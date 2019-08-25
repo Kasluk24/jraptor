@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class Raptor {
     private final Map<String, Map<Stop, Integer>> routeStopIndex = new HashMap<>();
     private final Map<String, List<Stop>> routePaths = new HashMap<>();
-    private final Map<Stop, Set<String>> routesAtStop = new HashMap<>();
+    private final Map<Stop, Set<String>> routesByStop = new HashMap<>();
     private final Map<String, List<Trip>> tripsByRoute = new HashMap<>();
     private final Map<Trip, Map<Stop, StopTime>> tripStopTimes = new HashMap<>();
     private final Set<Stop> stops;
@@ -27,8 +27,8 @@ public class Raptor {
 
                 for (var i = 0; i < path.size(); ++i) {
                     this.routeStopIndex.get(routeId).put(path.get(i), i);
-                    this.routesAtStop.putIfAbsent(path.get(i), new HashSet<>());
-                    this.routesAtStop.get(path.get(i)).add(routeId);
+                    this.routesByStop.putIfAbsent(path.get(i), new HashSet<>());
+                    this.routesByStop.get(path.get(i)).add(routeId);
                 }
             }
 
@@ -42,7 +42,7 @@ public class Raptor {
             this.tripsByRoute.get(routeId).add(trip);
         }
 
-        this.stops = this.routesAtStop.keySet();
+        this.stops = this.routesByStop.keySet();
     }
 
     public ArrayList<List<Stop>> plan(String originName, String destinationName, LocalDateTime date) {
@@ -112,7 +112,7 @@ public class Raptor {
         var queue = new HashMap<String, Stop>();
 
         for (var stop : markedStops) {
-            for (var routeId : this.routesAtStop.get(stop)) {
+            for (var routeId : this.routesByStop.get(stop)) {
                 if (!queue.containsKey(routeId) || !this.isStopBefore(routeId, queue.get(routeId), stop)) {
                     queue.put(routeId, stop);
                 }
