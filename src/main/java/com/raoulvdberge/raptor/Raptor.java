@@ -45,7 +45,7 @@ public class Raptor {
         this.stops = this.routesByStop.keySet();
     }
 
-    public ArrayList<List<Stop>> plan(String originName, String destinationName, LocalDateTime date) {
+    public List<List<Stop>> plan(String originName, String destinationName, LocalDateTime date) {
         var origin = this.stops.stream().filter(s -> s.getName().equals(originName)).findFirst().orElseThrow();
         var destination = this.stops.stream().filter(s -> s.getName().equals(destinationName)).findFirst().orElseThrow();
 
@@ -132,25 +132,25 @@ public class Raptor {
         return trip.map(this.tripStopTimes::get);
     }
 
-    private ArrayList<List<Stop>> getResults(HashMap<Stop, Map<Integer, Stop>> kConnections, Stop destination) {
+    private List<List<Stop>> getResults(HashMap<Stop, Map<Integer, Stop>> kConnections, Stop destination) {
         var results = new ArrayList<List<Stop>>();
 
         for (var k : kConnections.get(destination).keySet()) {
-            var d = destination;
-            var i = k;
+            var stop = destination;
 
             var legs = new ArrayList<Stop>();
-            legs.add(d);
+            legs.add(stop);
 
-            while (i > 0) {
-                var o = kConnections.get(d).get(i);
+            while (k > 0) {
+                stop = kConnections.get(stop).get(k);
 
-                legs.add(o);
-                d = o;
-                i--;
+                legs.add(stop);
+
+                k--;
             }
 
             Collections.reverse(legs);
+
             results.add(legs);
         }
 
