@@ -46,9 +46,14 @@ public class Raptor {
     }
 
     public List<List<Stop>> plan(String originName, String destinationName, LocalDateTime date) {
-        var origin = this.stops.stream().filter(s -> s.getName().equals(originName)).findFirst().orElseThrow();
-        var destination = this.stops.stream().filter(s -> s.getName().equals(destinationName)).findFirst().orElseThrow();
+        return plan(
+            this.stops.stream().filter(s -> s.getName().equals(originName)).findFirst().orElseThrow(),
+            this.stops.stream().filter(s -> s.getName().equals(destinationName)).findFirst().orElseThrow(),
+            date
+        );
+    }
 
+    public List<List<Stop>> plan(Stop origin, Stop destination, LocalDateTime date) {
         var kArrivals = new HashMap<Integer, Map<Stop, LocalDateTime>>();
         var kConnections = new HashMap<Stop, Map<Integer, Stop>>();
 
