@@ -70,7 +70,7 @@ public class Raptor {
             var queue = this.getQueue(markedStops);
 
             markedStops.clear();
-            kArrivals.put(k, copyKArrival(kArrivals.get(k - 1)));
+            kArrivals.put(k, new HashMap<>(kArrivals.get(k - 1)));
 
             for (var entry : queue.entrySet()) {
                 var routeId = entry.getKey();
@@ -98,16 +98,6 @@ public class Raptor {
         return this.getResults(kConnections, destination);
     }
 
-    private Map<Stop, LocalDateTime> copyKArrival(Map<Stop, LocalDateTime> data) {
-        var newData = new HashMap<Stop, LocalDateTime>();
-
-        for (var entry : data.entrySet()) {
-            newData.put(entry.getKey(), entry.getValue());
-        }
-
-        return newData;
-    }
-
     private Map<String, Stop> getQueue(Set<Stop> markedStops) {
         var queue = new HashMap<String, Stop>();
 
@@ -129,7 +119,11 @@ public class Raptor {
     private Optional<Map<Stop, StopTime>> getEarliestTrip(String routeId, Stop stop, LocalDateTime time) {
         var trip = this.tripsByRoute.get(routeId).stream().filter(t -> this.tripStopTimes.get(t).get(stop).getDepartureTime().isAfter(time)).findFirst();
 
-        return trip.map(this.tripStopTimes::get);
+        if (trip.isPresent()) {
+            return Optional.of(this.tripStopTimes.get(trip.get()));
+        } else {
+            return Optional.empty();
+        }
     }
 
     private List<List<Stop>> getResults(HashMap<Stop, Map<Integer, Stop>> kConnections, Stop destination) {
