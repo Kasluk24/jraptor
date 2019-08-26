@@ -79,22 +79,22 @@ public class Raptor {
 
             for (var entry : queue.entrySet()) {
                 var routeId = entry.getKey();
-                var stopP = entry.getValue();
+                var stop = entry.getValue();
 
                 Optional<Map<Stop, StopTime>> stopTimes = Optional.empty();
 
-                for (var pi = this.routeStopIndex.get(routeId).get(stopP); pi < this.routePaths.get(routeId).size(); ++pi) {
-                    var stopPi = this.routePaths.get(routeId).get(pi);
+                for (var stopIndex = this.routeStopIndex.get(routeId).get(stop); stopIndex < this.routePaths.get(routeId).size(); ++stopIndex) {
+                    var stopInRoute = this.routePaths.get(routeId).get(stopIndex);
 
-                    if (stopTimes.isPresent() && stopTimes.get().get(stopPi).getArrivalTime().isBefore(kArrivals.get(k).get(stopPi))) {
-                        kArrivals.get(k).put(stopPi, stopTimes.get().get(stopPi).getArrivalTime());
-                        kConnections.get(stopPi).put(k, stopP);
+                    if (stopTimes.isPresent() && stopTimes.get().get(stopInRoute).getArrivalTime().isBefore(kArrivals.get(k).get(stopInRoute))) {
+                        kArrivals.get(k).put(stopInRoute, stopTimes.get().get(stopInRoute).getArrivalTime());
+                        kConnections.get(stopInRoute).put(k, stop);
 
-                        markedStops.add(stopPi);
+                        markedStops.add(stopInRoute);
                     }
 
-                    if (stopTimes.isEmpty() || kArrivals.get(k - 1).get(stopPi).isBefore(stopTimes.get().get(stopPi).getArrivalTime())) {
-                        stopTimes = this.getEarliestTrip(routeId, stopPi, kArrivals.get(k - 1).get(stopPi));
+                    if (stopTimes.isEmpty() || kArrivals.get(k - 1).get(stopInRoute).isBefore(stopTimes.get().get(stopInRoute).getArrivalTime())) {
+                        stopTimes = this.getEarliestTrip(routeId, stopInRoute, kArrivals.get(k - 1).get(stopInRoute));
                     }
                 }
             }
@@ -108,7 +108,7 @@ public class Raptor {
 
         for (var stop : markedStops) {
             for (var routeId : this.routesByStop.get(stop)) {
-                if (!queue.containsKey(routeId) || !this.isStopBefore(routeId, queue.get(routeId), stop)) {
+                if (!queue.containsKey(routeId) || this.isStopBefore(routeId, stop, queue.get(routeId))) {
                     queue.put(routeId, stop);
                 }
             }
