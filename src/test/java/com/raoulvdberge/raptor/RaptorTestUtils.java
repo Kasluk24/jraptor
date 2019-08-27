@@ -1,20 +1,20 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.Stop;
+import com.raoulvdberge.raptor.model.Journey;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RaptorTestUtils {
-    private static String resultsToString(List<List<Stop>> results) {
+class RaptorTestUtils {
+    private static String resultsToString(List<Journey> results) {
         return "[" + results
             .stream()
-            .map(stops -> "[" + stops.stream().map(Stop::getName).collect(Collectors.joining(" -> ")) + "]")
+            .map(j -> "[" + j.getLegs().stream().map(l -> l.getOrigin().getName() + " -> " + l.getDestination().getName()).collect(Collectors.joining(", ")) + "]")
             .collect(Collectors.joining(", ")) + "]";
     }
 
-    public static void assertRaptorResult(String expected, List<List<Stop>> actual) {
+    static void assertRaptorResult(String expected, List<Journey> actual) {
         Assertions.assertEquals(expected, resultsToString(actual));
     }
 }

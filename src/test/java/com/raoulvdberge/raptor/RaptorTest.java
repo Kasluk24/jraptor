@@ -4,7 +4,8 @@ import com.raoulvdberge.raptor.model.TripBuilder;
 import org.junit.jupiter.api.Test;
 
 import static com.raoulvdberge.raptor.RaptorTestUtils.assertRaptorResult;
-import static com.raoulvdberge.raptor.model.TripBuilderTestUtils.*;
+import static com.raoulvdberge.raptor.model.TripBuilderTestUtils.nullTime;
+import static com.raoulvdberge.raptor.model.TripBuilderTestUtils.time;
 
 class RaptorTest {
     @Test
@@ -38,7 +39,7 @@ class RaptorTest {
 
         var result = sut.plan("A", "E", time(10, 0));
 
-        assertRaptorResult("[[A -> B -> E]]", result);
+        assertRaptorResult("[[A -> B, B -> E]]", result);
     }
 
     @Test
@@ -75,7 +76,7 @@ class RaptorTest {
 
         var result = sut.plan("A", "C", time(10, 0));
 
-        assertRaptorResult("[[A -> C], [A -> B -> C]]", result);
+        assertRaptorResult("[[A -> C], [A -> B, B -> C]]", result);
     }
 
     @Test
@@ -102,6 +103,6 @@ class RaptorTest {
 
         var result = sut.plan("A", "E", time(10, 0));
 
-        assertRaptorResult("[[A -> G -> E]]", result);
+        assertRaptorResult("[[A -> G, G -> E]]", result);
     }
 }

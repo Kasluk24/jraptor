@@ -1,9 +1,6 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.KConnection;
-import com.raoulvdberge.raptor.model.Stop;
-import com.raoulvdberge.raptor.model.StopTime;
-import com.raoulvdberge.raptor.model.Trip;
+import com.raoulvdberge.raptor.model.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -41,7 +38,7 @@ public class Raptor {
         this.stops = this.routesByStop.keySet();
     }
 
-    public List<List<Stop>> plan(String originName, String destinationName, LocalDateTime date) {
+    public List<Journey> plan(String originName, String destinationName, LocalDateTime date) {
         return plan(
             this.stops.stream().filter(s -> s.getName().equals(originName)).findFirst().orElseThrow(),
             this.stops.stream().filter(s -> s.getName().equals(destinationName)).findFirst().orElseThrow(),
@@ -49,7 +46,7 @@ public class Raptor {
         );
     }
 
-    public List<List<Stop>> plan(Stop origin, Stop destination, LocalDateTime date) {
+    public List<Journey> plan(Stop origin, Stop destination, LocalDateTime date) {
         var kArrivals = new HashMap<Integer, Map<Stop, LocalDateTime>>();
         var kConnections = new HashMap<Stop, Map<Integer, KConnection>>();
 
@@ -134,28 +131,36 @@ public class Raptor {
         }
     }
 
-    private List<List<Stop>> getResults(HashMap<Stop, Map<Integer, KConnection>> kConnections, Stop destination) {
-        var results = new ArrayList<List<Stop>>();
+    private List<Journey> getResults(HashMap<Stop, Map<Integer, KConnection>> kConnections, Stop finalDestination) {
+        var results = new ArrayList<Journey>();
 
-        for (var k : kConnections.get(destination).keySet()) {
-            var stop = destination;
+        for (var k : kConnections.get(finalDestination).keySet()) {
+            var dest = finalDestination;
 
-            var legs = new ArrayList<Stop>();
-            legs.add(stop);
+            var legs = new ArrayList<Leg>();
 
             while (k > 0) {
-                var connection = kConnections.get(stop).get(k);
+                var connection = kConnections.get(dest).get(k);
 
-                stop = connection.getStopTimes().get(connection.getBoardingPoint()).getStop();
+                var stopTimes = connection.getStopTimes();
 
-                legs.add(stop);
+                var origin = stopTimes.get(connection.getBoardingPoint()).getStop();
+                dest = stopTimes.get(connection.getStopIndex()).getStop();
+
+                legs.add(new TimetableLeg(
+                    origin,
+                    dest,
+                    connection.getStopTimes()
+                ));
+
+                dest = stopTimes.get(connection.getBoardingPoint()).getStop();
 
                 k--;
             }
 
             Collections.reverse(legs);
 
-            results.add(legs);
+            results.add(new Journey(legs));
         }
 
         return results;
