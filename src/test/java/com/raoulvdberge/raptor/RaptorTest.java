@@ -3,7 +3,6 @@ package com.raoulvdberge.raptor;
 import com.raoulvdberge.raptor.model.TripBuilder;
 import org.junit.jupiter.api.Test;
 
-import static com.raoulvdberge.raptor.RaptorTestUtils.assertRaptorResult;
 import static com.raoulvdberge.raptor.model.TripBuilderTestUtils.nullTime;
 import static com.raoulvdberge.raptor.model.TripBuilderTestUtils.time;
 
@@ -20,7 +19,11 @@ class RaptorTest {
 
         var result = sut.plan("A", "C", time(10, 0));
 
-        assertRaptorResult("[[A -> C]]", result);
+        JourneyAssertor.forJourneys(result)
+            .assertJourneyCount(1)
+            .journey(j -> j
+                .assertLegCount(1)
+                .assertLeg("A", "C"));
     }
 
     @Test
@@ -39,7 +42,12 @@ class RaptorTest {
 
         var result = sut.plan("A", "E", time(10, 0));
 
-        assertRaptorResult("[[A -> B, B -> E]]", result);
+        JourneyAssertor.forJourneys(result)
+            .assertJourneyCount(1)
+            .journey(j -> j
+                .assertLegCount(2)
+                .assertLeg("A", "B")
+                .assertLeg("B", "E"));
     }
 
     @Test
@@ -58,7 +66,8 @@ class RaptorTest {
 
         var result = sut.plan("A", "E", time(10, 0));
 
-        assertRaptorResult("[]", result);
+        JourneyAssertor.forJourneys(result)
+            .assertJourneyCount(0);
     }
 
     @Test
@@ -76,7 +85,15 @@ class RaptorTest {
 
         var result = sut.plan("A", "C", time(10, 0));
 
-        assertRaptorResult("[[A -> C], [A -> B, B -> C]]", result);
+        JourneyAssertor.forJourneys(result)
+            .assertJourneyCount(2)
+            .journey(j -> j
+                .assertLegCount(1)
+                .assertLeg("A", "C"))
+            .journey(j -> j
+                .assertLegCount(2)
+                .assertLeg("A", "B")
+                .assertLeg("B", "C"));
     }
 
     @Test
@@ -103,6 +120,11 @@ class RaptorTest {
 
         var result = sut.plan("A", "E", time(10, 0));
 
-        assertRaptorResult("[[A -> G, G -> E]]", result);
+        JourneyAssertor.forJourneys(result)
+            .assertJourneyCount(1)
+            .journey(j -> j
+                .assertLegCount(2)
+                .assertLeg("A", "G")
+                .assertLeg("G", "E"));
     }
 }
