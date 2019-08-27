@@ -1,5 +1,6 @@
 package com.raoulvdberge.raptor;
 
+import com.raoulvdberge.raptor.model.KConnection;
 import com.raoulvdberge.raptor.model.Stop;
 import com.raoulvdberge.raptor.model.StopTime;
 import com.raoulvdberge.raptor.model.Trip;
@@ -50,7 +51,7 @@ public class Raptor {
 
     public List<List<Stop>> plan(Stop origin, Stop destination, LocalDateTime date) {
         var kArrivals = new HashMap<Integer, Map<Stop, LocalDateTime>>();
-        var kConnections = new HashMap<Stop, Map<Integer, Stop>>();
+        var kConnections = new HashMap<Stop, Map<Integer, KConnection>>();
 
         for (var stop : stops) {
             kConnections.put(stop, new HashMap<>());
@@ -73,6 +74,7 @@ public class Raptor {
             kArrivals.put(k, new HashMap<>(kArrivals.get(k - 1)));
 
             for (var entry : queue.entrySet()) {
+                var boardingPoint = -1;
                 var routeId = entry.getKey();
                 var stop = entry.getValue();
 
@@ -83,13 +85,19 @@ public class Raptor {
 
                     if (stopTimes.isPresent() && stopTimes.get().get(stopIndex).getArrivalTime().isBefore(kArrivals.get(k).get(stopInRoute))) {
                         kArrivals.get(k).put(stopInRoute, stopTimes.get().get(stopIndex).getArrivalTime());
-                        kConnections.get(stopInRoute).put(k, stop);
+                        kConnections.get(stopInRoute).put(k, new KConnection(
+                            stopTimes.get(),
+                            boardingPoint,
+                            stopIndex
+                        ));
 
                         markedStops.add(stopInRoute);
                     }
 
                     if (stopTimes.isEmpty() || kArrivals.get(k - 1).get(stopInRoute).isBefore(stopTimes.get().get(stopIndex).getArrivalTime())) {
                         stopTimes = this.getEarliestTrip(routeId, stopIndex, kArrivals.get(k - 1).get(stopInRoute));
+
+                        boardingPoint = stopIndex;
                     }
                 }
             }
@@ -126,7 +134,7 @@ public class Raptor {
         }
     }
 
-    private List<List<Stop>> getResults(HashMap<Stop, Map<Integer, Stop>> kConnections, Stop destination) {
+    private List<List<Stop>> getResults(HashMap<Stop, Map<Integer, KConnection>> kConnections, Stop destination) {
         var results = new ArrayList<List<Stop>>();
 
         for (var k : kConnections.get(destination).keySet()) {
@@ -136,7 +144,9 @@ public class Raptor {
             legs.add(stop);
 
             while (k > 0) {
-                stop = kConnections.get(stop).get(k);
+                var connection = kConnections.get(stop).get(k);
+
+                stop = connection.getStopTimes().get(connection.getBoardingPoint()).getStop();
 
                 legs.add(stop);
 
