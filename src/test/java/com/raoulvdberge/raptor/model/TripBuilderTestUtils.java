@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class TripBuilderTestUtils {
     public static LocalDateTime time(int hour, int minute) {
-        return LocalDateTime.now().withHour(hour).withMinute(minute).withSecond(0);
+        return LocalDateTime.of(2019, 8, 27, hour, minute, 0, 0);
     }
 
     public static LocalDateTime nullTime() {

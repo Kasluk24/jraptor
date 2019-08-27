@@ -23,7 +23,7 @@ class RaptorTest {
             .assertJourneyCount(1)
             .journey(j -> j
                 .assertLegCount(1)
-                .assertLeg("A", "C"));
+                .assertLegTimetable("A", time(10, 0), "C", time(10, 10)));
     }
 
     @Test
@@ -46,8 +46,8 @@ class RaptorTest {
             .assertJourneyCount(1)
             .journey(j -> j
                 .assertLegCount(2)
-                .assertLeg("A", "B")
-                .assertLeg("B", "E"));
+                .assertLegTimetable("A", time(10, 0), "B", time(10, 5))
+                .assertLegTimetable("B", time(10, 8), "E", time(10, 10)));
     }
 
     @Test
@@ -89,11 +89,11 @@ class RaptorTest {
             .assertJourneyCount(2)
             .journey(j -> j
                 .assertLegCount(1)
-                .assertLeg("A", "C"))
+                .assertLegTimetable("A", time(10, 0), "C", time(10, 10)))
             .journey(j -> j
                 .assertLegCount(2)
-                .assertLeg("A", "B")
-                .assertLeg("B", "C"));
+                .assertLegTimetable("A", time(10, 0), "B", time(10, 5))
+                .assertLegTimetable("B", time(10, 6), "C", time(10, 7)));
     }
 
     @Test
@@ -124,7 +124,7 @@ class RaptorTest {
             .assertJourneyCount(1)
             .journey(j -> j
                 .assertLegCount(2)
-                .assertLeg("A", "G")
-                .assertLeg("G", "E"));
+                .assertLegTimetable("A", time(10, 0), "G", time(10, 5))
+                .assertLegTimetable("G", time(10, 6), "E", time(10, 7)));
     }
 }
