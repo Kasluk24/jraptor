@@ -32,7 +32,7 @@ class IndividualJourneyAssertor {
     }
 
     IndividualJourneyAssertor assertLegTimetable(String origin, LocalDateTime originDeparture, String destination, LocalDateTime destinationArrival) {
-        assertLeg(origin, destination);
+        this.assertLeg(origin, destination);
 
         var leg = (TimetableLeg) this.journey.getLegs().get(currentLeg - 1);
 

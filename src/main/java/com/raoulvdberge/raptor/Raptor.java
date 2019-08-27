@@ -4,38 +4,27 @@ import com.raoulvdberge.raptor.model.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Raptor {
-    private final Map<String, Map<Stop, Integer>> routeStopIndex = new HashMap<>();
-    private final Map<String, List<Stop>> routePaths = new HashMap<>();
-    private final Map<Stop, Set<String>> routesByStop = new HashMap<>();
-    private final Map<String, List<Trip>> tripsByRoute = new HashMap<>();
-    private final Map<Trip, List<StopTime>> tripStopTimes = new HashMap<>();
+    private final Map<String, Map<Stop, Integer>> routeStopIndex;
+    private final Map<String, List<Stop>> routePaths;
+    private final Map<Stop, Set<String>> routesByStop;
+    private final Map<String, List<Trip>> tripsByRoute;
+    private final Map<Trip, List<StopTime>> tripStopTimes;
     private final Set<Stop> stops;
 
-    public Raptor(List<Trip> trips) {
-        for (var trip : trips) {
-            var path = trip.getStopTimes().stream().map(StopTime::getStop).collect(Collectors.toList());
-            var routeId = path.stream().map(Stop::getName).collect(Collectors.joining("->"));
-
-            if (!this.routeStopIndex.containsKey(routeId)) {
-                this.tripsByRoute.put(routeId, new ArrayList<>());
-                this.routeStopIndex.put(routeId, new HashMap<>());
-                this.routePaths.put(routeId, path);
-
-                for (var i = 0; i < path.size(); ++i) {
-                    this.routeStopIndex.get(routeId).put(path.get(i), i);
-                    this.routesByStop.putIfAbsent(path.get(i), new HashSet<>());
-                    this.routesByStop.get(path.get(i)).add(routeId);
-                }
-            }
-
-            this.tripStopTimes.put(trip, trip.getStopTimes());
-            this.tripsByRoute.get(routeId).add(trip);
-        }
-
-        this.stops = this.routesByStop.keySet();
+    public Raptor(Map<String, Map<Stop, Integer>> routeStopIndex,
+                  Map<String, List<Stop>> routePaths,
+                  Map<Stop, Set<String>> routesByStop,
+                  Map<String, List<Trip>> tripsByRoute,
+                  Map<Trip, List<StopTime>> tripStopTimes,
+                  Set<Stop> stops) {
+        this.routeStopIndex = routeStopIndex;
+        this.routePaths = routePaths;
+        this.routesByStop = routesByStop;
+        this.tripsByRoute = tripsByRoute;
+        this.tripStopTimes = tripStopTimes;
+        this.stops = stops;
     }
 
     public List<Journey> plan(String originName, String destinationName, LocalDateTime date) {

@@ -9,13 +9,13 @@ import static com.raoulvdberge.raptor.model.TripBuilderTestUtils.time;
 class RaptorTest {
     @Test
     void testFindingJourneyWithDirectConnection() {
-        var sut = new Raptor(new TripBuilder()
+        var sut = new InMemoryRaptorFactory(new TripBuilder()
             .trip(t -> t
                 .stop("A", nullTime(), time(10, 0))
                 .stop("B", time(10, 5), time(10, 6))
                 .stop("C", time(10, 10), nullTime()))
             .build()
-        );
+        ).create();
 
         var result = sut.plan("A", "C", time(10, 0));
 
@@ -28,7 +28,7 @@ class RaptorTest {
 
     @Test
     void testFindingJourneyWithSingleConnection() {
-        var sut = new Raptor(new TripBuilder()
+        var sut = new InMemoryRaptorFactory(new TripBuilder()
             .trip(t -> t
                 .stop("A", nullTime(), time(10, 0))
                 .stop("B", time(10, 5), time(10, 6))
@@ -38,7 +38,7 @@ class RaptorTest {
                 .stop("B", time(10, 3), time(10, 8))
                 .stop("E", time(10, 10), nullTime()))
             .build()
-        );
+        ).create();
 
         var result = sut.plan("A", "E", time(10, 0));
 
@@ -52,7 +52,7 @@ class RaptorTest {
 
     @Test
     void testNotFindingJourneyThatCannotBeMade() {
-        var sut = new Raptor(new TripBuilder()
+        var sut = new InMemoryRaptorFactory(new TripBuilder()
             .trip(t -> t
                 .stop("A", nullTime(), time(10, 0))
                 .stop("B", time(10, 5), time(10, 6))
@@ -62,7 +62,7 @@ class RaptorTest {
                 .stop("B", time(10, 1), time(10, 2))
                 .stop("E", time(10, 10), nullTime()))
             .build()
-        );
+        ).create();
 
         var result = sut.plan("A", "E", time(10, 0));
 
@@ -72,7 +72,7 @@ class RaptorTest {
 
     @Test
     void testFindingFastestAndLeastChanges() {
-        var sut = new Raptor(new TripBuilder()
+        var sut = new InMemoryRaptorFactory(new TripBuilder()
             .trip(t -> t
                 .stop("A", nullTime(), time(10, 0))
                 .stop("B", time(10, 5), time(10, 6))
@@ -81,7 +81,7 @@ class RaptorTest {
                 .stop("B", nullTime(), time(10, 6))
                 .stop("C", time(10, 7), nullTime()))
             .build()
-        );
+        ).create();
 
         var result = sut.plan("A", "C", time(10, 0));
 
@@ -98,7 +98,7 @@ class RaptorTest {
 
     @Test
     void testFindingFastestJourneyWhereAmountOfChangesIsTheSame() {
-        var sut = new Raptor(new TripBuilder()
+        var sut = new InMemoryRaptorFactory(new TripBuilder()
             .trip(t -> t
                 .stop("A", nullTime(), time(10, 0))
                 .stop("B", time(10, 2), time(10, 2))
@@ -116,7 +116,7 @@ class RaptorTest {
                 .stop("H", time(10, 6), time(10, 6))
                 .stop("E", time(10, 7), nullTime()))
             .build()
-        );
+        ).create();
 
         var result = sut.plan("A", "E", time(10, 0));
 
