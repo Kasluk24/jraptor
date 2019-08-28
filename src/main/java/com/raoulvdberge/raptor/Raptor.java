@@ -6,21 +6,18 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class Raptor {
-    private final Map<String, Map<Stop, Integer>> routeStopIndex;
-    private final Map<String, List<Stop>> routePaths;
-    private final Map<Stop, Set<String>> routesByStop;
-    private final Map<String, List<Trip>> tripsByRoute;
+    private final RouteDetailsProvider routeDetailsProvider;
+    private final Map<Stop, Set<Route>> routesByStop;
+    private final Map<Route, List<Trip>> tripsByRoute;
     private final Map<Trip, List<StopTime>> tripStopTimes;
     private final Set<Stop> stops;
 
-    public Raptor(Map<String, Map<Stop, Integer>> routeStopIndex,
-                  Map<String, List<Stop>> routePaths,
-                  Map<Stop, Set<String>> routesByStop,
-                  Map<String, List<Trip>> tripsByRoute,
+    public Raptor(RouteDetailsProvider routeDetailsProvider,
+                  Map<Stop, Set<Route>> routesByStop,
+                  Map<Route, List<Trip>> tripsByRoute,
                   Map<Trip, List<StopTime>> tripStopTimes,
                   Set<Stop> stops) {
-        this.routeStopIndex = routeStopIndex;
-        this.routePaths = routePaths;
+        this.routeDetailsProvider = routeDetailsProvider;
         this.routesByStop = routesByStop;
         this.tripsByRoute = tripsByRoute;
         this.tripStopTimes = tripStopTimes;
@@ -61,13 +58,15 @@ public class Raptor {
 
             for (var entry : queue.entrySet()) {
                 var boardingPoint = -1;
-                var routeId = entry.getKey();
+                var route = entry.getKey();
                 var stop = entry.getValue();
 
                 Optional<List<StopTime>> stopTimes = Optional.empty();
 
-                for (var stopIndex = this.routeStopIndex.get(routeId).get(stop); stopIndex < this.routePaths.get(routeId).size(); ++stopIndex) {
-                    var stopInRoute = this.routePaths.get(routeId).get(stopIndex);
+                var routePath = this.routeDetailsProvider.getRoutePath(route);
+
+                for (var stopIndex = this.routeDetailsProvider.getRouteStopIndex(route, stop); stopIndex < routePath.size(); ++stopIndex) {
+                    var stopInRoute = routePath.get(stopIndex);
 
                     if (stopTimes.isPresent() && stopTimes.get().get(stopIndex).getArrivalTime().isBefore(kArrivals.get(k).get(stopInRoute))) {
                         kArrivals.get(k).put(stopInRoute, stopTimes.get().get(stopIndex).getArrivalTime());
@@ -81,7 +80,7 @@ public class Raptor {
                     }
 
                     if (stopTimes.isEmpty() || kArrivals.get(k - 1).get(stopInRoute).isBefore(stopTimes.get().get(stopIndex).getArrivalTime())) {
-                        stopTimes = this.getEarliestTrip(routeId, stopIndex, kArrivals.get(k - 1).get(stopInRoute));
+                        stopTimes = this.getEarliestTrip(route, stopIndex, kArrivals.get(k - 1).get(stopInRoute));
 
                         boardingPoint = stopIndex;
                     }
@@ -92,13 +91,13 @@ public class Raptor {
         return this.getResults(kConnections, destination);
     }
 
-    private Map<String, Stop> getQueue(Set<Stop> markedStops) {
-        var queue = new HashMap<String, Stop>();
+    private Map<Route, Stop> getQueue(Set<Stop> markedStops) {
+        var queue = new HashMap<Route, Stop>();
 
         for (var stop : markedStops) {
-            for (var routeId : this.routesByStop.get(stop)) {
-                if (!queue.containsKey(routeId) || this.isStopBefore(routeId, stop, queue.get(routeId))) {
-                    queue.put(routeId, stop);
+            for (var route : this.routesByStop.get(stop)) {
+                if (!queue.containsKey(route) || this.routeDetailsProvider.isStopBefore(route, stop, queue.get(route))) {
+                    queue.put(route, stop);
                 }
             }
         }
@@ -106,12 +105,8 @@ public class Raptor {
         return queue;
     }
 
-    private boolean isStopBefore(String routeId, Stop stopA, Stop stopB) {
-        return this.routeStopIndex.get(routeId).get(stopA) < this.routeStopIndex.get(routeId).get(stopB);
-    }
-
-    private Optional<List<StopTime>> getEarliestTrip(String routeId, int stopIndex, LocalDateTime time) {
-        var trip = this.tripsByRoute.get(routeId).stream().filter(t -> this.tripStopTimes.get(t).get(stopIndex).getDepartureTime().isAfter(time)).findFirst();
+    private Optional<List<StopTime>> getEarliestTrip(Route route, int stopIndex, LocalDateTime time) {
+        var trip = this.tripsByRoute.get(route).stream().filter(t -> this.tripStopTimes.get(t).get(stopIndex).getDepartureTime().isAfter(time)).findFirst();
 
         if (trip.isPresent()) {
             return Optional.of(this.tripStopTimes.get(trip.get()));
