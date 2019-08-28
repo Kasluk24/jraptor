@@ -7,27 +7,19 @@ import java.util.*;
 
 public class Raptor {
     private final RouteDetailsProvider routeDetailsProvider;
-    private final Map<Stop, Set<Route>> routesByStop;
-    private final Map<Route, List<Trip>> tripsByRoute;
-    private final Map<Trip, List<StopTime>> tripStopTimes;
-    private final Set<Stop> stops;
+    private final TripDetailsProvider tripDetailsProvider;
+    private final StopDetailsProvider stopDetailsProvider;
 
-    public Raptor(RouteDetailsProvider routeDetailsProvider,
-                  Map<Stop, Set<Route>> routesByStop,
-                  Map<Route, List<Trip>> tripsByRoute,
-                  Map<Trip, List<StopTime>> tripStopTimes,
-                  Set<Stop> stops) {
+    public Raptor(RouteDetailsProvider routeDetailsProvider, TripDetailsProvider tripDetailsProvider, StopDetailsProvider stopDetailsProvider) {
         this.routeDetailsProvider = routeDetailsProvider;
-        this.routesByStop = routesByStop;
-        this.tripsByRoute = tripsByRoute;
-        this.tripStopTimes = tripStopTimes;
-        this.stops = stops;
+        this.tripDetailsProvider = tripDetailsProvider;
+        this.stopDetailsProvider = stopDetailsProvider;
     }
 
     public List<Journey> plan(String originName, String destinationName, LocalDateTime date) {
         return plan(
-            this.stops.stream().filter(s -> s.getName().equals(originName)).findFirst().orElseThrow(),
-            this.stops.stream().filter(s -> s.getName().equals(destinationName)).findFirst().orElseThrow(),
+            this.stopDetailsProvider.getStops().stream().filter(s -> s.getName().equals(originName)).findFirst().orElseThrow(),
+            this.stopDetailsProvider.getStops().stream().filter(s -> s.getName().equals(destinationName)).findFirst().orElseThrow(),
             date
         );
     }
@@ -36,12 +28,12 @@ public class Raptor {
         var kArrivals = new HashMap<Integer, Map<Stop, LocalDateTime>>();
         var kConnections = new HashMap<Stop, Map<Integer, KConnection>>();
 
-        for (var stop : stops) {
+        for (var stop : this.stopDetailsProvider.getStops()) {
             kConnections.put(stop, new HashMap<>());
         }
 
         var initialArrivals = new HashMap<Stop, LocalDateTime>();
-        for (var stop : stops) {
+        for (var stop : this.stopDetailsProvider.getStops()) {
             initialArrivals.put(stop, LocalDateTime.MAX);
         }
         kArrivals.put(0, initialArrivals);
@@ -80,7 +72,15 @@ public class Raptor {
                     }
 
                     if (stopTimes.isEmpty() || kArrivals.get(k - 1).get(stopInRoute).isBefore(stopTimes.get().get(stopIndex).getArrivalTime())) {
-                        stopTimes = this.getEarliestTrip(route, stopIndex, kArrivals.get(k - 1).get(stopInRoute));
+                        var trip = this.tripDetailsProvider.getEarliestTripAtStop(
+                            route,
+                            stopIndex,
+                            kArrivals.get(k - 1).get(stopInRoute)
+                        );
+
+                        if (trip.isPresent()) {
+                            stopTimes = Optional.of(trip.get().getStopTimes());
+                        }
 
                         boardingPoint = stopIndex;
                     }
@@ -95,7 +95,7 @@ public class Raptor {
         var queue = new HashMap<Route, Stop>();
 
         for (var stop : markedStops) {
-            for (var route : this.routesByStop.get(stop)) {
+            for (var route : this.stopDetailsProvider.getRoutesByStop(stop)) {
                 if (!queue.containsKey(route) || this.routeDetailsProvider.isStopBefore(route, stop, queue.get(route))) {
                     queue.put(route, stop);
                 }
@@ -103,16 +103,6 @@ public class Raptor {
         }
 
         return queue;
-    }
-
-    private Optional<List<StopTime>> getEarliestTrip(Route route, int stopIndex, LocalDateTime time) {
-        var trip = this.tripsByRoute.get(route).stream().filter(t -> this.tripStopTimes.get(t).get(stopIndex).getDepartureTime().isAfter(time)).findFirst();
-
-        if (trip.isPresent()) {
-            return Optional.of(this.tripStopTimes.get(trip.get()));
-        } else {
-            return Optional.empty();
-        }
     }
 
     private List<Journey> getResults(HashMap<Stop, Map<Integer, KConnection>> kConnections, Stop finalDestination) {

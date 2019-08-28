@@ -47,10 +47,8 @@ public class InMemoryRaptorFactory implements RaptorFactory {
 
         return new Raptor(
             new InMemoryRouteDetailsProvider(routeStopIndex, routePaths),
-            routesByStop,
-            tripsByRoute,
-            tripStopTimes,
-            stops
+            new InMemoryTripDetailsProvider(tripsByRoute, tripStopTimes),
+            new InMemoryStopDetailsProvider(routesByStop, stops)
         );
     }
 }
