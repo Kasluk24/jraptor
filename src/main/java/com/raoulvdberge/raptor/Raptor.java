@@ -9,11 +9,16 @@ public class Raptor {
     private final RouteDetailsProvider routeDetailsProvider;
     private final TripDetailsProvider tripDetailsProvider;
     private final StopDetailsProvider stopDetailsProvider;
+    private final TransferDetailsProvider transferDetailsProvider;
 
-    public Raptor(RouteDetailsProvider routeDetailsProvider, TripDetailsProvider tripDetailsProvider, StopDetailsProvider stopDetailsProvider) {
+    public Raptor(RouteDetailsProvider routeDetailsProvider,
+                  TripDetailsProvider tripDetailsProvider,
+                  StopDetailsProvider stopDetailsProvider,
+                  TransferDetailsProvider transferDetailsProvider) {
         this.routeDetailsProvider = routeDetailsProvider;
         this.tripDetailsProvider = tripDetailsProvider;
         this.stopDetailsProvider = stopDetailsProvider;
+        this.transferDetailsProvider = transferDetailsProvider;
     }
 
     public List<Journey> plan(String originName, String destinationName, LocalDateTime date) {
@@ -43,10 +48,29 @@ public class Raptor {
         markedStops.add(origin);
 
         for (var k = 1; !markedStops.isEmpty(); ++k) {
+            var newMarkedStops = new HashSet<Stop>();
+
             var queue = this.getQueue(markedStops);
 
-            markedStops.clear();
             kArrivals.put(k, new HashMap<>(kArrivals.get(k - 1)));
+
+            for (var stop : markedStops) {
+                for (var transfer : this.transferDetailsProvider.getTransfersForStop(stop)) {
+                    var dest = transfer.getDestination();
+                    var arrivalTime = kArrivals.get(k - 1).get(stop).plus(transfer.getDuration());
+
+                    if (arrivalTime.isBefore(kArrivals.get(k - 1).get(dest))) {
+                        kArrivals.get(k).put(dest, arrivalTime);
+                        kConnections.get(dest).put(k, new KConnection(
+                            stop,
+                            dest,
+                            transfer.getDuration()
+                        ));
+
+                        newMarkedStops.add(dest);
+                    }
+                }
+            }
 
             for (var entry : queue.entrySet()) {
                 var boardingPoint = -1;
@@ -68,7 +92,7 @@ public class Raptor {
                             stopIndex
                         ));
 
-                        markedStops.add(stopInRoute);
+                        newMarkedStops.add(stopInRoute);
                     }
 
                     if (stopTimes.isEmpty() || kArrivals.get(k - 1).get(stopInRoute).isBefore(stopTimes.get().get(stopIndex).getArrivalTime())) {
@@ -86,6 +110,8 @@ public class Raptor {
                     }
                 }
             }
+
+            markedStops = newMarkedStops;
         }
 
         return this.getResults(kConnections, destination);
@@ -116,18 +142,24 @@ public class Raptor {
             while (k > 0) {
                 var connection = kConnections.get(dest).get(k);
 
-                var stopTimes = connection.getStopTimes();
+                if (connection.getType() == KConnectionType.TRANSFER) {
+                    legs.add(new TransferLeg(connection.getOrigin(), connection.getDestination(), connection.getDuration()));
 
-                var origin = stopTimes.get(connection.getBoardingPoint()).getStop();
-                dest = stopTimes.get(connection.getStopIndex()).getStop();
+                    dest = connection.getOrigin();
+                } else {
+                    var stopTimes = connection.getStopTimes();
 
-                legs.add(new TimetableLeg(
-                    origin,
-                    dest,
-                    connection.getStopTimes()
-                ));
+                    var origin = stopTimes.get(connection.getBoardingPoint()).getStop();
+                    dest = stopTimes.get(connection.getStopIndex()).getStop();
 
-                dest = stopTimes.get(connection.getBoardingPoint()).getStop();
+                    legs.add(new TimetableLeg(
+                        origin,
+                        dest,
+                        connection.getStopTimes()
+                    ));
+
+                    dest = stopTimes.get(connection.getBoardingPoint()).getStop();
+                }
 
                 k--;
             }

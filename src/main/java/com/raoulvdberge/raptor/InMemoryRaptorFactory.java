@@ -1,18 +1,17 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.Route;
-import com.raoulvdberge.raptor.model.Stop;
-import com.raoulvdberge.raptor.model.StopTime;
-import com.raoulvdberge.raptor.model.Trip;
+import com.raoulvdberge.raptor.model.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryRaptorFactory implements RaptorFactory {
     private final List<Trip> trips;
+    private final Map<Stop, List<TransferLeg>> transfers;
 
-    public InMemoryRaptorFactory(List<Trip> trips) {
+    public InMemoryRaptorFactory(List<Trip> trips, Map<Stop, List<TransferLeg>> transfers) {
         this.trips = trips;
+        this.transfers = transfers;
     }
 
     @Override
@@ -48,7 +47,8 @@ public class InMemoryRaptorFactory implements RaptorFactory {
         return new Raptor(
             new InMemoryRouteDetailsProvider(routeStopIndex, routePaths),
             new InMemoryTripDetailsProvider(tripsByRoute, tripStopTimes),
-            new InMemoryStopDetailsProvider(routesByStop, stops)
+            new InMemoryStopDetailsProvider(routesByStop, stops),
+            new InMemoryTransferDetailsProvider(this.transfers)
         );
     }
 }

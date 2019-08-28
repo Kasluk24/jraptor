@@ -3,18 +3,21 @@ package com.raoulvdberge.raptor.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static com.raoulvdberge.raptor.model.TripBuilderTestUtils.nullTime;
-import static com.raoulvdberge.raptor.model.TripBuilderTestUtils.time;
+import java.time.Duration;
 
-class TripBuilderTest {
+import static com.raoulvdberge.raptor.model.TripAndTransferBuilderTestUtils.nullTime;
+import static com.raoulvdberge.raptor.model.TripAndTransferBuilderTestUtils.time;
+
+class TripAndTransferBuilderTest {
     @Test
     void testAddingSingleTrip() {
-        var trips = new TripBuilder()
+        var trips = new TripAndTransferBuilder()
             .trip(t -> t
                 .stop("A", nullTime(), time(10, 0))
                 .stop("B", time(10, 5), time(10, 6))
                 .stop("C", time(10, 10), nullTime()))
-            .build();
+            .build()
+            .getTrips();
 
         Assertions.assertEquals(trips.size(), 1);
 
@@ -28,7 +31,7 @@ class TripBuilderTest {
 
     @Test
     void testAddingMultipleTrips() {
-        var trips = new TripBuilder()
+        var trips = new TripAndTransferBuilder()
             .trip(t -> t
                 .stop("A", nullTime(), time(10, 0))
                 .stop("B", time(10, 5), time(10, 6))
@@ -37,7 +40,8 @@ class TripBuilderTest {
                 .stop("D", nullTime(), time(10, 0))
                 .stop("E", time(10, 5), time(10, 6))
                 .stop("F", time(10, 10), nullTime()))
-            .build();
+            .build()
+            .getTrips();
 
         Assertions.assertEquals(trips.size(), 2);
 
@@ -57,9 +61,66 @@ class TripBuilderTest {
     }
 
     @Test
+    void testAddingSingleTransferWithTrips() {
+        var transfers = new TripAndTransferBuilder()
+            .trip(t -> t
+                .stop("A", nullTime(), time(10, 0))
+                .stop("B", time(10, 5), time(10, 6))
+                .stop("C", time(10, 10), nullTime()))
+            .transfer("A", "C", Duration.ofMinutes(1))
+            .build()
+            .getTransfers();
+
+        Assertions.assertEquals(1, transfers.size());
+
+        var transfersAtA = transfers.get(new Stop("A"));
+
+        Assertions.assertEquals(transfersAtA.size(), 1);
+        Assertions.assertEquals(transfersAtA.get(0).getOrigin().getName(), "A");
+        Assertions.assertEquals(transfersAtA.get(0).getDestination().getName(), "C");
+        Assertions.assertEquals(transfersAtA.get(0).getDuration(), Duration.ofMinutes(1));
+    }
+
+    @Test
+    void testAddingMultipleTransfersWithTrips() {
+        var transfers = new TripAndTransferBuilder()
+            .trip(t -> t
+                .stop("A", nullTime(), time(10, 0))
+                .stop("B", time(10, 5), time(10, 6))
+                .stop("C", time(10, 10), nullTime()))
+            .transfer("A", "B", Duration.ofMinutes(1))
+            .transfer("A", "C", Duration.ofMinutes(2))
+            .transfer("C", "B", Duration.ofMinutes(3))
+            .build()
+            .getTransfers();
+
+        Assertions.assertEquals(2, transfers.size());
+
+        var transfersAtA = transfers.get(new Stop("A"));
+
+        Assertions.assertEquals(transfersAtA.size(), 2);
+
+        Assertions.assertEquals(transfersAtA.get(0).getOrigin().getName(), "A");
+        Assertions.assertEquals(transfersAtA.get(0).getDestination().getName(), "B");
+        Assertions.assertEquals(transfersAtA.get(0).getDuration(), Duration.ofMinutes(1));
+
+        Assertions.assertEquals(transfersAtA.get(1).getOrigin().getName(), "A");
+        Assertions.assertEquals(transfersAtA.get(1).getDestination().getName(), "C");
+        Assertions.assertEquals(transfersAtA.get(1).getDuration(), Duration.ofMinutes(2));
+
+        var transfersAtC = transfers.get(new Stop("C"));
+
+        Assertions.assertEquals(transfersAtC.size(), 1);
+
+        Assertions.assertEquals(transfersAtC.get(0).getOrigin().getName(), "C");
+        Assertions.assertEquals(transfersAtC.get(0).getDestination().getName(), "B");
+        Assertions.assertEquals(transfersAtC.get(0).getDuration(), Duration.ofMinutes(3));
+    }
+
+    @Test
     void testStopsRequired() {
-        var thrown = Assertions.assertThrows(TripBuilderException.class, () -> {
-            new TripBuilder()
+        var thrown = Assertions.assertThrows(TripAndTransferBuilderException.class, () -> {
+            new TripAndTransferBuilder()
                 .trip(t -> {
                 })
                 .build();
@@ -70,8 +131,8 @@ class TripBuilderTest {
 
     @Test
     void testFirstStopNeedsToArriveAtNull() {
-        var thrown = Assertions.assertThrows(TripBuilderException.class, () -> {
-            new TripBuilder()
+        var thrown = Assertions.assertThrows(TripAndTransferBuilderException.class, () -> {
+            new TripAndTransferBuilder()
                 .trip(t -> t
                     .stop("A", time(10, 0), time(10, 0))
                     .stop("B", time(10, 5), time(10, 6))
@@ -84,8 +145,8 @@ class TripBuilderTest {
 
     @Test
     void testIntermediateStopNeedsToNotArriveAtNull() {
-        var thrown = Assertions.assertThrows(TripBuilderException.class, () -> {
-            new TripBuilder()
+        var thrown = Assertions.assertThrows(TripAndTransferBuilderException.class, () -> {
+            new TripAndTransferBuilder()
                 .trip(t -> t
                     .stop("A", nullTime(), time(10, 0))
                     .stop("B", nullTime(), time(10, 6))
@@ -98,8 +159,8 @@ class TripBuilderTest {
 
     @Test
     void testFirstStopNeedsToNotDepartAtNull() {
-        var thrown = Assertions.assertThrows(TripBuilderException.class, () -> {
-            new TripBuilder()
+        var thrown = Assertions.assertThrows(TripAndTransferBuilderException.class, () -> {
+            new TripAndTransferBuilder()
                 .trip(t -> t
                     .stop("A", nullTime(), nullTime())
                     .stop("B", time(10, 5), time(10, 6))
@@ -112,8 +173,8 @@ class TripBuilderTest {
 
     @Test
     void testLastStopNeedsToDepartAtNull() {
-        var thrown = Assertions.assertThrows(TripBuilderException.class, () -> {
-            new TripBuilder()
+        var thrown = Assertions.assertThrows(TripAndTransferBuilderException.class, () -> {
+            new TripAndTransferBuilder()
                 .trip(t -> t
                     .stop("A", nullTime(), time(10, 0))
                     .stop("B", time(10, 5), time(10, 6))
@@ -126,8 +187,8 @@ class TripBuilderTest {
 
     @Test
     void testCannotAddStopsAfterStopWithDepartureAsNull() {
-        var thrown = Assertions.assertThrows(TripBuilderException.class, () -> {
-            new TripBuilder()
+        var thrown = Assertions.assertThrows(TripAndTransferBuilderException.class, () -> {
+            new TripAndTransferBuilder()
                 .trip(t -> t
                     .stop("A", nullTime(), time(10, 0))
                     .stop("B", time(10, 5), time(10, 6))

@@ -2,8 +2,10 @@ package com.raoulvdberge.raptor;
 
 import com.raoulvdberge.raptor.model.Journey;
 import com.raoulvdberge.raptor.model.TimetableLeg;
+import com.raoulvdberge.raptor.model.TransferLeg;
 import org.junit.jupiter.api.Assertions;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 class IndividualJourneyAssertor {
@@ -28,6 +30,16 @@ class IndividualJourneyAssertor {
 
         this.currentLeg++;
 
+        return this;
+    }
+
+    IndividualJourneyAssertor assertLegTransfer(String origin, String destination, Duration duration) {
+        this.assertLeg(origin, destination);
+
+        var leg = (TransferLeg) this.journey.getLegs().get(currentLeg - 1);
+
+        Assertions.assertEquals(duration, leg.getDuration());
+        
         return this;
     }
 
