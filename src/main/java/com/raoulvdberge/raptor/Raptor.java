@@ -42,7 +42,7 @@ public class Raptor {
             initialArrivals.put(stop, LocalDateTime.MAX);
         }
         kArrivals.put(0, initialArrivals);
-        kArrivals.get(0).put(origin, LocalDateTime.MIN);
+        kArrivals.get(0).put(origin, date);
 
         var markedStops = new HashSet<Stop>();
         markedStops.add(origin);

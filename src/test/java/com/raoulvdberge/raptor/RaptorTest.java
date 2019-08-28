@@ -20,7 +20,7 @@ class RaptorTest {
 
         var sut = new InMemoryRaptorFactory(builderResult.getTrips(), builderResult.getTransfers()).create();
 
-        var result = sut.plan("A", "C", time(10, 0));
+        var result = sut.plan("A", "C", time(9, 59));
 
         JourneyAssertor.forJourneys(result)
             .assertJourneyCount(1)
@@ -210,7 +210,7 @@ class RaptorTest {
 
         var sut = new InMemoryRaptorFactory(builderResult.getTrips(), builderResult.getTransfers()).create();
 
-        var result = sut.plan("A", "E", time(10, 0));
+        var result = sut.plan("A", "E", time(9, 59));
 
         JourneyAssertor.forJourneys(result)
             .assertJourneyCount(1)
@@ -221,7 +221,7 @@ class RaptorTest {
     }
 
     @Test
-    void testNotFindingJourneyThatCannotBeMade() {
+    void testNotFindingJourneyThatCannotBeMadeDueToMissingConnection() {
         var builderResult = new TripAndTransferBuilder()
             .trip(t -> t
                 .stop("A", nullTime(), time(10, 0))
@@ -242,6 +242,23 @@ class RaptorTest {
     }
 
     @Test
+    void testNotFindingJourneyThatCannotBeMadeDueToLateQuery() {
+        var builderResult = new TripAndTransferBuilder()
+            .trip(t -> t
+                .stop("A", nullTime(), time(10, 0))
+                .stop("B", time(10, 5), time(10, 6))
+                .stop("C", time(10, 10), nullTime()))
+            .build();
+
+        var sut = new InMemoryRaptorFactory(builderResult.getTrips(), builderResult.getTransfers()).create();
+
+        var result = sut.plan("A", "C", time(10, 1));
+
+        JourneyAssertor.forJourneys(result)
+            .assertJourneyCount(0);
+    }
+
+    @Test
     void testFindingFastestAndLeastChanges() {
         var builderResult = new TripAndTransferBuilder()
             .trip(t -> t
@@ -255,7 +272,7 @@ class RaptorTest {
 
         var sut = new InMemoryRaptorFactory(builderResult.getTrips(), builderResult.getTransfers()).create();
 
-        var result = sut.plan("A", "C", time(10, 0));
+        var result = sut.plan("A", "C", time(9, 59));
 
         JourneyAssertor.forJourneys(result)
             .assertJourneyCount(2)
@@ -291,7 +308,7 @@ class RaptorTest {
 
         var sut = new InMemoryRaptorFactory(builderResult.getTrips(), builderResult.getTransfers()).create();
 
-        var result = sut.plan("A", "E", time(10, 0));
+        var result = sut.plan("A", "E", time(9, 59));
 
         JourneyAssertor.forJourneys(result)
             .assertJourneyCount(1)
