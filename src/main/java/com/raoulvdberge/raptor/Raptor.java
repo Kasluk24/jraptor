@@ -54,24 +54,6 @@ public class Raptor {
 
             kArrivals.put(k, new HashMap<>(kArrivals.get(k - 1)));
 
-            for (var stop : markedStops) {
-                for (var transfer : this.transferDetailsProvider.getTransfersForStop(stop)) {
-                    var dest = transfer.getDestination();
-                    var arrivalTime = kArrivals.get(k - 1).get(stop).plus(transfer.getDuration());
-
-                    if (arrivalTime.isBefore(kArrivals.get(k - 1).get(dest))) {
-                        kArrivals.get(k).put(dest, arrivalTime);
-                        kConnections.get(dest).put(k, new KConnection(
-                            stop,
-                            dest,
-                            transfer.getDuration()
-                        ));
-
-                        newMarkedStops.add(dest);
-                    }
-                }
-            }
-
             for (var entry : queue.entrySet()) {
                 var boardingPoint = -1;
                 var route = entry.getKey();
@@ -107,6 +89,24 @@ public class Raptor {
                         }
 
                         boardingPoint = stopIndex;
+                    }
+                }
+            }
+
+            for (var stop : markedStops) {
+                for (var transfer : this.transferDetailsProvider.getTransfersForStop(stop)) {
+                    var dest = transfer.getDestination();
+                    var arrivalTime = kArrivals.get(k - 1).get(stop).plus(transfer.getDuration());
+
+                    if (arrivalTime.isBefore(kArrivals.get(k).get(dest))) {
+                        kArrivals.get(k).put(dest, arrivalTime);
+                        kConnections.get(dest).put(k, new KConnection(
+                            stop,
+                            dest,
+                            transfer.getDuration()
+                        ));
+
+                        newMarkedStops.add(dest);
                     }
                 }
             }
