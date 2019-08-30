@@ -2,17 +2,11 @@ package com.raoulvdberge.raptor.model;
 
 import java.util.Objects;
 
-public class RaptorRoute {
-    private final int id;
+public class Stop {
     private final String name;
 
-    public RaptorRoute(int id, String name) {
-        this.id = id;
+    public Stop(String name) {
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
@@ -23,13 +17,17 @@ public class RaptorRoute {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RaptorRoute route = (RaptorRoute) o;
-        return id == route.id &&
-            name.equals(route.name);
+        Stop stop = (Stop) o;
+        return name.equals(stop.name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(name);
     }
 }

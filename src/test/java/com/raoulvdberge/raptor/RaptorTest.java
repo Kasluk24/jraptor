@@ -1,12 +1,12 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.TripAndTransferBuilder;
+import com.raoulvdberge.raptor.builder.TripAndTransferBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static com.raoulvdberge.raptor.model.TripAndTransferBuilderTestUtils.nullTime;
-import static com.raoulvdberge.raptor.model.TripAndTransferBuilderTestUtils.time;
+import static com.raoulvdberge.raptor.builder.TripAndTransferBuilderTestUtils.nullTime;
+import static com.raoulvdberge.raptor.builder.TripAndTransferBuilderTestUtils.time;
 
 class RaptorTest {
     @Test

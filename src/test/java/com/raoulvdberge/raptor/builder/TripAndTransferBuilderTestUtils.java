@@ -1,4 +1,4 @@
-package com.raoulvdberge.raptor.model;
+package com.raoulvdberge.raptor.builder;
 
 import java.time.LocalDateTime;
 

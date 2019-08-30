@@ -1,12 +1,13 @@
-package com.raoulvdberge.raptor.model;
+package com.raoulvdberge.raptor.builder;
 
+import com.raoulvdberge.raptor.model.Stop;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static com.raoulvdberge.raptor.model.TripAndTransferBuilderTestUtils.nullTime;
-import static com.raoulvdberge.raptor.model.TripAndTransferBuilderTestUtils.time;
+import static com.raoulvdberge.raptor.builder.TripAndTransferBuilderTestUtils.nullTime;
+import static com.raoulvdberge.raptor.builder.TripAndTransferBuilderTestUtils.time;
 
 class TripAndTransferBuilderTest {
     @Test
@@ -73,7 +74,7 @@ class TripAndTransferBuilderTest {
 
         Assertions.assertEquals(1, transfers.size());
 
-        var transfersAtA = transfers.get(new RaptorStop("A"));
+        var transfersAtA = transfers.get(new Stop("A"));
 
         Assertions.assertEquals(transfersAtA.size(), 1);
         Assertions.assertEquals(transfersAtA.get(0).getOrigin().getName(), "A");
@@ -96,7 +97,7 @@ class TripAndTransferBuilderTest {
 
         Assertions.assertEquals(2, transfers.size());
 
-        var transfersAtA = transfers.get(new RaptorStop("A"));
+        var transfersAtA = transfers.get(new Stop("A"));
 
         Assertions.assertEquals(transfersAtA.size(), 2);
 
@@ -108,7 +109,7 @@ class TripAndTransferBuilderTest {
         Assertions.assertEquals(transfersAtA.get(1).getDestination().getName(), "C");
         Assertions.assertEquals(transfersAtA.get(1).getDuration(), Duration.ofMinutes(2));
 
-        var transfersAtC = transfers.get(new RaptorStop("C"));
+        var transfersAtC = transfers.get(new Stop("C"));
 
         Assertions.assertEquals(transfersAtC.size(), 1);
 

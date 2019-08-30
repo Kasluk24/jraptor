@@ -1,4 +1,9 @@
-package com.raoulvdberge.raptor.model;
+package com.raoulvdberge.raptor.builder;
+
+import com.raoulvdberge.raptor.model.Stop;
+import com.raoulvdberge.raptor.model.StopTime;
+import com.raoulvdberge.raptor.model.TransferLeg;
+import com.raoulvdberge.raptor.model.TripImpl;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -9,12 +14,12 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class TripAndTransferBuilder {
-    private final List<RaptorTrip> trips = new ArrayList<>();
-    private final Map<String, RaptorStop> stopsByName = new HashMap<>();
-    private final Map<RaptorStop, List<RaptorTransferLeg>> transfers = new HashMap<>();
+    private final List<TripImpl> trips = new ArrayList<>();
+    private final Map<String, Stop> stopsByName = new HashMap<>();
+    private final Map<Stop, List<TransferLeg<Stop>>> transfers = new HashMap<>();
 
     public class TripConfigurer {
-        private final List<RaptorStopTime> stopTimes = new ArrayList<>();
+        private final List<StopTime<Stop>> stopTimes = new ArrayList<>();
         private boolean addedLastStop;
 
         public TripConfigurer stop(String stopName, LocalDateTime arrivalTime, LocalDateTime departureTime) {
@@ -40,9 +45,9 @@ public class TripAndTransferBuilder {
                 }
             }
 
-            stopsByName.putIfAbsent(stopName, new RaptorStop(stopName));
+            stopsByName.putIfAbsent(stopName, new Stop(stopName));
 
-            stopTimes.add(new RaptorStopTime(stopsByName.get(stopName), arrivalTime, departureTime));
+            stopTimes.add(new StopTime<>(stopsByName.get(stopName), arrivalTime, departureTime));
 
             return this;
         }
@@ -53,7 +58,7 @@ public class TripAndTransferBuilder {
         var toStop = this.stopsByName.get(to);
 
         this.transfers.putIfAbsent(fromStop, new ArrayList<>());
-        this.transfers.get(fromStop).add(new RaptorTransferLeg(fromStop, toStop, duration));
+        this.transfers.get(fromStop).add(new TransferLeg<>(fromStop, toStop, duration));
 
         return this;
     }
@@ -71,7 +76,7 @@ public class TripAndTransferBuilder {
             throw new TripAndTransferBuilderException("The last stop needs to depart at 0");
         }
 
-        trips.add(new RaptorTrip(trips.size(), tripConfigurer.stopTimes));
+        trips.add(new TripImpl(tripConfigurer.stopTimes));
 
         return this;
     }

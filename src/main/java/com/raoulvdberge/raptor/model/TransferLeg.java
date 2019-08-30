@@ -2,10 +2,10 @@ package com.raoulvdberge.raptor.model;
 
 import java.time.Duration;
 
-public class RaptorTransferLeg extends RaptorLeg {
+public class TransferLeg<S> extends Leg<S> {
     private final Duration duration;
 
-    public RaptorTransferLeg(RaptorStop origin, RaptorStop destination, Duration duration) {
+    public TransferLeg(S origin, S destination, Duration duration) {
         super(origin, destination);
 
         this.duration = duration;
