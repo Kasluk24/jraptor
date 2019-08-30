@@ -2,11 +2,11 @@ package com.raoulvdberge.raptor.model;
 
 import java.util.List;
 
-public class Trip {
+public class RaptorTrip {
     private final int id;
-    private final List<StopTime> stopTimes;
+    private final List<RaptorStopTime> stopTimes;
 
-    public Trip(int id, List<StopTime> stopTimes) {
+    public RaptorTrip(int id, List<RaptorStopTime> stopTimes) {
         this.id = id;
         this.stopTimes = stopTimes;
     }
@@ -15,7 +15,7 @@ public class Trip {
         return id;
     }
 
-    public List<StopTime> getStopTimes() {
+    public List<RaptorStopTime> getStopTimes() {
         return stopTimes;
     }
 }

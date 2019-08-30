@@ -2,18 +2,18 @@ package com.raoulvdberge.raptor.model;
 
 import java.time.LocalDateTime;
 
-public class StopTime {
-    private final Stop stop;
+public class RaptorStopTime {
+    private final RaptorStop stop;
     private final LocalDateTime arrivalTime;
     private final LocalDateTime departureTime;
 
-    public StopTime(Stop stop, LocalDateTime arrivalTime, LocalDateTime departureTime) {
+    public RaptorStopTime(RaptorStop stop, LocalDateTime arrivalTime, LocalDateTime departureTime) {
         this.stop = stop;
         this.arrivalTime = arrivalTime;
         this.departureTime = departureTime;
     }
 
-    public Stop getStop() {
+    public RaptorStop getStop() {
         return stop;
     }
 

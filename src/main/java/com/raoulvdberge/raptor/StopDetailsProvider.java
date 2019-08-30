@@ -1,12 +1,12 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.Route;
-import com.raoulvdberge.raptor.model.Stop;
+import com.raoulvdberge.raptor.model.RaptorRoute;
+import com.raoulvdberge.raptor.model.RaptorStop;
 
 import java.util.Set;
 
 public interface StopDetailsProvider {
-    Set<Stop> getStops();
+    Set<RaptorStop> getStops();
 
-    Set<Route> getRoutesByStop(Stop stop);
+    Set<RaptorRoute> getRoutesByStop(RaptorStop stop);
 }

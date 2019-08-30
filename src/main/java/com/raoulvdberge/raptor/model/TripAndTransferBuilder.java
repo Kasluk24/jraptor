@@ -9,12 +9,12 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class TripAndTransferBuilder {
-    private final List<Trip> trips = new ArrayList<>();
-    private final Map<String, Stop> stopsByName = new HashMap<>();
-    private final Map<Stop, List<TransferLeg>> transfers = new HashMap<>();
+    private final List<RaptorTrip> trips = new ArrayList<>();
+    private final Map<String, RaptorStop> stopsByName = new HashMap<>();
+    private final Map<RaptorStop, List<RaptorTransferLeg>> transfers = new HashMap<>();
 
     public class TripConfigurer {
-        private final List<StopTime> stopTimes = new ArrayList<>();
+        private final List<RaptorStopTime> stopTimes = new ArrayList<>();
         private boolean addedLastStop;
 
         public TripConfigurer stop(String stopName, LocalDateTime arrivalTime, LocalDateTime departureTime) {
@@ -40,9 +40,9 @@ public class TripAndTransferBuilder {
                 }
             }
 
-            stopsByName.putIfAbsent(stopName, new Stop(stopName));
+            stopsByName.putIfAbsent(stopName, new RaptorStop(stopName));
 
-            stopTimes.add(new StopTime(stopsByName.get(stopName), arrivalTime, departureTime));
+            stopTimes.add(new RaptorStopTime(stopsByName.get(stopName), arrivalTime, departureTime));
 
             return this;
         }
@@ -53,7 +53,7 @@ public class TripAndTransferBuilder {
         var toStop = this.stopsByName.get(to);
 
         this.transfers.putIfAbsent(fromStop, new ArrayList<>());
-        this.transfers.get(fromStop).add(new TransferLeg(fromStop, toStop, duration));
+        this.transfers.get(fromStop).add(new RaptorTransferLeg(fromStop, toStop, duration));
 
         return this;
     }
@@ -71,7 +71,7 @@ public class TripAndTransferBuilder {
             throw new TripAndTransferBuilderException("The last stop needs to depart at 0");
         }
 
-        trips.add(new Trip(trips.size(), tripConfigurer.stopTimes));
+        trips.add(new RaptorTrip(trips.size(), tripConfigurer.stopTimes));
 
         return this;
     }

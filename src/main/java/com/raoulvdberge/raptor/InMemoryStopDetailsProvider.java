@@ -1,27 +1,27 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.Route;
-import com.raoulvdberge.raptor.model.Stop;
+import com.raoulvdberge.raptor.model.RaptorRoute;
+import com.raoulvdberge.raptor.model.RaptorStop;
 
 import java.util.Map;
 import java.util.Set;
 
 public class InMemoryStopDetailsProvider implements StopDetailsProvider {
-    private final Map<Stop, Set<Route>> routesByStop;
-    private final Set<Stop> stops;
+    private final Map<RaptorStop, Set<RaptorRoute>> routesByStop;
+    private final Set<RaptorStop> stops;
 
-    public InMemoryStopDetailsProvider(Map<Stop, Set<Route>> routesByStop, Set<Stop> stops) {
+    public InMemoryStopDetailsProvider(Map<RaptorStop, Set<RaptorRoute>> routesByStop, Set<RaptorStop> stops) {
         this.routesByStop = routesByStop;
         this.stops = stops;
     }
 
     @Override
-    public Set<Stop> getStops() {
+    public Set<RaptorStop> getStops() {
         return stops;
     }
 
     @Override
-    public Set<Route> getRoutesByStop(Stop stop) {
+    public Set<RaptorRoute> getRoutesByStop(RaptorStop stop) {
         return this.routesByStop.get(stop);
     }
 }

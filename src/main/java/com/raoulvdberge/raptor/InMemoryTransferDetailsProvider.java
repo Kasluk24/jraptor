@@ -1,21 +1,21 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.Stop;
-import com.raoulvdberge.raptor.model.TransferLeg;
+import com.raoulvdberge.raptor.model.RaptorStop;
+import com.raoulvdberge.raptor.model.RaptorTransferLeg;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class InMemoryTransferDetailsProvider implements TransferDetailsProvider {
-    private final Map<Stop, List<TransferLeg>> transfers;
+    private final Map<RaptorStop, List<RaptorTransferLeg>> transfers;
 
-    public InMemoryTransferDetailsProvider(Map<Stop, List<TransferLeg>> transfers) {
+    public InMemoryTransferDetailsProvider(Map<RaptorStop, List<RaptorTransferLeg>> transfers) {
         this.transfers = transfers;
     }
 
     @Override
-    public List<TransferLeg> getTransfersForStop(Stop stop) {
+    public List<RaptorTransferLeg> getTransfersForStop(RaptorStop stop) {
         return this.transfers.getOrDefault(stop, new ArrayList<>());
     }
 }

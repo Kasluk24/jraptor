@@ -6,25 +6,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryRaptorFactory implements RaptorFactory {
-    private final List<Trip> trips;
-    private final Map<Stop, List<TransferLeg>> transfers;
+    private final List<RaptorTrip> trips;
+    private final Map<RaptorStop, List<RaptorTransferLeg>> transfers;
 
-    public InMemoryRaptorFactory(List<Trip> trips, Map<Stop, List<TransferLeg>> transfers) {
+    public InMemoryRaptorFactory(List<RaptorTrip> trips, Map<RaptorStop, List<RaptorTransferLeg>> transfers) {
         this.trips = trips;
         this.transfers = transfers;
     }
 
     @Override
     public Raptor create() {
-        var routeStopIndex = new HashMap<Route, Map<Stop, Integer>>();
-        var routePaths = new HashMap<Route, List<Stop>>();
-        var routesByStop = new HashMap<Stop, Set<Route>>();
-        var tripsByRoute = new HashMap<Route, List<Trip>>();
-        var tripStopTimes = new HashMap<Trip, List<StopTime>>();
+        var routeStopIndex = new HashMap<RaptorRoute, Map<RaptorStop, Integer>>();
+        var routePaths = new HashMap<RaptorRoute, List<RaptorStop>>();
+        var routesByStop = new HashMap<RaptorStop, Set<RaptorRoute>>();
+        var tripsByRoute = new HashMap<RaptorRoute, List<RaptorTrip>>();
+        var tripStopTimes = new HashMap<RaptorTrip, List<RaptorStopTime>>();
 
         for (var trip : this.trips) {
-            var path = trip.getStopTimes().stream().map(StopTime::getStop).collect(Collectors.toList());
-            var route = new Route(0, path.stream().map(Stop::getName).collect(Collectors.joining("->")));
+            var path = trip.getStopTimes().stream().map(RaptorStopTime::getStop).collect(Collectors.toList());
+            var route = new RaptorRoute(0, path.stream().map(RaptorStop::getName).collect(Collectors.joining("->")));
 
             if (!routeStopIndex.containsKey(route)) {
                 tripsByRoute.put(route, new ArrayList<>());

@@ -1,18 +1,18 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.Journey;
-import com.raoulvdberge.raptor.model.TimetableLeg;
-import com.raoulvdberge.raptor.model.TransferLeg;
+import com.raoulvdberge.raptor.model.RaptorJourney;
+import com.raoulvdberge.raptor.model.RaptorTimetableLeg;
+import com.raoulvdberge.raptor.model.RaptorTransferLeg;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 class IndividualJourneyAssertor {
-    private final Journey journey;
+    private final RaptorJourney journey;
     private int currentLeg;
 
-    IndividualJourneyAssertor(Journey journey) {
+    IndividualJourneyAssertor(RaptorJourney journey) {
         this.journey = journey;
     }
 
@@ -36,7 +36,7 @@ class IndividualJourneyAssertor {
     IndividualJourneyAssertor assertLegTransfer(String origin, String destination, Duration duration) {
         this.assertLeg(origin, destination);
 
-        var leg = (TransferLeg) this.journey.getLegs().get(currentLeg - 1);
+        var leg = (RaptorTransferLeg) this.journey.getLegs().get(currentLeg - 1);
 
         Assertions.assertEquals(duration, leg.getDuration());
         
@@ -46,7 +46,7 @@ class IndividualJourneyAssertor {
     IndividualJourneyAssertor assertLegTimetable(String origin, LocalDateTime originDeparture, String destination, LocalDateTime destinationArrival) {
         this.assertLeg(origin, destination);
 
-        var leg = (TimetableLeg) this.journey.getLegs().get(currentLeg - 1);
+        var leg = (RaptorTimetableLeg) this.journey.getLegs().get(currentLeg - 1);
 
         var stopTimeAtOrigin = leg.getStopTimes().stream().filter(st -> st.getStop().getName().equals(origin)).findFirst().orElseThrow();
         var stopTimeAtDestination = leg.getStopTimes().stream().filter(st -> st.getStop().getName().equals(destination)).findFirst().orElseThrow();

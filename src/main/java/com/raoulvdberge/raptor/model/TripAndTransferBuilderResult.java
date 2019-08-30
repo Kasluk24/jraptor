@@ -4,19 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 public class TripAndTransferBuilderResult {
-    private final List<Trip> trips;
-    private final Map<Stop, List<TransferLeg>> transfers;
+    private final List<RaptorTrip> trips;
+    private final Map<RaptorStop, List<RaptorTransferLeg>> transfers;
 
-    public TripAndTransferBuilderResult(List<Trip> trips, Map<Stop, List<TransferLeg>> transfers) {
+    public TripAndTransferBuilderResult(List<RaptorTrip> trips, Map<RaptorStop, List<RaptorTransferLeg>> transfers) {
         this.trips = trips;
         this.transfers = transfers;
     }
 
-    public List<Trip> getTrips() {
+    public List<RaptorTrip> getTrips() {
         return trips;
     }
 
-    public Map<Stop, List<TransferLeg>> getTransfers() {
+    public Map<RaptorStop, List<RaptorTransferLeg>> getTransfers() {
         return transfers;
     }
 }

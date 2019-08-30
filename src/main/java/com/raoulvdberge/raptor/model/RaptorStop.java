@@ -2,10 +2,10 @@ package com.raoulvdberge.raptor.model;
 
 import java.util.Objects;
 
-public class Stop {
+public class RaptorStop {
     private final String name;
 
-    public Stop(String name) {
+    public RaptorStop(String name) {
         this.name = name;
     }
 
@@ -17,7 +17,7 @@ public class Stop {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Stop stop = (Stop) o;
+        RaptorStop stop = (RaptorStop) o;
         return name.equals(stop.name);
     }
 

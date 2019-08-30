@@ -1,14 +1,14 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.Route;
-import com.raoulvdberge.raptor.model.Stop;
+import com.raoulvdberge.raptor.model.RaptorRoute;
+import com.raoulvdberge.raptor.model.RaptorStop;
 
 import java.util.List;
 
 public interface RouteDetailsProvider {
-    boolean isStopBefore(Route route, Stop stopA, Stop stopB);
+    boolean isStopBefore(RaptorRoute route, RaptorStop stopA, RaptorStop stopB);
 
-    int getRouteStopIndex(Route route, Stop stop);
+    int getRouteStopIndex(RaptorRoute route, RaptorStop stop);
 
-    List<Stop> getRoutePath(Route route);
+    List<RaptorStop> getRoutePath(RaptorRoute route);
 }

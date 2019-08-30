@@ -2,11 +2,11 @@ package com.raoulvdberge.raptor.model;
 
 import java.util.Objects;
 
-public class Route {
+public class RaptorRoute {
     private final int id;
     private final String name;
 
-    public Route(int id, String name) {
+    public RaptorRoute(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -23,7 +23,7 @@ public class Route {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Route route = (Route) o;
+        RaptorRoute route = (RaptorRoute) o;
         return id == route.id &&
             name.equals(route.name);
     }

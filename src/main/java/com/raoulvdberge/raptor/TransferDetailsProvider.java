@@ -1,10 +1,10 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.Stop;
-import com.raoulvdberge.raptor.model.TransferLeg;
+import com.raoulvdberge.raptor.model.RaptorStop;
+import com.raoulvdberge.raptor.model.RaptorTransferLeg;
 
 import java.util.List;
 
 public interface TransferDetailsProvider {
-    List<TransferLeg> getTransfersForStop(Stop stop);
+    List<RaptorTransferLeg> getTransfersForStop(RaptorStop stop);
 }

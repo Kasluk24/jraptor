@@ -21,7 +21,7 @@ public class Raptor {
         this.transferDetailsProvider = transferDetailsProvider;
     }
 
-    public List<Journey> plan(String originName, String destinationName, LocalDateTime date) {
+    public List<RaptorJourney> plan(String originName, String destinationName, LocalDateTime date) {
         return plan(
             this.stopDetailsProvider.getStops().stream().filter(s -> s.getName().equals(originName)).findFirst().orElseThrow(),
             this.stopDetailsProvider.getStops().stream().filter(s -> s.getName().equals(destinationName)).findFirst().orElseThrow(),
@@ -29,26 +29,26 @@ public class Raptor {
         );
     }
 
-    public List<Journey> plan(Stop origin, Stop destination, LocalDateTime date) {
-        var kArrivals = new HashMap<Integer, Map<Stop, LocalDateTime>>();
-        var kConnections = new HashMap<Stop, Map<Integer, KConnection>>();
+    public List<RaptorJourney> plan(RaptorStop origin, RaptorStop destination, LocalDateTime date) {
+        var kArrivals = new HashMap<Integer, Map<RaptorStop, LocalDateTime>>();
+        var kConnections = new HashMap<RaptorStop, Map<Integer, KConnection>>();
 
         for (var stop : this.stopDetailsProvider.getStops()) {
             kConnections.put(stop, new HashMap<>());
         }
 
-        var initialArrivals = new HashMap<Stop, LocalDateTime>();
+        var initialArrivals = new HashMap<RaptorStop, LocalDateTime>();
         for (var stop : this.stopDetailsProvider.getStops()) {
             initialArrivals.put(stop, LocalDateTime.MAX);
         }
         kArrivals.put(0, initialArrivals);
         kArrivals.get(0).put(origin, date);
 
-        var markedStops = new HashSet<Stop>();
+        var markedStops = new HashSet<RaptorStop>();
         markedStops.add(origin);
 
         for (var k = 1; !markedStops.isEmpty(); ++k) {
-            var newMarkedStops = new HashSet<Stop>();
+            var newMarkedStops = new HashSet<RaptorStop>();
 
             var queue = this.getQueue(markedStops);
 
@@ -59,7 +59,7 @@ public class Raptor {
                 var route = entry.getKey();
                 var stop = entry.getValue();
 
-                Optional<List<StopTime>> stopTimes = Optional.empty();
+                Optional<List<RaptorStopTime>> stopTimes = Optional.empty();
 
                 var routePath = this.routeDetailsProvider.getRoutePath(route);
 
@@ -117,8 +117,8 @@ public class Raptor {
         return this.getResults(kConnections, destination);
     }
 
-    private Map<Route, Stop> getQueue(Set<Stop> markedStops) {
-        var queue = new HashMap<Route, Stop>();
+    private Map<RaptorRoute, RaptorStop> getQueue(Set<RaptorStop> markedStops) {
+        var queue = new HashMap<RaptorRoute, RaptorStop>();
 
         for (var stop : markedStops) {
             for (var route : this.stopDetailsProvider.getRoutesByStop(stop)) {
@@ -131,19 +131,19 @@ public class Raptor {
         return queue;
     }
 
-    private List<Journey> getResults(HashMap<Stop, Map<Integer, KConnection>> kConnections, Stop finalDestination) {
-        var results = new ArrayList<Journey>();
+    private List<RaptorJourney> getResults(HashMap<RaptorStop, Map<Integer, KConnection>> kConnections, RaptorStop finalDestination) {
+        var results = new ArrayList<RaptorJourney>();
 
         for (var k : kConnections.get(finalDestination).keySet()) {
             var dest = finalDestination;
 
-            var legs = new ArrayList<Leg>();
+            var legs = new ArrayList<RaptorLeg>();
 
             while (k > 0) {
                 var connection = kConnections.get(dest).get(k);
 
                 if (connection.getType() == KConnectionType.TRANSFER) {
-                    legs.add(new TransferLeg(connection.getOrigin(), connection.getDestination(), connection.getDuration()));
+                    legs.add(new RaptorTransferLeg(connection.getOrigin(), connection.getDestination(), connection.getDuration()));
 
                     dest = connection.getOrigin();
                 } else {
@@ -152,7 +152,7 @@ public class Raptor {
                     var origin = stopTimes.get(connection.getBoardingPoint()).getStop();
                     dest = stopTimes.get(connection.getStopIndex()).getStop();
 
-                    legs.add(new TimetableLeg(
+                    legs.add(new RaptorTimetableLeg(
                         origin,
                         dest,
                         connection.getStopTimes()
@@ -166,7 +166,7 @@ public class Raptor {
 
             Collections.reverse(legs);
 
-            results.add(new Journey(legs));
+            results.add(new RaptorJourney(legs));
         }
 
         return results;

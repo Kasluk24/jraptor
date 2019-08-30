@@ -73,7 +73,7 @@ class TripAndTransferBuilderTest {
 
         Assertions.assertEquals(1, transfers.size());
 
-        var transfersAtA = transfers.get(new Stop("A"));
+        var transfersAtA = transfers.get(new RaptorStop("A"));
 
         Assertions.assertEquals(transfersAtA.size(), 1);
         Assertions.assertEquals(transfersAtA.get(0).getOrigin().getName(), "A");
@@ -96,7 +96,7 @@ class TripAndTransferBuilderTest {
 
         Assertions.assertEquals(2, transfers.size());
 
-        var transfersAtA = transfers.get(new Stop("A"));
+        var transfersAtA = transfers.get(new RaptorStop("A"));
 
         Assertions.assertEquals(transfersAtA.size(), 2);
 
@@ -108,7 +108,7 @@ class TripAndTransferBuilderTest {
         Assertions.assertEquals(transfersAtA.get(1).getDestination().getName(), "C");
         Assertions.assertEquals(transfersAtA.get(1).getDuration(), Duration.ofMinutes(2));
 
-        var transfersAtC = transfers.get(new Stop("C"));
+        var transfersAtC = transfers.get(new RaptorStop("C"));
 
         Assertions.assertEquals(transfersAtC.size(), 1);
 

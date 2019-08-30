@@ -1,20 +1,20 @@
 package com.raoulvdberge.raptor;
 
-import com.raoulvdberge.raptor.model.Journey;
+import com.raoulvdberge.raptor.model.RaptorJourney;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 class JourneyAssertor {
-    private final List<Journey> journeys;
+    private final List<RaptorJourney> journeys;
     private int currentJourney;
 
-    private JourneyAssertor(List<Journey> journeys) {
+    private JourneyAssertor(List<RaptorJourney> journeys) {
         this.journeys = journeys;
     }
 
-    static JourneyAssertor forJourneys(List<Journey> journeys) {
+    static JourneyAssertor forJourneys(List<RaptorJourney> journeys) {
         return new JourneyAssertor(journeys);
     }
 
