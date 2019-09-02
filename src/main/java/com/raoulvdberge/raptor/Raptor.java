@@ -63,17 +63,17 @@ public class Raptor<R, S> {
                 var route = entry.getKey();
                 var stop = entry.getValue();
 
-                Optional<List<StopTime<S>>> stopTimes = Optional.empty();
+                Optional<Trip<S>> foundTrip = Optional.empty();
 
                 var routePath = this.routeDetailsProvider.getRoutePath(route);
 
                 for (var stopIndex = this.routeDetailsProvider.getRouteStopIndex(route, stop); stopIndex < routePath.size(); ++stopIndex) {
                     var stopInRoute = routePath.get(stopIndex);
 
-                    if (stopTimes.isPresent() && stopTimes.get().get(stopIndex).getArrivalTime().isBefore(kArrivals.get(k).get(stopInRoute))) {
-                        kArrivals.get(k).put(stopInRoute, stopTimes.get().get(stopIndex).getArrivalTime());
+                    if (foundTrip.isPresent() && foundTrip.get().getStopTimes().get(stopIndex).getArrivalTime().isBefore(kArrivals.get(k).get(stopInRoute))) {
+                        kArrivals.get(k).put(stopInRoute, foundTrip.get().getStopTimes().get(stopIndex).getArrivalTime());
                         kConnections.get(stopInRoute).put(k, new KConnection<>(
-                            stopTimes.get(),
+                            foundTrip.get(),
                             boardingPoint,
                             stopIndex
                         ));
@@ -81,16 +81,12 @@ public class Raptor<R, S> {
                         newMarkedStops.add(stopInRoute);
                     }
 
-                    if (stopTimes.isEmpty() || kArrivals.get(k - 1).get(stopInRoute).isBefore(stopTimes.get().get(stopIndex).getArrivalTime())) {
-                        var trip = this.tripDetailsProvider.getEarliestTripAtStop(
+                    if (foundTrip.isEmpty() || kArrivals.get(k - 1).get(stopInRoute).isBefore(foundTrip.get().getStopTimes().get(stopIndex).getArrivalTime())) {
+                        foundTrip = this.tripDetailsProvider.getEarliestTripAtStop(
                             route,
                             stopIndex,
                             kArrivals.get(k - 1).get(stopInRoute)
                         );
-
-                        if (trip.isPresent()) {
-                            stopTimes = Optional.of(trip.get().getStopTimes());
-                        }
 
                         boardingPoint = stopIndex;
                     }
@@ -151,7 +147,7 @@ public class Raptor<R, S> {
 
                     dest = connection.getOrigin();
                 } else {
-                    var stopTimes = connection.getStopTimes();
+                    var stopTimes = connection.getTrip().getStopTimes();
 
                     var origin = stopTimes.get(connection.getBoardingPoint()).getStop();
                     dest = stopTimes.get(connection.getStopIndex()).getStop();
@@ -159,7 +155,7 @@ public class Raptor<R, S> {
                     legs.add(new TimetableLeg<>(
                         origin,
                         dest,
-                        connection.getStopTimes()
+                        connection.getTrip()
                     ));
 
                     dest = stopTimes.get(connection.getBoardingPoint()).getStop();

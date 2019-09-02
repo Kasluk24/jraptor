@@ -49,8 +49,8 @@ class IndividualJourneyAssertor {
 
         var leg = (TimetableLeg<Stop>) this.journey.getLegs().get(currentLeg - 1);
 
-        var stopTimeAtOrigin = leg.getStopTimes().stream().filter(st -> st.getStop().getName().equals(origin)).findFirst().orElseThrow();
-        var stopTimeAtDestination = leg.getStopTimes().stream().filter(st -> st.getStop().getName().equals(destination)).findFirst().orElseThrow();
+        var stopTimeAtOrigin = leg.getTrip().getStopTimes().stream().filter(st -> st.getStop().getName().equals(origin)).findFirst().orElseThrow();
+        var stopTimeAtDestination = leg.getTrip().getStopTimes().stream().filter(st -> st.getStop().getName().equals(destination)).findFirst().orElseThrow();
 
         Assertions.assertEquals(originDeparture, stopTimeAtOrigin.getDepartureTime());
         Assertions.assertEquals(destinationArrival, stopTimeAtDestination.getArrivalTime());

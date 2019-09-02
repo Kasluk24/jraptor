@@ -1,17 +1,15 @@
 package com.raoulvdberge.raptor.model;
 
-import java.util.List;
-
 public class TimetableLeg<S> extends Leg<S> {
-    private final List<StopTime<S>> stopTimes;
+    private final Trip<S> trip;
 
-    public TimetableLeg(S origin, S destination, List<StopTime<S>> stopTimes) {
+    public TimetableLeg(S origin, S destination, Trip<S> trip) {
         super(origin, destination);
 
-        this.stopTimes = stopTimes;
+        this.trip = trip;
     }
 
-    public List<StopTime<S>> getStopTimes() {
-        return stopTimes;
+    public Trip<S> getTrip() {
+        return trip;
     }
 }

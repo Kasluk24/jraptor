@@ -1,12 +1,11 @@
 package com.raoulvdberge.raptor.model;
 
 import java.time.Duration;
-import java.util.List;
 
 public class KConnection<S> {
     private final KConnectionType type;
 
-    private final List<StopTime<S>> stopTimes;
+    private final Trip<S> trip;
     private final int boardingPoint;
     private final int stopIndex;
 
@@ -14,10 +13,10 @@ public class KConnection<S> {
     private final S destination;
     private final Duration duration;
 
-    public KConnection(List<StopTime<S>> stopTimes, int boardingPoint, int stopIndex) {
+    public KConnection(Trip<S> trip, int boardingPoint, int stopIndex) {
         this.type = KConnectionType.TIMETABLE;
 
-        this.stopTimes = stopTimes;
+        this.trip = trip;
         this.boardingPoint = boardingPoint;
         this.stopIndex = stopIndex;
 
@@ -29,7 +28,7 @@ public class KConnection<S> {
     public KConnection(S origin, S destination, Duration duration) {
         this.type = KConnectionType.TRANSFER;
 
-        this.stopTimes = null;
+        this.trip = null;
         this.boardingPoint = 0;
         this.stopIndex = 0;
 
@@ -38,8 +37,8 @@ public class KConnection<S> {
         this.duration = duration;
     }
 
-    public List<StopTime<S>> getStopTimes() {
-        return stopTimes;
+    public Trip<S> getTrip() {
+        return trip;
     }
 
     public int getBoardingPoint() {
