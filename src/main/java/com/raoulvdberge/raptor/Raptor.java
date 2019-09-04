@@ -103,7 +103,8 @@ public class Raptor<R, S> {
                         kConnections.get(dest).put(k, new KConnection<>(
                             stop,
                             dest,
-                            transfer.getDuration()
+                            transfer.getDuration(),
+                            transfer.getDistance()
                         ));
 
                         newMarkedStops.add(dest);
@@ -143,7 +144,12 @@ public class Raptor<R, S> {
                 var connection = kConnections.get(dest).get(k);
 
                 if (connection.getType() == KConnectionType.TRANSFER) {
-                    legs.add(new TransferLeg<>(connection.getOrigin(), connection.getDestination(), connection.getDuration()));
+                    legs.add(new TransferLeg<>(
+                        connection.getOrigin(),
+                        connection.getDestination(),
+                        connection.getDuration(),
+                        connection.getDistance()
+                    ));
 
                     dest = connection.getOrigin();
                 } else {

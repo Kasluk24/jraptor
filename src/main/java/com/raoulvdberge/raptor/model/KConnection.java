@@ -12,6 +12,7 @@ public class KConnection<S> {
     private final S origin;
     private final S destination;
     private final Duration duration;
+    private final double distance;
 
     public KConnection(Trip<S> trip, int boardingPoint, int stopIndex) {
         this.type = KConnectionType.TIMETABLE;
@@ -23,9 +24,10 @@ public class KConnection<S> {
         this.origin = null;
         this.destination = null;
         this.duration = null;
+        this.distance = 0;
     }
 
-    public KConnection(S origin, S destination, Duration duration) {
+    public KConnection(S origin, S destination, Duration duration, double distance) {
         this.type = KConnectionType.TRANSFER;
 
         this.trip = null;
@@ -35,6 +37,7 @@ public class KConnection<S> {
         this.origin = origin;
         this.destination = destination;
         this.duration = duration;
+        this.distance = distance;
     }
 
     public Trip<S> getTrip() {
@@ -63,5 +66,9 @@ public class KConnection<S> {
 
     public Duration getDuration() {
         return duration;
+    }
+
+    public double getDistance() {
+        return distance;
     }
 }

@@ -58,7 +58,7 @@ public class TripAndTransferBuilder {
         var toStop = this.stopsByName.get(to);
 
         this.transfers.putIfAbsent(fromStop, new ArrayList<>());
-        this.transfers.get(fromStop).add(new TransferLeg<>(fromStop, toStop, duration));
+        this.transfers.get(fromStop).add(new TransferLeg<>(fromStop, toStop, duration, 0));
 
         return this;
     }
