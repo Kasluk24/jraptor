@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * A factory that creates a {@link Raptor} instance for given trips and transfers.
  * This uses the various in-memory provider implementations.
- * This factory should only be used on small datasets for testing purposes, as it's not performant.
+ * This factory should only be used on small data sets or for testing purposes, as it's not performant.
  *
  * @param <T> the trip
  * @param <S> the stop
