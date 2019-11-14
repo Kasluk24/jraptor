@@ -1,11 +1,11 @@
-package com.raoulvdberge.raptor.model;
+package com.raoulvdberge.raptor.model.impl;
 
 import java.util.Objects;
 
-public class Stop {
+public class StopImpl {
     private final String name;
 
-    public Stop(String name) {
+    public StopImpl(String name) {
         this.name = name;
     }
 
@@ -17,7 +17,7 @@ public class Stop {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Stop stop = (Stop) o;
+        StopImpl stop = (StopImpl) o;
         return name.equals(stop.name);
     }
 

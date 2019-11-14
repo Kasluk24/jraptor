@@ -9,6 +9,12 @@ import com.raoulvdberge.raptor.provider.TripDetailsProvider;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * The Raptor algorithm.
+ *
+ * @param <R> the route
+ * @param <S> the stop
+ */
 public class Raptor<R, S> {
     private final RouteDetailsProvider<R, S> routeDetailsProvider;
     private final TripDetailsProvider<R, S> tripDetailsProvider;
@@ -25,6 +31,14 @@ public class Raptor<R, S> {
         this.transferDetailsProvider = transferDetailsProvider;
     }
 
+    /**
+     * Plans a journey from origin to destination.
+     *
+     * @param originName      the name of the origin, decided by {@link S#toString()}
+     * @param destinationName the name of the destination, decided by {@link S#toString()}
+     * @param date            the date and time that the journey should depart after
+     * @return a list of journeys for the query
+     */
     public List<Journey<S>> plan(String originName, String destinationName, LocalDateTime date) {
         return plan(
             this.stopDetailsProvider.getStops().stream().filter(s -> s.toString().equals(originName)).findFirst().orElseThrow(),
@@ -33,6 +47,14 @@ public class Raptor<R, S> {
         );
     }
 
+    /**
+     * Plans a journey from origin to destination.
+     *
+     * @param origin      the origin
+     * @param destination the destination
+     * @param date        the date and time that the journey should depart after
+     * @return a list of journeys for the query
+     */
     public List<Journey<S>> plan(S origin, S destination, LocalDateTime date) {
         var kArrivals = new HashMap<Integer, Map<S, LocalDateTime>>();
         var kConnections = new HashMap<S, Map<Integer, KConnection<S>>>();

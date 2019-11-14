@@ -1,29 +1,29 @@
-package com.raoulvdberge.raptor;
+package com.raoulvdberge.raptor.util;
 
 import com.raoulvdberge.raptor.model.Journey;
-import com.raoulvdberge.raptor.model.Stop;
 import com.raoulvdberge.raptor.model.TimetableLeg;
 import com.raoulvdberge.raptor.model.TransferLeg;
+import com.raoulvdberge.raptor.model.impl.StopImpl;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-class IndividualJourneyAssertor {
-    private final Journey<Stop> journey;
+public class JourneyAssertor {
+    private final Journey<StopImpl> journey;
     private int currentLeg;
 
-    IndividualJourneyAssertor(Journey<Stop> journey) {
+    JourneyAssertor(Journey<StopImpl> journey) {
         this.journey = journey;
     }
 
-    IndividualJourneyAssertor assertLegCount(int legCount) {
+    public JourneyAssertor assertLegCount(int legCount) {
         Assertions.assertEquals(legCount, this.journey.getLegs().size());
 
         return this;
     }
 
-    IndividualJourneyAssertor assertLeg(String origin, String destination) {
+    public JourneyAssertor assertLeg(String origin, String destination) {
         var leg = this.journey.getLegs().get(currentLeg);
 
         Assertions.assertEquals(origin, leg.getOrigin().getName());
@@ -34,20 +34,20 @@ class IndividualJourneyAssertor {
         return this;
     }
 
-    IndividualJourneyAssertor assertLegTransfer(String origin, String destination, Duration duration) {
+    public JourneyAssertor assertLegTransfer(String origin, String destination, Duration duration) {
         this.assertLeg(origin, destination);
 
         var leg = (TransferLeg) this.journey.getLegs().get(currentLeg - 1);
 
         Assertions.assertEquals(duration, leg.getDuration());
-        
+
         return this;
     }
 
-    IndividualJourneyAssertor assertLegTimetable(String origin, LocalDateTime originDeparture, String destination, LocalDateTime destinationArrival) {
+    public JourneyAssertor assertLegTimetable(String origin, LocalDateTime originDeparture, String destination, LocalDateTime destinationArrival) {
         this.assertLeg(origin, destination);
 
-        var leg = (TimetableLeg<Stop>) this.journey.getLegs().get(currentLeg - 1);
+        var leg = (TimetableLeg<StopImpl>) this.journey.getLegs().get(currentLeg - 1);
 
         var stopTimeAtOrigin = leg.getTrip().getStopTimes().stream().filter(st -> st.getStop().getName().equals(origin)).findFirst().orElseThrow();
         var stopTimeAtDestination = leg.getTrip().getStopTimes().stream().filter(st -> st.getStop().getName().equals(destination)).findFirst().orElseThrow();
@@ -58,3 +58,4 @@ class IndividualJourneyAssertor {
         return this;
     }
 }
+

@@ -1,5 +1,10 @@
 package com.raoulvdberge.raptor.model;
 
+/**
+ * Describes a leg that is based on a timetable, using a trip.
+ *
+ * @param <S> the stop
+ */
 public class TimetableLeg<S> extends Leg<S> {
     private final Trip<S> trip;
 
@@ -9,6 +14,9 @@ public class TimetableLeg<S> extends Leg<S> {
         this.trip = trip;
     }
 
+    /**
+     * @return the trip
+     */
     public Trip<S> getTrip() {
         return trip;
     }
