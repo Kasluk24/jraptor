@@ -27,10 +27,10 @@ public class InMemoryTripDetailsProvider<S> implements TripDetailsProvider<Strin
 
     @Override
     public Optional<Trip<S>> getEarliestTripAtStop(String route, int stopIndex, LocalDateTime time) {
-        return this.tripsByRoute
+        return tripsByRoute
             .get(route)
             .stream()
-            .filter(t -> this.tripStopTimes.get(t).get(stopIndex).getDepartureTime().isAfter(time))
+            .filter(t -> tripStopTimes.get(t).get(stopIndex).getDepartureTime().isAfter(time))
             .findFirst();
     }
 }

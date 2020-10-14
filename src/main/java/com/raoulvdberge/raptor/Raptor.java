@@ -41,8 +41,8 @@ public class Raptor<R, S> {
      */
     public List<Journey<S>> plan(String originName, String destinationName, LocalDateTime date) {
         return plan(
-            this.stopDetailsProvider.getStops().stream().filter(s -> s.toString().equals(originName)).findFirst().orElseThrow(),
-            this.stopDetailsProvider.getStops().stream().filter(s -> s.toString().equals(destinationName)).findFirst().orElseThrow(),
+            stopDetailsProvider.getStops().stream().filter(s -> s.toString().equals(originName)).findFirst().orElseThrow(),
+            stopDetailsProvider.getStops().stream().filter(s -> s.toString().equals(destinationName)).findFirst().orElseThrow(),
             date
         );
     }
@@ -56,19 +56,8 @@ public class Raptor<R, S> {
      * @return a list of journeys for the query
      */
     public List<Journey<S>> plan(S origin, S destination, LocalDateTime date) {
-        var kArrivals = new HashMap<Integer, Map<S, LocalDateTime>>();
-        var kConnections = new HashMap<S, Map<Integer, KConnection<S>>>();
-
-        for (var stop : this.stopDetailsProvider.getStops()) {
-            kConnections.put(stop, new HashMap<>());
-        }
-
-        var initialArrivals = new HashMap<S, LocalDateTime>();
-        for (var stop : this.stopDetailsProvider.getStops()) {
-            initialArrivals.put(stop, LocalDateTime.MAX);
-        }
-        kArrivals.put(0, initialArrivals);
-        kArrivals.get(0).put(origin, date);
+        var kArrivals = createKArrivals(origin, date);
+        var kConnections = createKConnections();
 
         var markedStops = new HashSet<S>();
         markedStops.add(origin);
@@ -76,7 +65,7 @@ public class Raptor<R, S> {
         for (var k = 1; !markedStops.isEmpty(); ++k) {
             var newMarkedStops = new HashSet<S>();
 
-            var queue = this.getQueue(markedStops);
+            var queue = getQueue(markedStops);
 
             kArrivals.put(k, new HashMap<>(kArrivals.get(k - 1)));
 
@@ -87,9 +76,9 @@ public class Raptor<R, S> {
 
                 Optional<Trip<S>> foundTrip = Optional.empty();
 
-                var routePath = this.routeDetailsProvider.getRoutePath(route);
+                var routePath = routeDetailsProvider.getRoutePath(route);
 
-                for (var stopIndex = this.routeDetailsProvider.getRouteStopIndex(route, stop); stopIndex < routePath.size(); ++stopIndex) {
+                for (var stopIndex = routeDetailsProvider.getRouteStopIndex(route, stop); stopIndex < routePath.size(); ++stopIndex) {
                     var stopInRoute = routePath.get(stopIndex);
 
                     if (foundTrip.isPresent() && foundTrip.get().getStopTimes().get(stopIndex).getArrivalTime().isBefore(kArrivals.get(k).get(stopInRoute))) {
@@ -116,7 +105,7 @@ public class Raptor<R, S> {
             }
 
             for (var stop : markedStops) {
-                for (var transfer : this.transferDetailsProvider.getTransfersForStop(stop)) {
+                for (var transfer : transferDetailsProvider.getTransfersForStop(stop)) {
                     var dest = transfer.getDestination();
                     var arrivalTime = kArrivals.get(k - 1).get(stop).plus(transfer.getDuration());
 
@@ -137,15 +126,38 @@ public class Raptor<R, S> {
             markedStops = newMarkedStops;
         }
 
-        return this.getResults(kConnections, destination);
+        return getJourneys(kConnections, destination);
+    }
+
+    private Map<S, Map<Integer, KConnection<S>>> createKConnections() {
+        var kConnections = new HashMap<S, Map<Integer, KConnection<S>>>();
+        for (var stop : stopDetailsProvider.getStops()) {
+            kConnections.put(stop, new HashMap<>());
+        }
+
+        return kConnections;
+    }
+
+    private Map<Integer, Map<S, LocalDateTime>> createKArrivals(S origin, LocalDateTime date) {
+        var kArrivals = new HashMap<Integer, Map<S, LocalDateTime>>();
+
+        var initialArrivals = new HashMap<S, LocalDateTime>();
+        for (var stop : stopDetailsProvider.getStops()) {
+            initialArrivals.put(stop, LocalDateTime.MAX);
+        }
+
+        kArrivals.put(0, initialArrivals);
+        kArrivals.get(0).put(origin, date);
+
+        return kArrivals;
     }
 
     private Map<R, S> getQueue(Set<S> markedStops) {
         var queue = new HashMap<R, S>();
 
         for (var stop : markedStops) {
-            for (var route : this.stopDetailsProvider.getRoutesByStop(stop)) {
-                if (!queue.containsKey(route) || this.routeDetailsProvider.isStopBefore(route, stop, queue.get(route))) {
+            for (var route : stopDetailsProvider.getRoutesByStop(stop)) {
+                if (!queue.containsKey(route) || routeDetailsProvider.isStopBefore(route, stop, queue.get(route))) {
                     queue.put(route, stop);
                 }
             }
@@ -154,8 +166,8 @@ public class Raptor<R, S> {
         return queue;
     }
 
-    private List<Journey<S>> getResults(HashMap<S, Map<Integer, KConnection<S>>> kConnections, S finalDestination) {
-        var results = new ArrayList<Journey<S>>();
+    private List<Journey<S>> getJourneys(Map<S, Map<Integer, KConnection<S>>> kConnections, S finalDestination) {
+        var journeys = new ArrayList<Journey<S>>();
 
         for (var k : kConnections.get(finalDestination).keySet()) {
             var dest = finalDestination;
@@ -194,9 +206,9 @@ public class Raptor<R, S> {
 
             Collections.reverse(legs);
 
-            results.add(new Journey<>(legs));
+            journeys.add(new Journey<>(legs));
         }
 
-        return results;
+        return journeys;
     }
 }

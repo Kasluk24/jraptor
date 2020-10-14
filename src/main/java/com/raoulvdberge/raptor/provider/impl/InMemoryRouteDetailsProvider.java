@@ -23,16 +23,16 @@ public class InMemoryRouteDetailsProvider<S> implements RouteDetailsProvider<Str
 
     @Override
     public boolean isStopBefore(String route, S stopA, S stopB) {
-        return this.routeStopIndex.get(route).get(stopA) < this.routeStopIndex.get(route).get(stopB);
+        return routeStopIndex.get(route).get(stopA) < this.routeStopIndex.get(route).get(stopB);
     }
 
     @Override
     public int getRouteStopIndex(String route, S stop) {
-        return this.routeStopIndex.get(route).get(stop);
+        return routeStopIndex.get(route).get(stop);
     }
 
     @Override
     public List<S> getRoutePath(String route) {
-        return this.routePaths.get(route);
+        return routePaths.get(route);
     }
 }

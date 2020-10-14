@@ -3,7 +3,7 @@ package com.raoulvdberge.raptor.provider.impl;
 import com.raoulvdberge.raptor.model.TransferLeg;
 import com.raoulvdberge.raptor.provider.TransferDetailsProvider;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +21,6 @@ public class InMemoryTransferDetailsProvider<S> implements TransferDetailsProvid
 
     @Override
     public List<TransferLeg<S>> getTransfersForStop(S stop) {
-        return this.transfers.getOrDefault(stop, new ArrayList<>());
+        return transfers.getOrDefault(stop, Collections.emptyList());
     }
 }

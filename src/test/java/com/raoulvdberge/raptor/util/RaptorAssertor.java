@@ -2,10 +2,11 @@ package com.raoulvdberge.raptor.util;
 
 import com.raoulvdberge.raptor.model.Journey;
 import com.raoulvdberge.raptor.model.impl.StopImpl;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 import java.util.function.Consumer;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RaptorAssertor {
     private final List<Journey<StopImpl>> journeys;
@@ -20,7 +21,7 @@ public class RaptorAssertor {
     }
 
     public RaptorAssertor assertJourneyCount(int journeyCount) {
-        Assertions.assertEquals(journeyCount, this.journeys.size());
+        assertEquals(journeyCount, this.journeys.size());
 
         return this;
     }

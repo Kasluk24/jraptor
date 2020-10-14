@@ -61,7 +61,7 @@ public class InMemoryRaptorFactory<T extends Trip<S>, S> {
             new InMemoryRouteDetailsProvider<>(routeStopIndex, routePaths),
             new InMemoryTripDetailsProvider<>(tripsByRoute, tripStopTimes),
             new InMemoryStopDetailsProvider<>(routesByStop, stops),
-            new InMemoryTransferDetailsProvider<>(this.transfers)
+            new InMemoryTransferDetailsProvider<>(transfers)
         );
     }
 }
