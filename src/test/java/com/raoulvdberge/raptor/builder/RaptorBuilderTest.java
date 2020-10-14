@@ -1,13 +1,14 @@
 package com.raoulvdberge.raptor.builder;
 
 import com.raoulvdberge.raptor.model.impl.StopImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
 import static com.raoulvdberge.raptor.util.TimeUtil.nullTime;
 import static com.raoulvdberge.raptor.util.TimeUtil.time;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RaptorBuilderTest {
     @Test
@@ -20,14 +21,14 @@ class RaptorBuilderTest {
             .build()
             .getTrips();
 
-        Assertions.assertEquals(trips.size(), 1);
+        assertEquals(1, trips.size());
 
         var stopTimes = trips.get(0).getStopTimes();
 
-        Assertions.assertEquals(stopTimes.size(), 3);
-        Assertions.assertEquals(stopTimes.get(0).getStop().getName(), "A");
-        Assertions.assertEquals(stopTimes.get(1).getStop().getName(), "B");
-        Assertions.assertEquals(stopTimes.get(2).getStop().getName(), "C");
+        assertEquals(3, stopTimes.size());
+        assertEquals("A", stopTimes.get(0).getStop().getName());
+        assertEquals("B", stopTimes.get(1).getStop().getName());
+        assertEquals("C", stopTimes.get(2).getStop().getName());
     }
 
     @Test
@@ -44,21 +45,21 @@ class RaptorBuilderTest {
             .build()
             .getTrips();
 
-        Assertions.assertEquals(trips.size(), 2);
+        assertEquals(2, trips.size());
 
         var stopTimes = trips.get(0).getStopTimes();
 
-        Assertions.assertEquals(stopTimes.size(), 3);
-        Assertions.assertEquals(stopTimes.get(0).getStop().getName(), "A");
-        Assertions.assertEquals(stopTimes.get(1).getStop().getName(), "B");
-        Assertions.assertEquals(stopTimes.get(2).getStop().getName(), "C");
+        assertEquals(3, stopTimes.size());
+        assertEquals("A", stopTimes.get(0).getStop().getName());
+        assertEquals("B", stopTimes.get(1).getStop().getName());
+        assertEquals("C", stopTimes.get(2).getStop().getName());
 
         stopTimes = trips.get(1).getStopTimes();
 
-        Assertions.assertEquals(stopTimes.size(), 3);
-        Assertions.assertEquals(stopTimes.get(0).getStop().getName(), "D");
-        Assertions.assertEquals(stopTimes.get(1).getStop().getName(), "E");
-        Assertions.assertEquals(stopTimes.get(2).getStop().getName(), "F");
+        assertEquals(3, stopTimes.size());
+        assertEquals("D", stopTimes.get(0).getStop().getName());
+        assertEquals("E", stopTimes.get(1).getStop().getName());
+        assertEquals("F", stopTimes.get(2).getStop().getName());
     }
 
     @Test
@@ -72,14 +73,14 @@ class RaptorBuilderTest {
             .build()
             .getTransfers();
 
-        Assertions.assertEquals(1, transfers.size());
+        assertEquals(1, transfers.size());
 
         var transfersAtA = transfers.get(new StopImpl("A"));
 
-        Assertions.assertEquals(transfersAtA.size(), 1);
-        Assertions.assertEquals(transfersAtA.get(0).getOrigin().getName(), "A");
-        Assertions.assertEquals(transfersAtA.get(0).getDestination().getName(), "C");
-        Assertions.assertEquals(transfersAtA.get(0).getDuration(), Duration.ofMinutes(1));
+        assertEquals(1, transfersAtA.size());
+        assertEquals("A", transfersAtA.get(0).getOrigin().getName());
+        assertEquals("C", transfersAtA.get(0).getDestination().getName());
+        assertEquals(Duration.ofMinutes(1), transfersAtA.get(0).getDuration());
     }
 
     @Test
@@ -95,109 +96,85 @@ class RaptorBuilderTest {
             .build()
             .getTransfers();
 
-        Assertions.assertEquals(2, transfers.size());
+        assertEquals(2, transfers.size());
 
         var transfersAtA = transfers.get(new StopImpl("A"));
 
-        Assertions.assertEquals(transfersAtA.size(), 2);
+        assertEquals(2, transfersAtA.size());
 
-        Assertions.assertEquals(transfersAtA.get(0).getOrigin().getName(), "A");
-        Assertions.assertEquals(transfersAtA.get(0).getDestination().getName(), "B");
-        Assertions.assertEquals(transfersAtA.get(0).getDuration(), Duration.ofMinutes(1));
+        assertEquals("A", transfersAtA.get(0).getOrigin().getName());
+        assertEquals("B", transfersAtA.get(0).getDestination().getName());
+        assertEquals(Duration.ofMinutes(1), transfersAtA.get(0).getDuration());
 
-        Assertions.assertEquals(transfersAtA.get(1).getOrigin().getName(), "A");
-        Assertions.assertEquals(transfersAtA.get(1).getDestination().getName(), "C");
-        Assertions.assertEquals(transfersAtA.get(1).getDuration(), Duration.ofMinutes(2));
+        assertEquals("A", transfersAtA.get(1).getOrigin().getName());
+        assertEquals("C", transfersAtA.get(1).getDestination().getName());
+        assertEquals(Duration.ofMinutes(2), transfersAtA.get(1).getDuration());
 
         var transfersAtC = transfers.get(new StopImpl("C"));
 
-        Assertions.assertEquals(transfersAtC.size(), 1);
+        assertEquals(1, transfersAtC.size());
 
-        Assertions.assertEquals(transfersAtC.get(0).getOrigin().getName(), "C");
-        Assertions.assertEquals(transfersAtC.get(0).getDestination().getName(), "B");
-        Assertions.assertEquals(transfersAtC.get(0).getDuration(), Duration.ofMinutes(3));
+        assertEquals("C", transfersAtC.get(0).getOrigin().getName());
+        assertEquals("B", transfersAtC.get(0).getDestination().getName());
+        assertEquals(Duration.ofMinutes(3), transfersAtC.get(0).getDuration());
     }
 
     @Test
     void testStopsRequired() {
-        var thrown = Assertions.assertThrows(RaptorBuilderException.class, () -> {
-            new RaptorBuilder()
-                .trip(t -> {
-                })
-                .build();
-        });
+        var builder = new RaptorBuilder();
+        var e = assertThrows(RaptorBuilderException.class, () -> builder.trip(t -> {
+        }));
 
-        Assertions.assertEquals(thrown.getMessage(), "Trip has no stops");
+        assertEquals("Trip has no stops", e.getMessage());
     }
 
     @Test
     void testFirstStopNeedsToArriveAtNull() {
-        var thrown = Assertions.assertThrows(RaptorBuilderException.class, () -> {
-            new RaptorBuilder()
-                .trip(t -> t
-                    .stop("A", time(10, 0), time(10, 0))
-                    .stop("B", time(10, 5), time(10, 6))
-                    .stop("C", time(10, 10), nullTime()))
-                .build();
-        });
+        var builder = new RaptorBuilder();
+        var e = assertThrows(RaptorBuilderException.class, () -> builder.trip(t -> t.stop("A", time(10, 0), time(10, 0))));
 
-        Assertions.assertEquals(thrown.getMessage(), "The first stop needs to arrive at 0");
+        assertEquals("The first stop needs to arrive at 0", e.getMessage());
     }
 
     @Test
     void testIntermediateStopNeedsToNotArriveAtNull() {
-        var thrown = Assertions.assertThrows(RaptorBuilderException.class, () -> {
-            new RaptorBuilder()
-                .trip(t -> t
-                    .stop("A", nullTime(), time(10, 0))
-                    .stop("B", nullTime(), time(10, 6))
-                    .stop("C", time(10, 10), nullTime()))
-                .build();
-        });
+        var builder = new RaptorBuilder();
+        var e = assertThrows(RaptorBuilderException.class, () -> builder
+            .trip(t -> t
+                .stop("A", nullTime(), time(10, 0))
+                .stop("B", nullTime(), time(10, 6))));
 
-        Assertions.assertEquals(thrown.getMessage(), "Already added the first stop, we can't arrive at 0 again");
+        assertEquals("Already added the first stop, we can't arrive at 0 again", e.getMessage());
     }
 
     @Test
     void testFirstStopNeedsToNotDepartAtNull() {
-        var thrown = Assertions.assertThrows(RaptorBuilderException.class, () -> {
-            new RaptorBuilder()
-                .trip(t -> t
-                    .stop("A", nullTime(), nullTime())
-                    .stop("B", time(10, 5), time(10, 6))
-                    .stop("C", time(10, 10), nullTime()))
-                .build();
-        });
+        var builder = new RaptorBuilder();
+        var e = assertThrows(RaptorBuilderException.class, () -> builder.trip(t -> t.stop("A", nullTime(), nullTime())));
 
-        Assertions.assertEquals(thrown.getMessage(), "The first stop can't depart at 0");
+        assertEquals("The first stop can't depart at 0", e.getMessage());
     }
 
     @Test
     void testLastStopNeedsToDepartAtNull() {
-        var thrown = Assertions.assertThrows(RaptorBuilderException.class, () -> {
-            new RaptorBuilder()
-                .trip(t -> t
-                    .stop("A", nullTime(), time(10, 0))
-                    .stop("B", time(10, 5), time(10, 6))
-                    .stop("C", time(10, 10), time(10, 11)))
-                .build();
-        });
+        var builder = new RaptorBuilder();
+        var e = assertThrows(RaptorBuilderException.class, ()->builder.trip(t -> t
+            .stop("A", nullTime(), time(10, 0))
+            .stop("B", time(10, 5), time(10, 6))
+            .stop("C", time(10, 10), time(10, 11))));
 
-        Assertions.assertEquals(thrown.getMessage(), "The last stop needs to depart at 0");
+        assertEquals("The last stop needs to depart at 0", e.getMessage());
     }
 
     @Test
     void testCannotAddStopsAfterStopWithDepartureAsNull() {
-        var thrown = Assertions.assertThrows(RaptorBuilderException.class, () -> {
-            new RaptorBuilder()
-                .trip(t -> t
-                    .stop("A", nullTime(), time(10, 0))
-                    .stop("B", time(10, 5), time(10, 6))
-                    .stop("C", time(10, 10), nullTime())
-                    .stop("D", time(10, 10), nullTime()))
-                .build();
-        });
+        var builder = new RaptorBuilder();
+        var e = assertThrows(RaptorBuilderException.class, () -> builder.trip(t -> t
+            .stop("A", nullTime(), time(10, 0))
+            .stop("B", time(10, 5), time(10, 6))
+            .stop("C", time(10, 10), nullTime())
+            .stop("D", time(10, 10), nullTime())));
 
-        Assertions.assertEquals(thrown.getMessage(), "Already added the last stop, can't add another one");
+        assertEquals("Already added the last stop, can't add another one", e.getMessage());
     }
 }

@@ -21,13 +21,13 @@ public class RaptorAssertor {
     }
 
     public RaptorAssertor assertJourneyCount(int journeyCount) {
-        assertEquals(journeyCount, this.journeys.size());
+        assertEquals(journeyCount, journeys.size());
 
         return this;
     }
 
     public RaptorAssertor journey(Consumer<JourneyAssertor> assertorConsumer) {
-        var journey = this.journeys.get(this.currentJourney);
+        var journey = journeys.get(this.currentJourney);
 
         var assertor = new JourneyAssertor(journey);
 
