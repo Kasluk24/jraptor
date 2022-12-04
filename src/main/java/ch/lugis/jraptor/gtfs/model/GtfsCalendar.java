@@ -1,0 +1,131 @@
+package ch.lugis.jraptor.gtfs.model;
+
+public class GtfsCalendar {
+	// Fields
+	private String serviceId;
+	private Boolean monday;
+	private Boolean tuesday;
+	private Boolean wednesday;
+	private Boolean thursday;
+	private Boolean friday;
+	private Boolean saturday;
+	private Boolean sunday;
+	private GtfsDate startDate;
+	private GtfsDate endDate;
+	
+	// Constructor
+	public GtfsCalendar() {}
+
+	public GtfsCalendar(String serviceId, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday,
+			Boolean friday, Boolean saturday, Boolean sunday, GtfsDate startDate, GtfsDate endDate) {
+		this.serviceId = serviceId;
+		this.monday = monday;
+		this.tuesday = tuesday;
+		this.wednesday = wednesday;
+		this.thursday = thursday;
+		this.friday = friday;
+		this.saturday = saturday;
+		this.sunday = sunday;
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
+	
+	// Getters
+	public String getServiceId() {
+		return serviceId;
+	}
+	public Boolean getMonday() {
+		return monday;
+	}
+	public int getMondayAsInt() {
+		return monday  ? 1 : 0;
+	}
+	public Boolean getTuesday() {
+		return tuesday;
+	}
+	public int getTuesdayAsInt() {
+		return tuesday  ? 1 : 0;
+	}
+	public Boolean getWednesday() {
+		return wednesday;
+	}
+	public int getWednesdayAsInt() {
+		return wednesday  ? 1 : 0;
+	}
+	public Boolean getThursday() {
+		return thursday;
+	}
+	public int getThursdayAsInt() {
+		return thursday  ? 1 : 0;
+	}
+	public Boolean getFriday() {
+		return friday;
+	}
+	public int getFridayAsInt() {
+		return friday  ? 1 : 0;
+	}
+	public Boolean getSaturday() {
+		return saturday;
+	}
+	public int getSaturdayAsInt() {
+		return saturday  ? 1 : 0;
+	}
+	public Boolean getSunday() {
+		return sunday;
+	}
+	public int getSundayAsInt() {
+		return sunday  ? 1 : 0;
+	}
+	public GtfsDate getStartDate() {
+		return startDate;
+	}
+	public String getStartDateAsString() {
+		return startDate.getDateAsString();
+	}
+	public GtfsDate getEndDate() {
+		return endDate;
+	}
+	public String getEndDateAsString() {
+		return endDate.getDateAsString();
+	}
+	
+	// Setters
+	public void setServiceId(String serviceId) {
+		this.serviceId = serviceId;
+	}
+	public void setMonday(Boolean monday) {
+		this.monday = monday;
+	}
+	public void setThuesday(Boolean tuesday) {
+		this.tuesday = tuesday;
+	}
+	public void setWednesday(Boolean wednesday) {
+		this.wednesday = wednesday;
+	}
+	public void setThursday(Boolean thursday) {
+		this.thursday = thursday;
+	}
+	public void setFriday(Boolean friday) {
+		this.friday = friday;
+	}
+	public void setSaturday(Boolean saturday) {
+		this.saturday = saturday;
+	}
+	public void setSunday(Boolean sunday) {
+		this.sunday = sunday;
+	}
+	public void setStartDate(GtfsDate startDate) {
+		this.startDate = startDate;
+	}
+	public void setStartDate(String datestring) {
+		this.startDate.setDate(datestring);
+	}
+	public void setEndDate(GtfsDate endDate) {
+		this.endDate = endDate;
+	}
+	public void setEndDate(String datestring) {
+		this.endDate.setDate(datestring);
+	}
+	
+	
+}
