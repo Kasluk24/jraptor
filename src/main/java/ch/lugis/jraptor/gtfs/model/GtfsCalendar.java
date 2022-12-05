@@ -15,7 +15,7 @@ public class GtfsCalendar {
 	
 	// Constructor
 	public GtfsCalendar() {}
-
+	
 	public GtfsCalendar(String serviceId, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday,
 			Boolean friday, Boolean saturday, Boolean sunday, GtfsDate startDate, GtfsDate endDate) {
 		this.serviceId = serviceId;
@@ -28,6 +28,19 @@ public class GtfsCalendar {
 		this.sunday = sunday;
 		this.startDate = startDate;
 		this.endDate = endDate;
+	}
+	public GtfsCalendar(String serviceId, int monday, int tuesday, int wednesday, int thursday,
+			int friday, int saturday, int sunday, String startDate, String endDate) {
+		this.serviceId = serviceId;
+		this.monday = getBooleanFromInt(monday);
+		this.tuesday = getBooleanFromInt(tuesday);
+		this.wednesday = getBooleanFromInt(wednesday);
+		this.thursday = getBooleanFromInt(thursday);
+		this.friday = getBooleanFromInt(friday);
+		this.saturday = getBooleanFromInt(saturday);
+		this.sunday = getBooleanFromInt(sunday);
+		this.startDate.setDate(startDate);
+		this.endDate.setDate(endDate);
 	}
 	
 	// Getters
@@ -96,23 +109,44 @@ public class GtfsCalendar {
 	public void setMonday(Boolean monday) {
 		this.monday = monday;
 	}
+	public void setMonday(int monday) {
+		this.monday = getBooleanFromInt(monday);
+	}
 	public void setThuesday(Boolean tuesday) {
 		this.tuesday = tuesday;
+	}
+	public void setThuesday(int tuesday) {
+		this.tuesday = getBooleanFromInt(tuesday);
 	}
 	public void setWednesday(Boolean wednesday) {
 		this.wednesday = wednesday;
 	}
+	public void setWednesday(int wednesday) {
+		this.wednesday = getBooleanFromInt(wednesday);
+	}
 	public void setThursday(Boolean thursday) {
 		this.thursday = thursday;
+	}
+	public void setThursday(int thursday) {
+		this.thursday = getBooleanFromInt(thursday);
 	}
 	public void setFriday(Boolean friday) {
 		this.friday = friday;
 	}
+	public void setFriday(int friday) {
+		this.friday = getBooleanFromInt(friday);
+	}
 	public void setSaturday(Boolean saturday) {
 		this.saturday = saturday;
 	}
+	public void setSaturday(int saturday) {
+		this.saturday = getBooleanFromInt(saturday);
+	}
 	public void setSunday(Boolean sunday) {
 		this.sunday = sunday;
+	}
+	public void setSunday(int sunday) {
+		this.sunday = getBooleanFromInt(sunday);
 	}
 	public void setStartDate(GtfsDate startDate) {
 		this.startDate = startDate;
@@ -127,5 +161,12 @@ public class GtfsCalendar {
 		this.endDate.setDate(datestring);
 	}
 	
-	
+	// Private methods
+	private Boolean getBooleanFromInt(int intValue) {
+		if (intValue >= 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

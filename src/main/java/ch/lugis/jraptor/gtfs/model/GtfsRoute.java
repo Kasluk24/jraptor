@@ -79,16 +79,7 @@ public class GtfsRoute {
 		this.routeDesc = routeDesc;
 	}
 	public void setRouteType(Integer routeType) {
-		if (routeType != null && routeType >= 0) {
-			this.routeType = routeType;
-		} else {
-			throw new IllegalArgumentException(
-					String.format(
-							"The value %s is not valid for GTFS route type", 
-							routeType
-						)
-					);
-		}
+		this.routeType = routeType;
 	}
 	public void setRouteUrl(String routeUrl) {
 		this.routeUrl = routeUrl;
@@ -100,16 +91,7 @@ public class GtfsRoute {
 		this.routeTextColor = routeTextColor;
 	}
 	public void setRouteSortOrder(Integer routeSortOrder) {
-		if (routeSortOrder != null && routeSortOrder >= 0) {
-			this.routeSortOrder = routeSortOrder;
-		} else {
-			throw new IllegalArgumentException(
-					String.format(
-							"The value %s is not valid for GTFS route sort order", 
-							routeSortOrder
-						)
-					);
-		}
+		this.routeSortOrder = routeSortOrder;
+
 	}
-		
 }

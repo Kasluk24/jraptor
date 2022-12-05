@@ -90,6 +90,7 @@ public class GtfsDate {
 			return false;
 		}
 	}
+	
 	public boolean before(GtfsDate date) {
 		return getBefore(date.getYear(), date.getMonth(), date.getDay());
 	}
@@ -98,6 +99,7 @@ public class GtfsDate {
 				convertDatestringToMonth(datestring),
 				convertDatestringToDay(datestring));
 	}
+	
 	public boolean after(GtfsDate date) {
 		return getAfter(date.getYear(), date.getMonth(), date.getDay());
 	}

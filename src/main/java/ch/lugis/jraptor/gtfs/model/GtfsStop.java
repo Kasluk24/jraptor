@@ -89,9 +89,7 @@ public class GtfsStop {
 			throw new IllegalArgumentException(
 					String.format(
 							"The value %s is not a valid GTFS location type", 
-							locationTypeCode
-						)
-					);
+							locationTypeCode));
 		}
 	}
 	public void setParentStation(String parentStation) {

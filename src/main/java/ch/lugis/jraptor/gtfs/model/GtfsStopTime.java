@@ -93,9 +93,7 @@ public class GtfsStopTime {
 			throw new IllegalArgumentException(
 					String.format(
 							"The value %s is not a valid GTFS pickup type", 
-							pickupTypeCode
-						)
-					);
+							pickupTypeCode));
 		}
 	}
 	public void setDropoffType(GtfsPickupDropoffType dropoffType) {
@@ -108,9 +106,7 @@ public class GtfsStopTime {
 			throw new IllegalArgumentException(
 					String.format(
 							"The value %s is not a valid GTFS pickup type", 
-							dropoffTypeCode
-						)
-					);
+							dropoffTypeCode));
 		}
 	}
 	public void setShapeDistTraveled(Double shapeDistTraveled) {

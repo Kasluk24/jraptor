@@ -14,6 +14,18 @@ public class GtfsCalendarDates {
 		this.date = date;
 		this.exceptionType = exceptionType;
 	}
+	public GtfsCalendarDates(String serviceID, String date, int exceptionType) {
+		this.serviceID = serviceID;
+		this.date.setDate(date);
+		if (GtfsCalendarExceptionType.getTypeByCode(exceptionType) != null) {
+			this.exceptionType = GtfsCalendarExceptionType.getTypeByCode(exceptionType);
+		} else {
+			throw new IllegalArgumentException(
+					String.format(
+							"The value %s is not a valid GTFS calendar exception type", 
+							exceptionType));
+		}
+	}
 
 	// Getters
 	public String getServiceID() {
@@ -52,9 +64,7 @@ public class GtfsCalendarDates {
 			throw new IllegalArgumentException(
 					String.format(
 							"The value %s is not a valid GTFS calendar exception type", 
-							exceptionTypeCode
-						)
-					);
+							exceptionTypeCode));
 		}
 	}
 	

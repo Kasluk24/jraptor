@@ -81,9 +81,7 @@ public class GtfsTrip {
 			throw new IllegalArgumentException(
 					String.format(
 							"The value %s is not a valid GTFS direction id", 
-							directionIdCode
-						)
-					);
+							directionIdCode));
 		}
 	}
 	public void setBlockId(String blockId) {
