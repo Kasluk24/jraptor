@@ -12,7 +12,7 @@ public class GtfsAgency {
 	
 	// Constructor
 	public GtfsAgency() {};
-	
+	// Only Strings
 	public GtfsAgency(String agencyId, String agencyName, String agencyUrl, String agencyTimezone, String agencyLang,
 			String agencyPhone, String agencyEmail) {
 		this.agencyId = agencyId;

@@ -1,20 +1,20 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public class GtfsCalendarDates {
+public class GtfsCalendarDate {
 	// Fields
 	private String serviceID;
 	private GtfsDate date;
 	private GtfsCalendarExceptionType exceptionType;
 	
 	// Constructor
-	public GtfsCalendarDates() {}
+	public GtfsCalendarDate() {}
 
-	public GtfsCalendarDates(String serviceID, GtfsDate date, GtfsCalendarExceptionType exceptionType) {
+	public GtfsCalendarDate(String serviceID, GtfsDate date, GtfsCalendarExceptionType exceptionType) {
 		this.serviceID = serviceID;
 		this.date = date;
 		this.exceptionType = exceptionType;
 	}
-	public GtfsCalendarDates(String serviceID, String date, int exceptionType) {
+	public GtfsCalendarDate(String serviceID, String date, int exceptionType) {
 		this.serviceID = serviceID;
 		this.date.setDate(date);
 		if (GtfsCalendarExceptionType.getTypeByCode(exceptionType) != null) {
@@ -25,6 +25,12 @@ public class GtfsCalendarDates {
 							"The value %s is not a valid GTFS calendar exception type", 
 							exceptionType));
 		}
+	}
+	// Only Strings
+	public GtfsCalendarDate(String serviceID, String date, String exceptionType) {
+		this.serviceID = serviceID;
+		this.date.setDate(date);
+		setExceptionType(Integer.valueOf(exceptionType));
 	}
 
 	// Getters

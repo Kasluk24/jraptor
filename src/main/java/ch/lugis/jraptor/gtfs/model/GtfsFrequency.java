@@ -19,6 +19,15 @@ public class GtfsFrequency {
 		this.headwaySecs = headwaySecs;
 		this.exactTime = exactTime;
 	}
+	// Only Strings
+	public GtfsFrequency(String tripId, String startTime, String endTime, String headwaySecs,
+			String exactTime) {
+		this.tripId = tripId;
+		setStartTime(startTime);
+		setEndTime(endTime);
+		this.headwaySecs = Integer.valueOf(headwaySecs);
+		setExactTime(Integer.valueOf(exactTime));
+	}
 
 	// Getters
 	public String getTripId() {

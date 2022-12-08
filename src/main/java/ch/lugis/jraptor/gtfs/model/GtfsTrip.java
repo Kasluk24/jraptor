@@ -25,6 +25,18 @@ public class GtfsTrip {
 		this.blockId = blockId;
 		this.shapeId = shapeId;
 	}
+	// Only Strings
+	public GtfsTrip(String routeId, String serviceId, String tripId, String tripHeadsign, String tripShortName,
+			String directionId, String blockId, String shapeId) {
+		this.routeId = routeId;
+		this.serviceId = serviceId;
+		this.tripId = tripId;
+		this.tripHeadsign = tripHeadsign;
+		this.tripShortName = tripShortName;
+		setDirectionId(Integer.valueOf(directionId));
+		this.blockId = blockId;
+		this.shapeId = shapeId;
+	}
 	
 	// Getters
 	public String getRouteId() {

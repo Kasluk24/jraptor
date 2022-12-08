@@ -28,6 +28,20 @@ public class GtfsStopTime {
 		this.dropoffType = dropoffType;
 		this.shapeDistTraveled = shapeDistTraveled;
 	}
+	// Only Strings
+	public GtfsStopTime(String tripId, String arrivalTime, String departureTime, String stopId, String stopSequence,
+			String stopHeadsign, String pickupType, String dropoffType,
+			String shapeDistTraveled) {
+		this.tripId = tripId;
+		setArrivalTime(arrivalTime);
+		setDepartureTime(departureTime);
+		this.stopId = stopId;
+		this.stopSequence = stopSequence;
+		this.stopHeadsign = stopHeadsign;
+		setPickupType(Integer.valueOf(pickupType));
+		setDropoffType(Integer.valueOf(dropoffType));
+		this.shapeDistTraveled = Double.valueOf(shapeDistTraveled);
+	}
 	
 	// Getters
 	public String getTripId() {
@@ -71,8 +85,14 @@ public class GtfsStopTime {
 	public void setArrivalTime(GtfsTime arrivalTime) {
 		this.arrivalTime = arrivalTime;
 	}
+	public void setArrivalTime(String timestring) {
+		this.arrivalTime.setTime(timestring);
+	}
 	public void setDepartureTime(GtfsTime departureTime) {
 		this.departureTime = departureTime;
+	}
+	public void setDepartureTime(String timestring) {
+		this.departureTime.setTime(timestring);;
 	}
 	public void setStopId(String stopId) {
 		this.stopId = stopId;

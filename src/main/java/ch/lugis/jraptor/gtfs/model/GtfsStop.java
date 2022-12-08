@@ -27,6 +27,19 @@ public class GtfsStop {
 		this.parentStation = parentStation;
 		this.stopTimezone = stopTimezone;
 	}
+	// Only Strings
+	public GtfsStop(String stopId, String stopCode, String stopName, String stopDesc, String stopLat, String stopLon,
+			String locationType, String parentStation, String stopTimezone) {
+		this.stopId = stopId;
+		this.stopCode = stopCode;
+		this.stopName = stopName;
+		this.stopDesc = stopDesc;
+		this.stopLat = Double.valueOf(stopLat);
+		this.stopLon = Double.valueOf(stopLon);
+		setLocationType(Integer.valueOf(locationType));
+		this.parentStation = parentStation;
+		this.stopTimezone = stopTimezone;
+	}
 	
 	// Getters
 	public String getStopId() {

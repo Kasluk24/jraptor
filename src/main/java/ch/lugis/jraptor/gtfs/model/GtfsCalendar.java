@@ -42,6 +42,20 @@ public class GtfsCalendar {
 		this.startDate.setDate(startDate);
 		this.endDate.setDate(endDate);
 	}
+	// Only Strings
+	public GtfsCalendar(String serviceId, String monday, String tuesday, String wednesday, String thursday,
+			String friday, String saturday, String sunday, String startDate, String endDate) {
+		this.serviceId = serviceId;
+		this.monday = getBooleanFromInt(Integer.valueOf(monday));
+		this.tuesday = getBooleanFromInt(Integer.valueOf(tuesday));
+		this.wednesday = getBooleanFromInt(Integer.valueOf(wednesday));
+		this.thursday = getBooleanFromInt(Integer.valueOf(thursday));
+		this.friday = getBooleanFromInt(Integer.valueOf(friday));
+		this.saturday = getBooleanFromInt(Integer.valueOf(saturday));
+		this.sunday = getBooleanFromInt(Integer.valueOf(sunday));
+		this.startDate.setDate(startDate);
+		this.endDate.setDate(endDate);
+	}
 	
 	// Getters
 	public String getServiceId() {

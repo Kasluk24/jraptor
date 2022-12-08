@@ -16,6 +16,13 @@ public class GtfsTransfer {
 		this.transferType = transferType;
 		this.minTransferTime = minTransferTime;
 	}
+	// Only Strings
+	public GtfsTransfer(String fromStopId, String toStopId, String transferType, String minTransferTime) {
+		this.fromStopId = fromStopId;
+		this.toStopId = toStopId;
+		setTransferType(Integer.valueOf(transferType));
+		this.minTransferTime = Integer.valueOf(minTransferTime);
+	}
 
 	// Getters
 	public String getFromStopId() {

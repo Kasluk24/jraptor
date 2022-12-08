@@ -29,6 +29,20 @@ public class GtfsRoute {
 		this.routeTextColor = routeTextColor;
 		this.routeSortOrder = routeSortOrder;
 	}
+	// Only Strings
+	public GtfsRoute(String routeId, String agencyId, String routeShortName, String routeLongName, String routeDesc,
+			Integer routeType, String routeUrl, String routeColor, String routeTextColor, String routeSortOrder) {
+		this.routeId = routeId;
+		this.agencyId = agencyId;
+		this.routeShortName = routeShortName;
+		this.routeLongName = routeLongName;
+		this.routeDesc = routeDesc;
+		this.routeType = routeType;
+		this.routeUrl = routeUrl;
+		this.routeColor = routeColor;
+		this.routeTextColor = routeTextColor;
+		this.routeSortOrder = Integer.valueOf(routeSortOrder);
+	}
 	
 	// Getters
 	public String getRouteId() {
