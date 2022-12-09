@@ -3,8 +3,8 @@ package ch.lugis.jraptor.gtfs.model;
 public class GtfsFrequency {
 	// Fields
 	private String tripId;
-	private GtfsTime startTime;
-	private GtfsTime endTime;
+	private GtfsTime startTime = new GtfsTime();
+	private GtfsTime endTime = new GtfsTime();
 	private Integer headwaySecs;
 	private GtfsFrequenciesExactTimesType exactTime;
 	
@@ -63,13 +63,13 @@ public class GtfsFrequency {
 		this.startTime = startTime;
 	}
 	public void setStartTime(String timestring) {
-		this.startTime.setTime(timestring);
+		this.startTime = new GtfsTime(timestring);
 	}
 	public void setEndTime(GtfsTime endTime) {
 		this.endTime = endTime;
 	}
 	public void setEndTime(String timestring) {
-		this.endTime.setTime(timestring);
+		this.endTime = new GtfsTime(timestring);
 	}
 	public void setHeadwaySecs(Integer headwaySecs) {
 		this.headwaySecs = headwaySecs;

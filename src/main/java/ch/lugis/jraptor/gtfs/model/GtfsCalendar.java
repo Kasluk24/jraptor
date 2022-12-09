@@ -39,8 +39,8 @@ public class GtfsCalendar {
 		this.friday = getBooleanFromInt(friday);
 		this.saturday = getBooleanFromInt(saturday);
 		this.sunday = getBooleanFromInt(sunday);
-		this.startDate.setDate(startDate);
-		this.endDate.setDate(endDate);
+		setStartDate(startDate);
+		setEndDate(endDate);
 	}
 	// Only Strings
 	public GtfsCalendar(String serviceId, String monday, String tuesday, String wednesday, String thursday,
@@ -53,8 +53,8 @@ public class GtfsCalendar {
 		this.friday = getBooleanFromInt(Integer.valueOf(friday));
 		this.saturday = getBooleanFromInt(Integer.valueOf(saturday));
 		this.sunday = getBooleanFromInt(Integer.valueOf(sunday));
-		this.startDate.setDate(startDate);
-		this.endDate.setDate(endDate);
+		setStartDate(startDate);
+		setEndDate(endDate);
 	}
 	
 	// Getters
@@ -166,13 +166,13 @@ public class GtfsCalendar {
 		this.startDate = startDate;
 	}
 	public void setStartDate(String datestring) {
-		this.startDate.setDate(datestring);
+		this.startDate = new GtfsDate(datestring);
 	}
 	public void setEndDate(GtfsDate endDate) {
 		this.endDate = endDate;
 	}
 	public void setEndDate(String datestring) {
-		this.endDate.setDate(datestring);
+		this.endDate = new GtfsDate(datestring);
 	}
 	
 	// Private methods

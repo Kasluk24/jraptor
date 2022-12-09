@@ -3,8 +3,8 @@ package ch.lugis.jraptor.gtfs.model;
 public class GtfsStopTime {
 	// Fields
 	private String tripId;
-	private GtfsTime arrivalTime;
-	private GtfsTime departureTime;
+	private GtfsTime arrivalTime = new GtfsTime();
+	private GtfsTime departureTime = new GtfsTime();
 	private String stopId;
 	private String stopSequence;
 	private String stopHeadsign;
@@ -50,8 +50,14 @@ public class GtfsStopTime {
 	public GtfsTime getArrivalTime() {
 		return arrivalTime;
 	}
+	public String getArrivalTimeAsString() {
+		return arrivalTime.getTimeAsString();
+	}
 	public GtfsTime getDepartureTime() {
 		return departureTime;
+	}
+	public String getDepartureTimeAsString() {
+		return departureTime.getTimeAsString();
 	}
 	public String getStopId() {
 		return stopId;
@@ -86,13 +92,13 @@ public class GtfsStopTime {
 		this.arrivalTime = arrivalTime;
 	}
 	public void setArrivalTime(String timestring) {
-		this.arrivalTime.setTime(timestring);
+		this.arrivalTime = new GtfsTime(timestring);
 	}
 	public void setDepartureTime(GtfsTime departureTime) {
 		this.departureTime = departureTime;
 	}
 	public void setDepartureTime(String timestring) {
-		this.departureTime.setTime(timestring);;
+		this.departureTime = new GtfsTime(timestring);
 	}
 	public void setStopId(String stopId) {
 		this.stopId = stopId;
