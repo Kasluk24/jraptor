@@ -111,5 +111,25 @@ public class GtfsStop {
 	public void setStopTimezone(String stopTimezone) {
 		this.stopTimezone = stopTimezone;
 	}
-	
+		
+	// Public static methods
+	public static int[] mapFields(String[] headerValues) {
+		int[] valueOrder = new int[9];
+		int counter = 0;
+		for (String column : headerValues) {
+			switch (column) {
+				case "stop_id": valueOrder[0] = counter; break;
+				case "stop_code": valueOrder[1] = counter; break;
+				case "stop_name": valueOrder[2] = counter; break;
+				case "stop_desc": valueOrder[3] = counter; break;
+				case "stop_lat": valueOrder[4] = counter; break;
+				case "stop_lo": valueOrder[5] = counter; break;
+				case "location_type": valueOrder[6] = counter; break;
+				case "parent_station": valueOrder[7] = counter; break;
+				case "stop_timezone": valueOrder[8] = counter; break;
+			}
+			counter++;
+		}
+		return valueOrder;
+	}
 }

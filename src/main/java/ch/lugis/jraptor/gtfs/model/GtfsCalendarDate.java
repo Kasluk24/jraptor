@@ -3,7 +3,7 @@ package ch.lugis.jraptor.gtfs.model;
 public class GtfsCalendarDate {
 	// Fields
 	private String serviceID;
-	private GtfsDate date = new GtfsDate();
+	private GtfsDate date;
 	private GtfsCalendarExceptionType exceptionType;
 	
 	// Constructor
@@ -74,6 +74,18 @@ public class GtfsCalendarDate {
 		}
 	}
 	
-	
-	
+	// Public static methods
+	public static int[] mapFields(String[] headerValues) {
+		int[] valueOrder = new int[3];
+		int counter = 0;
+		for (String column : headerValues) {
+			switch (column) {
+				case "service_id": valueOrder[0] = counter; break;
+				case "date": valueOrder[1] = counter; break;
+				case "exception_type": valueOrder[2] = counter; break;
+			}
+			counter++;
+		}
+		return valueOrder;	
+	}	
 }

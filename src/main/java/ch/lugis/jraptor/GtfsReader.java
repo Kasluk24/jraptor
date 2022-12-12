@@ -46,63 +46,75 @@ public class GtfsReader {
 		}
 	}
 	
-	// Read functions
-	public void readAll() throws IOException, CsvValidationException {
-		File gtfsFolder = gtfsDirectory.toFile();
-	    Set<String> gtfsFiles = Stream.of(gtfsFolder.listFiles())
-	    	      .filter(file -> !file.isDirectory())
-	    	      .map(File::getName)
-	    	      .collect(Collectors.toSet());
-	    
+	// Public read methods
+	public void readAllToMemory() throws IOException, CsvValidationException {
+		Set<String> gtfsFiles = getGtfsFiles();
 	    if (gtfsFiles.contains("agency.txt")) {
-			readAgencies();
+			readAgenciesToMemory();
 	    }
 	    if (gtfsFiles.contains("calendar.txt")) {
-			readCalendars();
+			readCalendarsToMemory();
 	    }
 	    if (gtfsFiles.contains("calendar_dates.txt")) {
-			readCalendarDates();
+			readCalendarDatesToMemory();
 	    }
 	    if (gtfsFiles.contains("agency.txt")) {
-			readFrequencies();
+			readFrequenciesToMemory();
 	    }
 	    if (gtfsFiles.contains("routes.txt")) {
-			readRoutes();
+			readRoutesToMemory();
 	    }
 	    if (gtfsFiles.contains("stops.txt")) {
-			readStops();
+			readStopsToMemory();
 	    }
 	    if (gtfsFiles.contains("stop_times.txt")) {
-			readStopTimes();
+			readStopTimesToMemory();
 	    }
 	    if (gtfsFiles.contains("transfers.txt")) {
-			readTransfers();
+			readTransfersToMemory();
 	    }
 	    if (gtfsFiles.contains("trips.txt")) {
-			readTrips();
+			readTripsToMemory();
+	    }
+	}
+	public void readAllToSqlite() throws IOException, CsvValidationException {
+		Set<String> gtfsFiles = getGtfsFiles();
+	    if (gtfsFiles.contains("agency.txt")) {
+			readAgenciesToSqlite();
+	    }
+	    if (gtfsFiles.contains("calendar.txt")) {
+			readCalendarsToSqlite();
+	    }
+	    if (gtfsFiles.contains("calendar_dates.txt")) {
+			readCalendarDatesToSqlite();
+	    }
+	    if (gtfsFiles.contains("agency.txt")) {
+			readFrequenciesToSqlite();
+	    }
+	    if (gtfsFiles.contains("routes.txt")) {
+			readRoutesToSqlite();
+	    }
+	    if (gtfsFiles.contains("stops.txt")) {
+			readStopsToSqlite();
+	    }
+	    if (gtfsFiles.contains("stop_times.txt")) {
+			readStopTimesToSqlite();
+	    }
+	    if (gtfsFiles.contains("transfers.txt")) {
+			readTransfersToSqlite();
+	    }
+	    if (gtfsFiles.contains("trips.txt")) {
+			readTripsToSqlite();
 	    }
 	}
 	
-	public void readAgencies() throws IOException, CsvValidationException {
+	// Read to memory
+	public void readAgenciesToMemory() throws IOException, CsvValidationException {
 		gtfsAgencies = new LinkedList<>();
 		gtfsAgencies.clear();
 		CSVReader reader = createReader(gtfsDirectory.resolve("agency.txt"));
 		String[] lineValues = reader.readNext();
-
-		int[] valueOrder = new int[7];
-		int counter = 0;
-		for (String column : lineValues) {
-			switch (column) {
-				case "agency_id": valueOrder[0] = counter; break;
-				case "agency_name": valueOrder[1] = counter; break;
-				case "agency_url": valueOrder[2] = counter; break;
-				case "agency_timezone": valueOrder[3] = counter; break;
-				case "agency_lang": valueOrder[4] = counter; break;
-				case "agency_phone": valueOrder[5] = counter; break;
-				case "agency_email": valueOrder[6] = counter; break;
-			}
-			counter++;
-		}
+		int[] valueOrder = GtfsAgency.mapFields(lineValues);
 		
 		while ((lineValues = reader.readNext()) != null) {
 			GtfsAgency agency = new GtfsAgency(
@@ -117,43 +129,27 @@ public class GtfsReader {
 		}
 
 	}
-	public void readCalendars() {
+	public void readCalendarsToMemory() {
 		
 	}
-	public void readCalendarDates() {
+	public void readCalendarDatesToMemory() {
 		
 	}
-	public void readFrequencies() {
+	public void readFrequenciesToMemory() {
 		
 	}
-	public void readRoutes() {
+	public void readRoutesToMemory() {
 		
 	}
-	public void readStops() {
+	public void readStopsToMemory() {
 		
 	}
-	public void readStopTimes() throws IOException, CsvValidationException {
+	public void readStopTimesToMemory() throws IOException, CsvValidationException {
 		gtfsStopTimes = new LinkedList<>();
 		gtfsStopTimes.clear();
 		CSVReader reader = createReader(gtfsDirectory.resolve("stop_times.txt"));
 		String[] lineValues = reader.readNext();
-
-		int[] valueOrder = new int[9];
-		int counter = 0;
-		for (String column : lineValues) {
-			switch (column) {
-				case "trip_id": valueOrder[0] = counter;
-				case "arrival_time": valueOrder[1] = counter;
-				case "departure_time": valueOrder[2] = counter;
-				case "stop_id": valueOrder[3] = counter;
-				case "stop_sequence": valueOrder[4] = counter;
-				case "stop_headsign": valueOrder[5] = counter;
-				case "pickup_type": valueOrder[6] = counter;
-				case "dropoff_type": valueOrder[7] = counter;
-				case "shape_dist_traveled": valueOrder[8] = counter;
-			}
-			counter++;
-		}
+		int[] valueOrder = GtfsStopTime.mapFields(lineValues);
 		
 		while ((lineValues = reader.readNext()) != null) {
 			GtfsStopTime stopTime = new GtfsStopTime(
@@ -169,18 +165,57 @@ public class GtfsReader {
 			gtfsStopTimes.add(stopTime);
 		}
 	}
-	public void readTransfers() {
+	public void readTransfersToMemory() {
 		
 	}
-	public void readTrips() {
+	public void readTripsToMemory() {
 		
 	}
 	
+	// Read to sqlite
+	public void readAgenciesToSqlite() {
+		
+	}
+	public void readCalendarsToSqlite() {
+		
+	}
+	public void readCalendarDatesToSqlite() {
+		
+	}
+	public void readFrequenciesToSqlite() {
+		
+	}
+	public void readRoutesToSqlite() {
+		
+	}
+	public void readStopsToSqlite() {
+		
+	}
+	public void readStopTimesToSqlite() {
+
+	}
+	public void readTransfersToSqlite() {
+		
+	}
+	public void readTripsToSqlite() {
+		
+	}
+	
+	// Private methods
 	private CSVReader createReader(Path gtfsFile) throws IOException {
 		FileReader fileReader = new FileReader(gtfsFile.toFile());
 		CSVReader reader = new CSVReader(fileReader);
 		
 		return reader;
+	}
+	private Set<String> getGtfsFiles() {
+		File gtfsFolder = gtfsDirectory.toFile();
+	    Set<String> gtfsFiles = Stream.of(gtfsFolder.listFiles())
+	    	      .filter(file -> !file.isDirectory())
+	    	      .map(File::getName)
+	    	      .collect(Collectors.toSet());
+		
+		return gtfsFiles;
 	}
 
 	// Getters

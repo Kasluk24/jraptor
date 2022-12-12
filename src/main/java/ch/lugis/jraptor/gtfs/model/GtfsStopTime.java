@@ -138,4 +138,25 @@ public class GtfsStopTime {
 	public void setShapeDistTraveled(Double shapeDistTraveled) {
 		this.shapeDistTraveled = shapeDistTraveled;
 	};
+	
+	// Public static methods
+	public static int[] mapFields(String[] headerValues) {
+		int[] valueOrder = new int[9];
+		int counter = 0;
+		for (String column : headerValues) {
+			switch (column) {
+				case "trip_id": valueOrder[0] = counter; break;
+				case "arrival_time": valueOrder[1] = counter; break;
+				case "departure_time": valueOrder[2] = counter; break;
+				case "stop_id": valueOrder[3] = counter; break;
+				case "stop_sequence": valueOrder[4] = counter; break;
+				case "stop_headsign": valueOrder[5] = counter; break;
+				case "pickup_type": valueOrder[6] = counter; break;
+				case "dropoff_type": valueOrder[7] = counter; break;
+				case "shape_dist_traveled": valueOrder[8] = counter; break;
+			}
+			counter++;
+		}
+		return valueOrder;
+	}
 }

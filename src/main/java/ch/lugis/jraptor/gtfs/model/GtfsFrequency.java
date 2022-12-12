@@ -3,8 +3,8 @@ package ch.lugis.jraptor.gtfs.model;
 public class GtfsFrequency {
 	// Fields
 	private String tripId;
-	private GtfsTime startTime = new GtfsTime();
-	private GtfsTime endTime = new GtfsTime();
+	private GtfsTime startTime;
+	private GtfsTime endTime;
 	private Integer headwaySecs;
 	private GtfsFrequenciesExactTimesType exactTime;
 	
@@ -86,5 +86,22 @@ public class GtfsFrequency {
 							"The value %s is not a valid GTFS exact time type", 
 							exactTimeCode));
 		}
+	}
+	
+	// Public static methods
+	public static int[] mapFields(String[] headerValues) {
+		int[] valueOrder = new int[5];
+		int counter = 0;
+		for (String column : headerValues) {
+			switch (column) {
+				case "trip_id": valueOrder[0] = counter; break;
+				case "start_time": valueOrder[1] = counter; break;
+				case "end_time": valueOrder[2] = counter; break;
+				case "headway_secs": valueOrder[3] = counter; break;
+				case "exact_time": valueOrder[4] = counter; break;
+			}
+			counter++;
+		}
+		return valueOrder;	
 	}
 }

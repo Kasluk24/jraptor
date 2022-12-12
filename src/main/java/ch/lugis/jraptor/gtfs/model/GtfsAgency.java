@@ -69,4 +69,23 @@ public class GtfsAgency {
 	public void setAgencyEmail(String agencyEmail) {
 		this.agencyEmail = agencyEmail;
 	}
+	
+	// Public static methods
+	public static int[] mapFields(String[] headerValues) {
+		int[] valueOrder = new int[7];
+		int counter = 0;
+		for (String column : headerValues) {
+			switch (column) {
+				case "agency_id": valueOrder[0] = counter; break;
+				case "agency_name": valueOrder[1] = counter; break;
+				case "agency_url": valueOrder[2] = counter; break;
+				case "agency_timezone": valueOrder[3] = counter; break;
+				case "agency_lang": valueOrder[4] = counter; break;
+				case "agency_phone": valueOrder[5] = counter; break;
+				case "agency_email": valueOrder[6] = counter; break;
+			}
+			counter++;
+		}
+		return valueOrder;	
+	}
 }

@@ -106,6 +106,27 @@ public class GtfsRoute {
 	}
 	public void setRouteSortOrder(Integer routeSortOrder) {
 		this.routeSortOrder = routeSortOrder;
-
+	}
+	
+	// Public static methods
+	public static int[] mapFields(String[] headerValues) {
+		int[] valueOrder = new int[10];
+		int counter = 0;
+		for (String column : headerValues) {
+			switch (column) {
+				case "route_id": valueOrder[0] = counter; break;
+				case "agency_id": valueOrder[1] = counter; break;
+				case "route_short_name": valueOrder[2] = counter; break;
+				case "route_long_name": valueOrder[3] = counter; break;
+				case "route_desc": valueOrder[4] = counter; break;
+				case "route_type": valueOrder[5] = counter; break;
+				case "route_url": valueOrder[6] = counter; break;
+				case "route_color": valueOrder[7] = counter; break;
+				case "route_text_color": valueOrder[8] = counter; break;
+				case "route_sort_order": valueOrder[9] = counter; break;
+			}
+			counter++;
+		}
+		return valueOrder;	
 	}
 }

@@ -175,6 +175,28 @@ public class GtfsCalendar {
 		this.endDate = new GtfsDate(datestring);
 	}
 	
+	// Public static methods
+	public static int[] mapFields(String[] headerValues) {
+		int[] valueOrder = new int[10];
+		int counter = 0;
+		for (String column : headerValues) {
+			switch (column) {
+				case "service_id": valueOrder[0] = counter; break;
+				case "monday": valueOrder[1] = counter; break;
+				case "tuesday": valueOrder[2] = counter; break;
+				case "wednesday": valueOrder[3] = counter; break;
+				case "thursday": valueOrder[4] = counter; break;
+				case "friday": valueOrder[5] = counter; break;
+				case "saturday": valueOrder[6] = counter; break;
+				case "sunday": valueOrder[7] = counter; break;
+				case "start_date": valueOrder[8] = counter; break;
+				case "end_date": valueOrder[9] = counter; break;
+			}
+			counter++;
+		}
+		return valueOrder;	
+	}
+	
 	// Private methods
 	private Boolean getBooleanFromInt(int intValue) {
 		if (intValue >= 1) {

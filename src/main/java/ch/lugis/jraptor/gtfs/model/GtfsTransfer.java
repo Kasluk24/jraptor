@@ -64,4 +64,20 @@ public class GtfsTransfer {
 	public void setMinTransferTime(Integer minTransferTime) {
 		this.minTransferTime = minTransferTime;
 	}
+	
+	// Public static methods
+	public static int[] mapFields(String[] headerValues) {
+		int[] valueOrder = new int[4];
+		int counter = 0;
+		for (String column : headerValues) {
+			switch (column) {
+				case "from_stop_id": valueOrder[0] = counter; break;
+				case "to_stop_id": valueOrder[1] = counter; break;
+				case "transfer_type": valueOrder[2] = counter; break;
+				case "min_transfer_time": valueOrder[3] = counter; break;
+			}
+			counter++;
+		}
+		return valueOrder;
+	}
 }

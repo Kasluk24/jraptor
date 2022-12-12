@@ -102,4 +102,24 @@ public class GtfsTrip {
 	public void setShapeId(String shapeId) {
 		this.shapeId = shapeId;
 	}
+	
+	// Public static methods
+	public static int[] mapFields(String[] headerValues) {
+		int[] valueOrder = new int[8];
+		int counter = 0;
+		for (String column : headerValues) {
+			switch (column) {
+				case "route_id": valueOrder[0] = counter; break;
+				case "service_id": valueOrder[1] = counter; break;
+				case "trip_id": valueOrder[2] = counter; break;
+				case "trip_headsign": valueOrder[3] = counter; break;
+				case "trip_short_name": valueOrder[4] = counter; break;
+				case "direction_id": valueOrder[5] = counter; break;
+				case "block_id": valueOrder[6] = counter; break;
+				case "shape_id": valueOrder[7] = counter; break;
+			}
+			counter++;
+		}
+		return valueOrder;
+	}
 }
