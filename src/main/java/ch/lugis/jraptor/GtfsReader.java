@@ -111,7 +111,6 @@ public class GtfsReader {
 	// Read to memory
 	public void readAgenciesToMemory() throws IOException, CsvValidationException {
 		gtfsAgencies = new LinkedList<>();
-		gtfsAgencies.clear();
 		CSVReader reader = createReader(gtfsDirectory.resolve("agency.txt"));
 		String[] lineValues = reader.readNext();
 		int[] valueOrder = GtfsAgency.mapFields(lineValues);
@@ -129,8 +128,26 @@ public class GtfsReader {
 		}
 
 	}
-	public void readCalendarsToMemory() {
+	public void readCalendarsToMemory() throws IOException, CsvValidationException {
+		gtfsCalendars = new LinkedList<>();
+		CSVReader reader = createReader(gtfsDirectory.resolve("calendar.txt"));
+		String[] lineValues = reader.readNext();
+		int[] valueOrder = GtfsCalendar.mapFields(lineValues);
 		
+		while((lineValues = reader.readNext()) != null) {
+			GtfsCalendar calendar = new GtfsCalendar(
+					lineValues[valueOrder[0]],
+					lineValues[valueOrder[1]],
+					lineValues[valueOrder[2]],
+					lineValues[valueOrder[3]],
+					lineValues[valueOrder[4]],
+					lineValues[valueOrder[5]],
+					lineValues[valueOrder[6]],
+					lineValues[valueOrder[7]],
+					lineValues[valueOrder[8]],
+					lineValues[valueOrder[9]]);
+			gtfsCalendars.add(calendar);
+		}
 	}
 	public void readCalendarDatesToMemory() {
 		
@@ -146,7 +163,6 @@ public class GtfsReader {
 	}
 	public void readStopTimesToMemory() throws IOException, CsvValidationException {
 		gtfsStopTimes = new LinkedList<>();
-		gtfsStopTimes.clear();
 		CSVReader reader = createReader(gtfsDirectory.resolve("stop_times.txt"));
 		String[] lineValues = reader.readNext();
 		int[] valueOrder = GtfsStopTime.mapFields(lineValues);
