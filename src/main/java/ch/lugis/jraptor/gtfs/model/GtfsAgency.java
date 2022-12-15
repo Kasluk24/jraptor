@@ -1,5 +1,10 @@
 package ch.lugis.jraptor.gtfs.model;
 
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public class GtfsAgency {
 	// Fields
 	private String agencyId;
@@ -9,7 +14,21 @@ public class GtfsAgency {
 	private String agencyLang;
 	private String agencyPhone;
 	private String agencyEmail;
+	public static Map<String, String> mapSetters;
 	
+	static {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("agency_id", "setAgencyId");
+		tempFields.put("agency_name", "setAgencyName");
+		tempFields.put("agency_url", "setAgencyUrl");
+		tempFields.put("agency_timezone", "setAgencyTimezone");
+		tempFields.put("agency_lang", "setAgencyLang");
+		tempFields.put("agency_phone", "setAgencyPhone");
+		tempFields.put("agency_email", "setAgencyEmail");
+		
+		mapSetters = Collections.unmodifiableMap(tempFields);
+	}
+		
 	// Constructor
 	public GtfsAgency() {};
 	// Only Strings
@@ -70,22 +89,32 @@ public class GtfsAgency {
 		this.agencyEmail = agencyEmail;
 	}
 	
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[7];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "agency_id": valueOrder[0] = counter; break;
-				case "agency_name": valueOrder[1] = counter; break;
-				case "agency_url": valueOrder[2] = counter; break;
-				case "agency_timezone": valueOrder[3] = counter; break;
-				case "agency_lang": valueOrder[4] = counter; break;
-				case "agency_phone": valueOrder[5] = counter; break;
-				case "agency_email": valueOrder[6] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;	
+	@Override
+	public String toString() {
+		return "GtfsAgency [agencyId=" + agencyId + ", agencyName=" + agencyName + ", agencyUrl=" + agencyUrl
+				+ ", agencyTimezone=" + agencyTimezone + ", agencyLang=" + agencyLang + ", agencyPhone=" + agencyPhone
+				+ ", agencyEmail=" + agencyEmail + "]";
 	}
+	
+	// Public static methods
+	public static Method[] getOrderedMethodArray(String[] gtfsHeader) {
+		Class<GtfsAgency> agencyClass = GtfsAgency.class;
+		Method[] methods = new Method[gtfsHeader.length];
+		
+		int i = 0;
+		for (String header : gtfsHeader) {
+			if (mapSetters.containsKey(header)) {
+				try {
+					methods[i] = agencyClass.getMethod(mapSetters.get(header), String.class);
+				} catch (NoSuchMethodException | SecurityException e) {
+					// Internal error
+					e.printStackTrace();
+				}
+			} else {
+				methods[i] = null;
+			}
+			i++;
+		}
+		return methods;
+	}	
 }
