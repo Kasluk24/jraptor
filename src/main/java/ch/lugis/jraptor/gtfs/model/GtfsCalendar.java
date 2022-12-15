@@ -1,5 +1,10 @@
 package ch.lugis.jraptor.gtfs.model;
 
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public class GtfsCalendar {
 	// Fields
 	private String serviceId;
@@ -12,6 +17,23 @@ public class GtfsCalendar {
 	private Boolean sunday;
 	private GtfsDate startDate;
 	private GtfsDate endDate;
+	public static Map<String, String> mapSetters = new HashMap<>();
+	
+	static {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("service_id", "setServiceId");
+		tempFields.put("monday", "setMonday");
+		tempFields.put("tuesday", "setTuesday");
+		tempFields.put("wednesday", "setWednesday");
+		tempFields.put("thursday", "setThursday");
+		tempFields.put("friday", "setFriday");
+		tempFields.put("saturday", "setSaturday");
+		tempFields.put("sunday", "setSunday");
+		tempFields.put("start_date", "setStartDate");
+		tempFields.put("end_date", "setEndDate");
+		mapSetters = Collections.unmodifiableMap(tempFields);
+	}
+	
 	
 	// Constructor
 	public GtfsCalendar() {}
@@ -126,11 +148,17 @@ public class GtfsCalendar {
 	public void setMonday(int monday) {
 		this.monday = getBooleanFromInt(monday);
 	}
-	public void setThuesday(Boolean tuesday) {
+	public void setMonday(String monday) {
+		this.monday = getBooleanFromString(monday);
+	}
+	public void setTuesday(Boolean tuesday) {
 		this.tuesday = tuesday;
 	}
-	public void setThuesday(int tuesday) {
+	public void setTuesday(int tuesday) {
 		this.tuesday = getBooleanFromInt(tuesday);
+	}
+	public void setTuesday(String tuesday) {
+		this.tuesday = getBooleanFromString(tuesday);
 	}
 	public void setWednesday(Boolean wednesday) {
 		this.wednesday = wednesday;
@@ -138,11 +166,17 @@ public class GtfsCalendar {
 	public void setWednesday(int wednesday) {
 		this.wednesday = getBooleanFromInt(wednesday);
 	}
+	public void setWednesday(String wednesday) {
+		this.wednesday = getBooleanFromString(wednesday);
+	}
 	public void setThursday(Boolean thursday) {
 		this.thursday = thursday;
 	}
 	public void setThursday(int thursday) {
 		this.thursday = getBooleanFromInt(thursday);
+	}
+	public void setThursday(String thursday) {
+		this.thursday = getBooleanFromString(thursday);
 	}
 	public void setFriday(Boolean friday) {
 		this.friday = friday;
@@ -150,17 +184,26 @@ public class GtfsCalendar {
 	public void setFriday(int friday) {
 		this.friday = getBooleanFromInt(friday);
 	}
+	public void setFriday(String friday) {
+		this.friday = getBooleanFromString(friday);
+	}
 	public void setSaturday(Boolean saturday) {
 		this.saturday = saturday;
 	}
 	public void setSaturday(int saturday) {
 		this.saturday = getBooleanFromInt(saturday);
 	}
+	public void setSaturday(String saturday) {
+		this.saturday = getBooleanFromString(saturday);
+	}
 	public void setSunday(Boolean sunday) {
 		this.sunday = sunday;
 	}
 	public void setSunday(int sunday) {
 		this.sunday = getBooleanFromInt(sunday);
+	}
+	public void setSunday(String sunday) {
+		this.sunday = getBooleanFromString(sunday);
 	}
 	public void setStartDate(GtfsDate startDate) {
 		this.startDate = startDate;
@@ -175,27 +218,34 @@ public class GtfsCalendar {
 		this.endDate = new GtfsDate(datestring);
 	}
 	
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[10];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "service_id": valueOrder[0] = counter; break;
-				case "monday": valueOrder[1] = counter; break;
-				case "tuesday": valueOrder[2] = counter; break;
-				case "wednesday": valueOrder[3] = counter; break;
-				case "thursday": valueOrder[4] = counter; break;
-				case "friday": valueOrder[5] = counter; break;
-				case "saturday": valueOrder[6] = counter; break;
-				case "sunday": valueOrder[7] = counter; break;
-				case "start_date": valueOrder[8] = counter; break;
-				case "end_date": valueOrder[9] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;	
+	@Override
+	public String toString() {
+		return "GtfsCalendar [serviceId=" + serviceId + ", monday=" + monday + ", tuesday=" + tuesday + ", wednesday="
+				+ wednesday + ", thursday=" + thursday + ", friday=" + friday + ", saturday=" + saturday + ", sunday="
+				+ sunday + ", startDate=" + startDate + ", endDate=" + endDate + "]";
 	}
+
+	// Public static methods
+	public static Method[] getOrderedMethodArray(String[] gtfsHeader) {
+		Class<GtfsCalendar> classObject = GtfsCalendar.class;
+		Method[] methods = new Method[gtfsHeader.length];
+		
+		int i = 0;
+		for (String header : gtfsHeader) {
+			if (mapSetters.containsKey(header)) {
+				try {
+					methods[i] = classObject.getMethod(mapSetters.get(header), String.class);
+				} catch (NoSuchMethodException | SecurityException e) {
+					// Fatal error
+					e.printStackTrace();
+				}
+			} else {
+				methods[i] = null;
+			}
+			i++;
+		}
+		return methods;
+	}	
 	
 	// Private methods
 	private Boolean getBooleanFromInt(int intValue) {
@@ -203,6 +253,13 @@ public class GtfsCalendar {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	private Boolean getBooleanFromString(String stringValue) {
+		if (stringValue == null || stringValue.equals("0") || stringValue.isBlank()) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 }

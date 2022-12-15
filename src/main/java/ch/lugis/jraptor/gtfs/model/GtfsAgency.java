@@ -25,7 +25,6 @@ public class GtfsAgency {
 		tempFields.put("agency_lang", "setAgencyLang");
 		tempFields.put("agency_phone", "setAgencyPhone");
 		tempFields.put("agency_email", "setAgencyEmail");
-		
 		mapSetters = Collections.unmodifiableMap(tempFields);
 	}
 		
@@ -98,16 +97,16 @@ public class GtfsAgency {
 	
 	// Public static methods
 	public static Method[] getOrderedMethodArray(String[] gtfsHeader) {
-		Class<GtfsAgency> agencyClass = GtfsAgency.class;
+		Class<GtfsAgency> classObject = GtfsAgency.class;
 		Method[] methods = new Method[gtfsHeader.length];
 		
 		int i = 0;
 		for (String header : gtfsHeader) {
 			if (mapSetters.containsKey(header)) {
 				try {
-					methods[i] = agencyClass.getMethod(mapSetters.get(header), String.class);
+					methods[i] = classObject.getMethod(mapSetters.get(header), String.class);
 				} catch (NoSuchMethodException | SecurityException e) {
-					// Internal error
+					// Fatal error
 					e.printStackTrace();
 				}
 			} else {

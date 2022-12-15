@@ -149,23 +149,29 @@ public class GtfsReader {
 
 	}
 	public void readCalendarsToMemory() throws IOException, CsvValidationException {
+		logger.info("Read calendar.txt to memory");
+		
 		gtfsCalendars = new HashSet<>();
 		CSVReader reader = createReader(gtfsDirectory.resolve("calendar.txt"));
 		String[] lineValues = reader.readNext();
-		int[] valueOrder = GtfsCalendar.mapFields(lineValues);
 		
-		while((lineValues = reader.readNext()) != null) {
-			GtfsCalendar calendar = new GtfsCalendar(
-					lineValues[valueOrder[0]],
-					lineValues[valueOrder[1]],
-					lineValues[valueOrder[2]],
-					lineValues[valueOrder[3]],
-					lineValues[valueOrder[4]],
-					lineValues[valueOrder[5]],
-					lineValues[valueOrder[6]],
-					lineValues[valueOrder[7]],
-					lineValues[valueOrder[8]],
-					lineValues[valueOrder[9]]);
+		Method[] methods = GtfsCalendar.getOrderedMethodArray(lineValues);
+		
+		while ((lineValues = reader.readNext()) != null) {
+			GtfsCalendar calendar = new GtfsCalendar();
+			int i = 0;
+			for (String value : lineValues) {
+				if (methods[i] != null) {
+					try {
+						methods[i].invoke(calendar, value);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						// Internal error
+						logger.severe("Fatal error in GtfsCalendar class");
+						e.printStackTrace();
+					}
+				}
+				i++;
+			}
 			gtfsCalendars.add(calendar);
 		}
 	}
