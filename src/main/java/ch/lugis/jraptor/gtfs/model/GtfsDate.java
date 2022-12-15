@@ -50,13 +50,13 @@ public class GtfsDate {
 	
 	// Public static methods to convert date
 	public static Integer convertDatestringToYear(String datestring) {
-		return Integer.valueOf(datestring.substring(0, 3));
+		return Integer.valueOf(datestring.substring(0, 4));
 	}
 	public static Integer convertDatestringToMonth(String datestring) {
-		return Integer.valueOf(datestring.substring(4, 5));
+		return Integer.valueOf(datestring.substring(4, 6));
 	}
 	public static Integer convertDatestringToDay(String datestring) {
-		return Integer.valueOf(datestring.substring(6, 7));
+		return Integer.valueOf(datestring.substring(6, 8));
 	}
 	public static String convertYmdToString(Integer year, Integer month, Integer day) {
 		return String.format("%04d%02d%02d", year, month, day);
