@@ -8,15 +8,15 @@ public class GtfsStopTime {
 	private String stopId;
 	private String stopSequence;
 	private String stopHeadsign;
-	private GtfsPickupDropoffType pickupType;
-	private GtfsPickupDropoffType dropoffType;
+	private GtfsPickupDropOffType pickupType;
+	private GtfsPickupDropOffType dropOffType;
 	private Double shapeDistTraveled;
 	
 	// Constructor
 	public GtfsStopTime() {}
 
 	public GtfsStopTime(String tripId, GtfsTime arrivalTime, GtfsTime departureTime, String stopId, String stopSequence,
-			String stopHeadsign, GtfsPickupDropoffType pickupType, GtfsPickupDropoffType dropoffType,
+			String stopHeadsign, GtfsPickupDropOffType pickupType, GtfsPickupDropOffType dropoffType,
 			Double shapeDistTraveled) {
 		this.tripId = tripId;
 		this.arrivalTime = arrivalTime;
@@ -25,7 +25,7 @@ public class GtfsStopTime {
 		this.stopSequence = stopSequence;
 		this.stopHeadsign = stopHeadsign;
 		this.pickupType = pickupType;
-		this.dropoffType = dropoffType;
+		this.dropOffType = dropoffType;
 		this.shapeDistTraveled = shapeDistTraveled;
 	}
 	// Only Strings
@@ -68,17 +68,17 @@ public class GtfsStopTime {
 	public String getStopHeadsign() {
 		return stopHeadsign;
 	}
-	public GtfsPickupDropoffType getPickupType() {
+	public GtfsPickupDropOffType getPickupType() {
 		return pickupType;
 	}
 	public int getPickupTypeCode() {
 		return pickupType.getCode();
 	}
-	public GtfsPickupDropoffType getDropoffType() {
-		return dropoffType;
+	public GtfsPickupDropOffType getDropoffType() {
+		return dropOffType;
 	}
 	public int getDropoffTypeCode() {
-		return dropoffType.getCode();
+		return dropOffType.getCode();
 	}
 	public Double getShapeDistTraveled() {
 		return shapeDistTraveled;
@@ -109,12 +109,12 @@ public class GtfsStopTime {
 	public void setStopHeadsign(String stopHeadsign) {
 		this.stopHeadsign = stopHeadsign;
 	}
-	public void setPickupType(GtfsPickupDropoffType pickupType) {
+	public void setPickupType(GtfsPickupDropOffType pickupType) {
 		this.pickupType = pickupType;
 	}
 	public void setPickupType(int pickupTypeCode) {
-		if (GtfsPickupDropoffType.getTypeByCode(pickupTypeCode) != null) {
-			this.pickupType = GtfsPickupDropoffType.getTypeByCode(pickupTypeCode);
+		if (GtfsPickupDropOffType.getTypeByCode(pickupTypeCode) != null) {
+			this.pickupType = GtfsPickupDropOffType.getTypeByCode(pickupTypeCode);
 		} else {
 			throw new IllegalArgumentException(
 					String.format(
@@ -122,12 +122,12 @@ public class GtfsStopTime {
 							pickupTypeCode));
 		}
 	}
-	public void setDropoffType(GtfsPickupDropoffType dropoffType) {
-		this.dropoffType = dropoffType;
+	public void setDropoffType(GtfsPickupDropOffType dropoffType) {
+		this.dropOffType = dropoffType;
 	}
 	public void setDropoffType(int dropoffTypeCode) {
-		if (GtfsPickupDropoffType.getTypeByCode(dropoffTypeCode) != null) {
-			this.dropoffType = GtfsPickupDropoffType.getTypeByCode(dropoffTypeCode);
+		if (GtfsPickupDropOffType.getTypeByCode(dropoffTypeCode) != null) {
+			this.dropOffType = GtfsPickupDropOffType.getTypeByCode(dropoffTypeCode);
 		} else {
 			throw new IllegalArgumentException(
 					String.format(
@@ -152,7 +152,7 @@ public class GtfsStopTime {
 				case "stop_sequence": valueOrder[4] = counter; break;
 				case "stop_headsign": valueOrder[5] = counter; break;
 				case "pickup_type": valueOrder[6] = counter; break;
-				case "dropoff_type": valueOrder[7] = counter; break;
+				case "drop_off_type": valueOrder[7] = counter; break;
 				case "shape_dist_traveled": valueOrder[8] = counter; break;
 			}
 			counter++;

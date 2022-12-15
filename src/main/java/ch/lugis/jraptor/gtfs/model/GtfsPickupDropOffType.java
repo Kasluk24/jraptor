@@ -1,6 +1,6 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public enum GtfsPickupDropoffType {
+public enum GtfsPickupDropOffType {
 	REGULARLY(0),
 	NO_PICKUP_DROPOFF(1),
 	PHONE_AGENCY(2),
@@ -8,7 +8,7 @@ public enum GtfsPickupDropoffType {
 	
 	private final int code;
 
-	GtfsPickupDropoffType(int code) {
+	GtfsPickupDropOffType(int code) {
 		this.code = code;
 	}
 	
@@ -16,8 +16,8 @@ public enum GtfsPickupDropoffType {
 		return code;
 	}
 	
-	public static GtfsPickupDropoffType getTypeByCode(int code) {
-		for (GtfsPickupDropoffType type : GtfsPickupDropoffType.values()) {
+	public static GtfsPickupDropOffType getTypeByCode(int code) {
+		for (GtfsPickupDropOffType type : GtfsPickupDropOffType.values()) {
 			return type;
 		}
 		return null;

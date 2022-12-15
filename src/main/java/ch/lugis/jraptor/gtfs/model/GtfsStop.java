@@ -36,7 +36,7 @@ public class GtfsStop {
 		this.stopDesc = stopDesc;
 		this.stopLat = Double.valueOf(stopLat);
 		this.stopLon = Double.valueOf(stopLon);
-		setLocationType(Integer.valueOf(locationType));
+		setLocationType(locationType.isBlank() ? 0 : Integer.valueOf(locationType));
 		this.parentStation = parentStation;
 		this.stopTimezone = stopTimezone;
 	}
@@ -123,7 +123,7 @@ public class GtfsStop {
 				case "stop_name": valueOrder[2] = counter; break;
 				case "stop_desc": valueOrder[3] = counter; break;
 				case "stop_lat": valueOrder[4] = counter; break;
-				case "stop_lo": valueOrder[5] = counter; break;
+				case "stop_lon": valueOrder[5] = counter; break;
 				case "location_type": valueOrder[6] = counter; break;
 				case "parent_station": valueOrder[7] = counter; break;
 				case "stop_timezone": valueOrder[8] = counter; break;

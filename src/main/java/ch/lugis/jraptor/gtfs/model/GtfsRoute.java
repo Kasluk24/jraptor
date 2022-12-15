@@ -11,13 +11,12 @@ public class GtfsRoute {
 	private String routeUrl;
 	private String routeColor;
 	private String routeTextColor;
-	private Integer routeSortOrder;
 	
 	// Constructor
 	public GtfsRoute() {};
 	
 	public GtfsRoute(String routeId, String agencyId, String routeShortName, String routeLongName, String routeDesc,
-			Integer routeType, String routeUrl, String routeColor, String routeTextColor, Integer routeSortOrder) {
+			Integer routeType, String routeUrl, String routeColor, String routeTextColor) {
 		this.routeId = routeId;
 		this.agencyId = agencyId;
 		this.routeShortName = routeShortName;
@@ -27,21 +26,19 @@ public class GtfsRoute {
 		this.routeUrl = routeUrl;
 		this.routeColor = routeColor;
 		this.routeTextColor = routeTextColor;
-		this.routeSortOrder = routeSortOrder;
 	}
 	// Only Strings
 	public GtfsRoute(String routeId, String agencyId, String routeShortName, String routeLongName, String routeDesc,
-			Integer routeType, String routeUrl, String routeColor, String routeTextColor, String routeSortOrder) {
+			String routeType, String routeUrl, String routeColor, String routeTextColor) {
 		this.routeId = routeId;
 		this.agencyId = agencyId;
 		this.routeShortName = routeShortName;
 		this.routeLongName = routeLongName;
 		this.routeDesc = routeDesc;
-		this.routeType = routeType;
+		this.routeType = Integer.valueOf(routeType);
 		this.routeUrl = routeUrl;
 		this.routeColor = routeColor;
 		this.routeTextColor = routeTextColor;
-		this.routeSortOrder = Integer.valueOf(routeSortOrder);
 	}
 	
 	// Getters
@@ -72,9 +69,6 @@ public class GtfsRoute {
 	public String getRouteTextColor() {
 		return routeTextColor;
 	}
-	public Integer getRouteSortOrder() {
-		return routeSortOrder;
-	}
 	
 	// Setters
 	public void setRouteId(String routeId) {
@@ -104,13 +98,10 @@ public class GtfsRoute {
 	public void setRouteTextColor(String routeTextColor) {
 		this.routeTextColor = routeTextColor;
 	}
-	public void setRouteSortOrder(Integer routeSortOrder) {
-		this.routeSortOrder = routeSortOrder;
-	}
 	
 	// Public static methods
 	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[10];
+		int[] valueOrder = new int[9];
 		int counter = 0;
 		for (String column : headerValues) {
 			switch (column) {
@@ -123,7 +114,6 @@ public class GtfsRoute {
 				case "route_url": valueOrder[6] = counter; break;
 				case "route_color": valueOrder[7] = counter; break;
 				case "route_text_color": valueOrder[8] = counter; break;
-				case "route_sort_order": valueOrder[9] = counter; break;
 			}
 			counter++;
 		}
