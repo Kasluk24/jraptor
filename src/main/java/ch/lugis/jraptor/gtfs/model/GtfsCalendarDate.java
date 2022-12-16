@@ -1,21 +1,37 @@
 package ch.lugis.jraptor.gtfs.model;
 
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.lugis.jraptor.utils.GtfsImport;
+
 public class GtfsCalendarDate {
 	// Fields
-	private String serviceID;
+	private String serviceId;
 	private GtfsDate date;
 	private GtfsCalendarExceptionType exceptionType;
+	public static Map<String, String> mapSetters = new HashMap<>();
+	
+	static {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("service_id", "setServiceId");
+		tempFields.put("date", "setDate");
+		tempFields.put("exception_type", "setExceptionType");
+		mapSetters = Collections.unmodifiableMap(tempFields);
+	}
 	
 	// Constructor
 	public GtfsCalendarDate() {}
 
-	public GtfsCalendarDate(String serviceID, GtfsDate date, GtfsCalendarExceptionType exceptionType) {
-		this.serviceID = serviceID;
+	public GtfsCalendarDate(String serviceId, GtfsDate date, GtfsCalendarExceptionType exceptionType) {
+		this.serviceId = serviceId;
 		this.date = date;
 		this.exceptionType = exceptionType;
 	}
-	public GtfsCalendarDate(String serviceID, String date, int exceptionType) {
-		this.serviceID = serviceID;
+	public GtfsCalendarDate(String serviceId, String date, int exceptionType) {
+		this.serviceId = serviceId;
 		setDate(date);
 		if (GtfsCalendarExceptionType.getTypeByCode(exceptionType) != null) {
 			this.exceptionType = GtfsCalendarExceptionType.getTypeByCode(exceptionType);
@@ -27,15 +43,15 @@ public class GtfsCalendarDate {
 		}
 	}
 	// Only Strings
-	public GtfsCalendarDate(String serviceID, String date, String exceptionType) {
-		this.serviceID = serviceID;
+	public GtfsCalendarDate(String serviceId, String date, String exceptionType) {
+		this.serviceId = serviceId;
 		setDate(date);
 		setExceptionType(Integer.valueOf(exceptionType));
 	}
 
 	// Getters
-	public String getServiceID() {
-		return serviceID;
+	public String getServiceId() {
+		return serviceId;
 	}
 	public GtfsDate getDate() {
 		return date;
@@ -51,8 +67,8 @@ public class GtfsCalendarDate {
 	}
 	
 	// Setters
-	public void setServiceID(String serviceID) {
-		this.serviceID = serviceID;
+	public void setServiceId(String serviceId) {
+		this.serviceId = serviceId;
 	}
 	public void setDate(GtfsDate date) {
 		this.date = date;
@@ -73,19 +89,18 @@ public class GtfsCalendarDate {
 							exceptionTypeCode));
 		}
 	}
+	public void setExceptionType(String exceptionTypeCode) {
+		setExceptionType(Integer.valueOf(exceptionTypeCode));
+	}
 	
+	@Override
+	public String toString() {
+		return "GtfsCalendarDate [serviceId=" + serviceId + ", date=" + date + ", exceptionType=" + exceptionType + "]";
+	}
+
 	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[3];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "service_id": valueOrder[0] = counter; break;
-				case "date": valueOrder[1] = counter; break;
-				case "exception_type": valueOrder[2] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;	
+	public static Method[] getOrderedMethodArray(String[] gtfsHeader) {
+		Class<GtfsCalendarDate> classObject = GtfsCalendarDate.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	
 }
