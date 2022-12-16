@@ -1,6 +1,12 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public class GtfsRoute {
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.lugis.jraptor.utils.GtfsImport;
+
+public class GtfsRoute implements GtfsTableData {
 	// Fields
 	private String routeId;
 	private String agencyId;
@@ -11,6 +17,20 @@ public class GtfsRoute {
 	private String routeUrl;
 	private String routeColor;
 	private String routeTextColor;
+	public static Map<String, String> mapSetters = createSetterMap();
+	
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("route_id", "setRouteId");
+		tempFields.put("agency_id", "setAgencyId");
+		tempFields.put("route_short_name", "setRouteShortName");
+		tempFields.put("route_long_name", "setRouteLongName");
+		tempFields.put("route_type", "setRouteType");
+		tempFields.put("route_url", "setRouteUrl");
+		tempFields.put("route_color", "setRouteColor");
+		tempFields.put("route_text_color", "setRouteTextColor");
+		return tempFields;
+	}
 	
 	// Constructor
 	public GtfsRoute() {};
@@ -89,6 +109,9 @@ public class GtfsRoute {
 	public void setRouteType(Integer routeType) {
 		this.routeType = routeType;
 	}
+	public void setRouteType(String routeType) {
+		this.routeType = Integer.valueOf(routeType);
+	}
 	public void setRouteUrl(String routeUrl) {
 		this.routeUrl = routeUrl;
 	}
@@ -99,24 +122,16 @@ public class GtfsRoute {
 		this.routeTextColor = routeTextColor;
 	}
 	
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[9];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "route_id": valueOrder[0] = counter; break;
-				case "agency_id": valueOrder[1] = counter; break;
-				case "route_short_name": valueOrder[2] = counter; break;
-				case "route_long_name": valueOrder[3] = counter; break;
-				case "route_desc": valueOrder[4] = counter; break;
-				case "route_type": valueOrder[5] = counter; break;
-				case "route_url": valueOrder[6] = counter; break;
-				case "route_color": valueOrder[7] = counter; break;
-				case "route_text_color": valueOrder[8] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;	
+	@Override
+	public String toString() {
+		return "GtfsRoute [routeId=" + routeId + ", agencyId=" + agencyId + ", routeShortName=" + routeShortName
+				+ ", routeLongName=" + routeLongName + ", routeDesc=" + routeDesc + ", routeType=" + routeType
+				+ ", routeUrl=" + routeUrl + ", routeColor=" + routeColor + ", routeTextColor=" + routeTextColor + "]";
+	}
+
+	@Override
+	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+		Class<GtfsRoute> classObject = GtfsRoute.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
 }

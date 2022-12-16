@@ -7,6 +7,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import ch.lugis.jraptor.gtfs.model.GtfsAgency;
 import ch.lugis.jraptor.gtfs.model.GtfsCalendar;
 import ch.lugis.jraptor.gtfs.model.GtfsCalendarDate;
+import ch.lugis.jraptor.gtfs.model.GtfsRoute;
 
 public class Starter {
 
@@ -18,6 +19,7 @@ public class Starter {
 			reader.readAgenciesToMemory();
 			reader.readCalendarsToMemory();
 			reader.readCalendarDatesToMemory();
+			reader.readRoutesToMemory();
 		} catch (CsvValidationException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -30,6 +32,9 @@ public class Starter {
 		}
 		for (GtfsCalendarDate calendarDate : reader.getGtfsCalendarDates()) {
 			System.out.println(calendarDate.toString());
+		}
+		for (GtfsRoute route : reader.getGtfsRoutes()) {
+			System.out.println(route.toString());
 		}
 	}
 }
