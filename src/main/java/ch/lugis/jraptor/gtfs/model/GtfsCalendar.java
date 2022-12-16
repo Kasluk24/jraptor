@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.lugis.jraptor.utils.GtfsImport;
+
 public class GtfsCalendar {
 	// Fields
 	private String serviceId;
@@ -228,23 +230,7 @@ public class GtfsCalendar {
 	// Public static methods
 	public static Method[] getOrderedMethodArray(String[] gtfsHeader) {
 		Class<GtfsCalendar> classObject = GtfsCalendar.class;
-		Method[] methods = new Method[gtfsHeader.length];
-		
-		int i = 0;
-		for (String header : gtfsHeader) {
-			if (mapSetters.containsKey(header)) {
-				try {
-					methods[i] = classObject.getMethod(mapSetters.get(header), String.class);
-				} catch (NoSuchMethodException | SecurityException e) {
-					// Fatal error
-					e.printStackTrace();
-				}
-			} else {
-				methods[i] = null;
-			}
-			i++;
-		}
-		return methods;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	
 	
 	// Private methods

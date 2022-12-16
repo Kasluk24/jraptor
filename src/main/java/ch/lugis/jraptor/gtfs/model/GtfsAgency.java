@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.lugis.jraptor.utils.GtfsImport;
+
 public class GtfsAgency {
 	// Fields
 	private String agencyId;
@@ -98,22 +100,6 @@ public class GtfsAgency {
 	// Public static methods
 	public static Method[] getOrderedMethodArray(String[] gtfsHeader) {
 		Class<GtfsAgency> classObject = GtfsAgency.class;
-		Method[] methods = new Method[gtfsHeader.length];
-		
-		int i = 0;
-		for (String header : gtfsHeader) {
-			if (mapSetters.containsKey(header)) {
-				try {
-					methods[i] = classObject.getMethod(mapSetters.get(header), String.class);
-				} catch (NoSuchMethodException | SecurityException e) {
-					// Fatal error
-					e.printStackTrace();
-				}
-			} else {
-				methods[i] = null;
-			}
-			i++;
-		}
-		return methods;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	
 }
