@@ -7,7 +7,7 @@ import java.util.Map;
 
 import ch.lugis.jraptor.utils.GtfsImport;
 
-public class GtfsAgency {
+public class GtfsAgency implements GtfsTableData {
 	// Fields
 	private String agencyId;
 	private String agencyName;
@@ -16,9 +16,9 @@ public class GtfsAgency {
 	private String agencyLang;
 	private String agencyPhone;
 	private String agencyEmail;
-	public static Map<String, String> mapSetters;
+	public static final Map<String, String> mapSetters = createSettersMap();
 	
-	static {
+	private static Map<String, String> createSettersMap() {
 		Map<String, String> tempFields = new HashMap<>();
 		tempFields.put("agency_id", "setAgencyId");
 		tempFields.put("agency_name", "setAgencyName");
@@ -27,7 +27,7 @@ public class GtfsAgency {
 		tempFields.put("agency_lang", "setAgencyLang");
 		tempFields.put("agency_phone", "setAgencyPhone");
 		tempFields.put("agency_email", "setAgencyEmail");
-		mapSetters = Collections.unmodifiableMap(tempFields);
+		return tempFields;
 	}
 		
 	// Constructor
@@ -97,8 +97,8 @@ public class GtfsAgency {
 				+ ", agencyEmail=" + agencyEmail + "]";
 	}
 	
-	// Public static methods
-	public static Method[] getOrderedMethodArray(String[] gtfsHeader) {
+	@Override
+	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
 		Class<GtfsAgency> classObject = GtfsAgency.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	

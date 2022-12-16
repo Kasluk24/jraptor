@@ -3,16 +3,14 @@ package ch.lugis.jraptor;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
+
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +27,7 @@ import ch.lugis.jraptor.gtfs.model.GtfsFrequency;
 import ch.lugis.jraptor.gtfs.model.GtfsRoute;
 import ch.lugis.jraptor.gtfs.model.GtfsStop;
 import ch.lugis.jraptor.gtfs.model.GtfsStopTime;
+import ch.lugis.jraptor.gtfs.model.GtfsTableData;
 import ch.lugis.jraptor.gtfs.model.GtfsTransfer;
 import ch.lugis.jraptor.gtfs.model.GtfsTrip;
 
@@ -122,195 +121,49 @@ public class GtfsReader {
 	
 	// Read to memory
 	public void readAgenciesToMemory() throws IOException, CsvValidationException {
-    	logger.info("Read agency.txt to memory");
-		
-		gtfsAgencies = new HashSet<>();
-		CSVReader reader = createReader(gtfsDirectory.resolve("agency.txt"));
-		String[] lineValues = reader.readNext();
-		Method[] methods = GtfsAgency.getOrderedMethodArray(lineValues);
-		
-		while ((lineValues = reader.readNext()) != null) {
-			GtfsAgency agency = new GtfsAgency();
-			int i = 0;
-			for (String value : lineValues) {
-				if (methods[i] != null) {
-					try {
-						methods[i].invoke(agency, value);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						// Internal error
-						logger.severe("Fatal error in GtfsAgency class");
-						e.printStackTrace();
-					}
-				}
-				i++;
-			}
-			gtfsAgencies.add(agency);
-		}
-
+		logger.info("Read agency.txt to memory");
+		CSVReader reader = createReader(gtfsDirectory.resolve("calendar.txt"));
+		gtfsAgencies = readToMemory(reader, new GtfsAgency());
 	}
 	public void readCalendarsToMemory() throws IOException, CsvValidationException {
 		logger.info("Read calendar.txt to memory");
-		
-		gtfsCalendars = new HashSet<>();
 		CSVReader reader = createReader(gtfsDirectory.resolve("calendar.txt"));
-		String[] lineValues = reader.readNext();
-		
-		Method[] methods = GtfsCalendar.getOrderedMethodArray(lineValues);
-		
-		while ((lineValues = reader.readNext()) != null) {
-			GtfsCalendar calendar = new GtfsCalendar();
-			int i = 0;
-			for (String value : lineValues) {
-				if (methods[i] != null) {
-					try {
-						methods[i].invoke(calendar, value);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						// Internal error
-						logger.severe("Fatal error in GtfsCalendar class");
-						e.printStackTrace();
-					}
-				}
-				i++;
-			}
-			gtfsCalendars.add(calendar);
-		}
+		gtfsCalendars = readToMemory(reader, new GtfsCalendar());
 	}
 	public void readCalendarDatesToMemory() throws IOException, CsvValidationException {
 		logger.info("Read calendar_dates.txt to memory");
-		
-		gtfsCalendarDates = new HashSet<>();
 		CSVReader reader = createReader(gtfsDirectory.resolve("calendar_dates.txt"));
-		String[] lineValues = reader.readNext();
-		
-		Method[] methods = GtfsCalendarDate.getOrderedMethodArray(lineValues);
-		
-		while ((lineValues = reader.readNext()) != null) {
-			GtfsCalendarDate calendarDate = new GtfsCalendarDate();
-			int i = 0;
-			for (String value : lineValues) {
-				if (methods[i] != null) {
-					try {
-						methods[i].invoke(calendarDate, value);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						// Internal error
-						logger.severe("Fatal error in GtfsCalendarDate class");
-						e.printStackTrace();
-					}
-				}
-				i++;
-			}
-			gtfsCalendarDates.add(calendarDate);
-		}
+		gtfsCalendarDates = readToMemory(reader, new GtfsCalendarDate());
 	}
 	public void readFrequenciesToMemory() throws IOException, CsvValidationException {
-		gtfsFrequencies = new HashSet<>();
+		logger.info("Read frequency.txt to memory");
 		CSVReader reader = createReader(gtfsDirectory.resolve("frequencies.txt"));
-		String[] lineValues = reader.readNext();
-		int[] valueOrder = GtfsFrequency.mapFields(lineValues);
-		
-		while((lineValues = reader.readNext()) != null) {
-			GtfsFrequency frequency = new GtfsFrequency(
-					lineValues[valueOrder[0]],
-					lineValues[valueOrder[1]],
-					lineValues[valueOrder[2]],
-					lineValues[valueOrder[3]],
-					lineValues[valueOrder[4]]);
-			gtfsFrequencies.add(frequency);
-		}
+		gtfsFrequencies = readToMemory(reader, new GtfsFrequency());
 	}
 	public void readRoutesToMemory() throws IOException, CsvValidationException {
-		gtfsRoutes = new HashSet<>();
+		logger.info("Read routes.txt to memory");
 		CSVReader reader = createReader(gtfsDirectory.resolve("routes.txt"));
-		String[] lineValues = reader.readNext();
-		int[] valueOrder = GtfsRoute.mapFields(lineValues);
-		
-		while((lineValues = reader.readNext()) != null) {
-			GtfsRoute route = new GtfsRoute(
-					lineValues[valueOrder[0]],
-					lineValues[valueOrder[1]],
-					lineValues[valueOrder[2]],
-					lineValues[valueOrder[3]],
-					lineValues[valueOrder[4]],
-					lineValues[valueOrder[5]],
-					lineValues[valueOrder[6]],
-					lineValues[valueOrder[7]],
-					lineValues[valueOrder[8]]);
-			gtfsRoutes.add(route);
-		}
+		gtfsRoutes = readToMemory(reader, new GtfsRoute());
 	}
 	public void readStopsToMemory() throws IOException, CsvValidationException {
-		gtfsStops = new HashSet<>();
+		logger.info("Read stops.txt to memory");
 		CSVReader reader = createReader(gtfsDirectory.resolve("stops.txt"));
-		String[] lineValues = reader.readNext();
-		int[] valueOrder = GtfsStop.mapFields(lineValues);
-		
-		while((lineValues = reader.readNext()) != null) {
-			GtfsStop stop = new GtfsStop(
-					lineValues[valueOrder[0]],
-					lineValues[valueOrder[1]],
-					lineValues[valueOrder[2]],
-					lineValues[valueOrder[3]],
-					lineValues[valueOrder[4]],
-					lineValues[valueOrder[5]],
-					lineValues[valueOrder[6]],
-					lineValues[valueOrder[7]],
-					lineValues[valueOrder[8]]);
-			gtfsStops.add(stop);
-		}
+		gtfsStops = readToMemory(reader, new GtfsStop());
 	}
 	public void readStopTimesToMemory() throws IOException, CsvValidationException {
-		gtfsStopTimes = new HashSet<>();
+		logger.info("Read stop_times.txt to memory");
 		CSVReader reader = createReader(gtfsDirectory.resolve("stop_times.txt"));
-		String[] lineValues = reader.readNext();
-		int[] valueOrder = GtfsStopTime.mapFields(lineValues);
-		
-		while ((lineValues = reader.readNext()) != null) {
-			GtfsStopTime stopTime = new GtfsStopTime(
-					lineValues[valueOrder[0]],
-					lineValues[valueOrder[1]],
-					lineValues[valueOrder[2]],
-					lineValues[valueOrder[3]],
-					lineValues[valueOrder[4]],
-					lineValues[valueOrder[5]],
-					lineValues[valueOrder[6]],
-					lineValues[valueOrder[7]],
-					lineValues[valueOrder[8]]);
-			gtfsStopTimes.add(stopTime);
-		}
+		gtfsStopTimes = readToMemory(reader, new GtfsStopTime());
 	}
 	public void readTransfersToMemory() throws IOException, CsvValidationException {
-		gtfsTransfers = new HashSet<>();
+		logger.info("Read transfers.txt to memory");
 		CSVReader reader = createReader(gtfsDirectory.resolve("transfers.txt"));
-		String[] lineValues = reader.readNext();
-		int[] valueOrder = GtfsTransfer.mapFields(lineValues);
-		
-		while((lineValues = reader.readNext()) != null) {
-			GtfsTransfer transfer = new GtfsTransfer(
-					lineValues[valueOrder[0]],
-					lineValues[valueOrder[1]],
-					lineValues[valueOrder[2]],
-					lineValues[valueOrder[3]]);
-			gtfsTransfers.add(transfer);
-		}
+		gtfsTransfers = readToMemory(reader, new GtfsTransfer());
 	}
 	public void readTripsToMemory() throws IOException, CsvValidationException {
-		gtfsTrips = new HashSet<>();
+		logger.info("Read trips.txt to memory");
 		CSVReader reader = createReader(gtfsDirectory.resolve("trips.txt"));
-		String[] lineValues = reader.readNext();
-		int[] valueOrder = GtfsTrip.mapFields(lineValues);
-		
-		while((lineValues = reader.readNext()) != null) {
-			GtfsTrip trip = new GtfsTrip(
-					lineValues[valueOrder[0]],
-					lineValues[valueOrder[1]],
-					lineValues[valueOrder[2]],
-					lineValues[valueOrder[3]],
-					lineValues[valueOrder[4]],
-					lineValues[valueOrder[5]],
-					lineValues[valueOrder[6]],
-					lineValues[valueOrder[7]]);
-			gtfsTrips.add(trip);
-		}
+		gtfsTrips = readToMemory(reader, new GtfsTrip());
 	}
 	
 	// Read to sqlite
@@ -357,6 +210,37 @@ public class GtfsReader {
 	    	      .collect(Collectors.toSet());
 		
 		return gtfsFiles;
+	}
+	
+	private <T extends GtfsTableData> Method[] getSetters(T gtfsObject, String[] headers) {
+		return gtfsObject.getOrderedMethodArray(headers);
+	}
+
+	private <T extends GtfsTableData> Set<T> readToMemory(CSVReader reader, T gtfsObject) throws CsvValidationException, IOException {
+		Set<T> dataset = new HashSet<>();
+		String[] lineValues = reader.readNext(); // Reads the header
+		Class<T> gtfsClass = (Class<T>) gtfsObject.getClass();
+		Method[] setterMethods = getSetters(gtfsObject, lineValues);
+		
+		
+		while ((lineValues = reader.readNext()) != null) {
+			try {
+				T gtfsObjectInstance = gtfsClass.getConstructor().newInstance();
+				int i = 0;
+				for (String value : lineValues) {
+					if (setterMethods[i] != null) {
+							setterMethods[i].invoke(gtfsObjectInstance, value);
+					}
+					i++;
+				}
+				dataset.add(gtfsObjectInstance);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException | SecurityException | NoSuchMethodException e) {
+				// Internal error
+				logger.severe(String.format("Fatal error in {} class", gtfsClass.getName()));
+				e.printStackTrace();
+			}
+		}
+		return dataset;
 	}
 	
 	// Getters

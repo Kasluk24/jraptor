@@ -7,7 +7,7 @@ import java.util.Map;
 
 import ch.lugis.jraptor.utils.GtfsImport;
 
-public class GtfsCalendar {
+public class GtfsCalendar implements GtfsTableData {
 	// Fields
 	private String serviceId;
 	private Boolean monday;
@@ -19,9 +19,9 @@ public class GtfsCalendar {
 	private Boolean sunday;
 	private GtfsDate startDate;
 	private GtfsDate endDate;
-	public static Map<String, String> mapSetters = new HashMap<>();
+	public static final Map<String, String> mapSetters = createSetterMap();
 	
-	static {
+	private static Map<String, String> createSetterMap() {
 		Map<String, String> tempFields = new HashMap<>();
 		tempFields.put("service_id", "setServiceId");
 		tempFields.put("monday", "setMonday");
@@ -33,9 +33,8 @@ public class GtfsCalendar {
 		tempFields.put("sunday", "setSunday");
 		tempFields.put("start_date", "setStartDate");
 		tempFields.put("end_date", "setEndDate");
-		mapSetters = Collections.unmodifiableMap(tempFields);
-	}
-	
+		return tempFields;
+	}	
 	
 	// Constructor
 	public GtfsCalendar() {}
@@ -227,8 +226,8 @@ public class GtfsCalendar {
 				+ sunday + ", startDate=" + startDate + ", endDate=" + endDate + "]";
 	}
 
-	// Public static methods
-	public static Method[] getOrderedMethodArray(String[] gtfsHeader) {
+	@Override
+	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
 		Class<GtfsCalendar> classObject = GtfsCalendar.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	

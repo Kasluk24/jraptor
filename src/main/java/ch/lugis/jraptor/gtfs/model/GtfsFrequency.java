@@ -1,12 +1,29 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public class GtfsFrequency {
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.lugis.jraptor.utils.GtfsImport;
+
+public class GtfsFrequency implements GtfsTableData {
 	// Fields
 	private String tripId;
 	private GtfsTime startTime;
 	private GtfsTime endTime;
 	private Integer headwaySecs;
 	private GtfsFrequenciesExactTimesType exactTime;
+	public static Map<String, String> mapSetters = createSetterMap();
+	
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("trip_id", "setTripId");
+		tempFields.put("start_time", "setStartTime");
+		tempFields.put("end_time", "setEndTime");
+		tempFields.put("headway_secs", "setHeadwaySecs");
+		tempFields.put("exact_time", "setExactTime");
+		return tempFields;
+	}
 	
 	// Constructor
 	public GtfsFrequency() {}
@@ -74,6 +91,9 @@ public class GtfsFrequency {
 	public void setHeadwaySecs(Integer headwaySecs) {
 		this.headwaySecs = headwaySecs;
 	}
+	public void setHeadwaySecs(String headwaySecs) {
+		this.headwaySecs = Integer.valueOf(headwaySecs);
+	}
 	public void setExactTime(GtfsFrequenciesExactTimesType exactTime) {
 		this.exactTime = exactTime;
 	}
@@ -87,21 +107,19 @@ public class GtfsFrequency {
 							exactTimeCode));
 		}
 	}
-	
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[5];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "trip_id": valueOrder[0] = counter; break;
-				case "start_time": valueOrder[1] = counter; break;
-				case "end_time": valueOrder[2] = counter; break;
-				case "headway_secs": valueOrder[3] = counter; break;
-				case "exact_time": valueOrder[4] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;	
+	public void setExactTime(String exactTime) {
+		setExactTime(Integer.valueOf(exactTime));
+	}
+		
+	@Override
+	public String toString() {
+		return "GtfsFrequency [tripId=" + tripId + ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", headwaySecs=" + headwaySecs + ", exactTime=" + exactTime + "]";
+	}
+
+	@Override
+	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+		Class<GtfsFrequency> classObject = GtfsFrequency.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
 }
