@@ -1,6 +1,12 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public class GtfsStop {
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.lugis.jraptor.utils.GtfsImport;
+
+public class GtfsStop implements GtfsTableData {
 	// Fields
 	private String stopId;
 	private String stopCode;
@@ -11,6 +17,21 @@ public class GtfsStop {
 	private GtfsLocationType locationType;
 	private String parentStation;
 	private String stopTimezone;
+	public static Map<String, String> mapSetters = createSetterMap();
+	
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("stop_id", "setStopId");
+		tempFields.put("stop_code", "setStopCode");
+		tempFields.put("stop_name", "setStopName");
+		tempFields.put("stop_desc", "setStopDesc");
+		tempFields.put("stop_lat", "setStopLat");
+		tempFields.put("stop_lon", "setStopLon");
+		tempFields.put("location_type", "setLocationType");
+		tempFields.put("parent_station", "setParentStation");
+		tempFields.put("stop_timezone", "setStopTimezone");
+		return tempFields;
+	}
 	
 	// Constructor
 	public GtfsStop() {};
@@ -89,8 +110,14 @@ public class GtfsStop {
 	public void setStopLat(Double stopLat) {
 		this.stopLat = stopLat;
 	}
+	public void setStopLat(String stopLat) {
+		this.stopLat = Double.valueOf(stopLat);
+	}
 	public void setStopLon(Double stopLon) {
 		this.stopLon = stopLon;
+	}
+	public void setStopLon(String stopLon) {
+		this.stopLon = Double.valueOf(stopLon);
 	}
 	public void setLocationType(GtfsLocationType locationType) {
 		this.locationType = locationType;
@@ -105,6 +132,13 @@ public class GtfsStop {
 							locationTypeCode));
 		}
 	}
+	public void setLocationType(String locationTypeCode) {
+		if (locationTypeCode.isBlank()) {
+			setLocationType(0);
+		} else {
+			setLocationType(Integer.valueOf(locationTypeCode));
+		}
+	}
 	public void setParentStation(String parentStation) {
 		this.parentStation = parentStation;
 	}
@@ -112,24 +146,16 @@ public class GtfsStop {
 		this.stopTimezone = stopTimezone;
 	}
 		
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[9];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "stop_id": valueOrder[0] = counter; break;
-				case "stop_code": valueOrder[1] = counter; break;
-				case "stop_name": valueOrder[2] = counter; break;
-				case "stop_desc": valueOrder[3] = counter; break;
-				case "stop_lat": valueOrder[4] = counter; break;
-				case "stop_lon": valueOrder[5] = counter; break;
-				case "location_type": valueOrder[6] = counter; break;
-				case "parent_station": valueOrder[7] = counter; break;
-				case "stop_timezone": valueOrder[8] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;
+	@Override
+	public String toString() {
+		return "GtfsStop [stopId=" + stopId + ", stopCode=" + stopCode + ", stopName=" + stopName + ", stopDesc="
+				+ stopDesc + ", stopLat=" + stopLat + ", stopLon=" + stopLon + ", locationType=" + locationType
+				+ ", parentStation=" + parentStation + ", stopTimezone=" + stopTimezone + "]";
+	}
+
+	@Override
+	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+		Class<GtfsStop> classObject = GtfsStop.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
 }
