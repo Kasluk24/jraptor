@@ -1,6 +1,12 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public class GtfsTrip {
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.lugis.jraptor.utils.GtfsImport;
+
+public class GtfsTrip implements GtfsTableData  {
 	// Fields
 	private String routeId;
 	private String serviceId;
@@ -10,6 +16,20 @@ public class GtfsTrip {
 	private GtfsDirectionId directionId;
 	private String blockId;
 	private String shapeId;
+	public static final Map<String, String> mapSetters = createSettersMap();
+	
+	private static Map<String, String> createSettersMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("route_id", "setRouteId");
+		tempFields.put("service_id", "setServiceId");
+		tempFields.put("trip_id", "setTripId");
+		tempFields.put("trip_headsign", "setTripHeadsign");
+		tempFields.put("trip_short_name", "setTripShortName");
+		tempFields.put("direction_id", "setDirectionId");
+		tempFields.put("block_id", "setBlockId");
+		tempFields.put("shape_id", "setShapeId");
+		return tempFields;
+	}
 	
 	// Constructor
 	public GtfsTrip() {};
@@ -96,6 +116,9 @@ public class GtfsTrip {
 							directionIdCode));
 		}
 	}
+	public void setDirectionId(String directionIdCode) {
+		setDirectionId(Integer.valueOf(directionIdCode));
+	}
 	public void setBlockId(String blockId) {
 		this.blockId = blockId;
 	}
@@ -103,23 +126,16 @@ public class GtfsTrip {
 		this.shapeId = shapeId;
 	}
 	
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[8];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "route_id": valueOrder[0] = counter; break;
-				case "service_id": valueOrder[1] = counter; break;
-				case "trip_id": valueOrder[2] = counter; break;
-				case "trip_headsign": valueOrder[3] = counter; break;
-				case "trip_short_name": valueOrder[4] = counter; break;
-				case "direction_id": valueOrder[5] = counter; break;
-				case "block_id": valueOrder[6] = counter; break;
-				case "shape_id": valueOrder[7] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;
+	@Override
+	public String toString() {
+		return "GtfsTrip [routeId=" + routeId + ", serviceId=" + serviceId + ", tripId=" + tripId + ", tripHeadsign="
+				+ tripHeadsign + ", tripShortName=" + tripShortName + ", directionId=" + directionId + ", blockId="
+				+ blockId + ", shapeId=" + shapeId + "]";
 	}
+
+	@Override
+	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+		Class<GtfsTrip> classObject = GtfsTrip.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+	}	
 }

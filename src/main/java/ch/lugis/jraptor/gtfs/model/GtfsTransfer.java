@@ -1,11 +1,27 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public class GtfsTransfer {
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.lugis.jraptor.utils.GtfsImport;
+
+public class GtfsTransfer implements GtfsTableData {
 	// Fields
 	private String fromStopId;
 	private String toStopId;
 	private GtfsTransferType transferType;
 	private Integer minTransferTime;
+	public static final Map<String, String> mapSetters = createSettersMap();
+	
+	private static Map<String, String> createSettersMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("from_stop_id", "setFromStopId");
+		tempFields.put("to_stop_id", "setToStopId");
+		tempFields.put("transfer_type", "setTransferType");
+		tempFields.put("min_transfer_time", "setMinTransferTime");
+		return tempFields;
+	}
 	
 	// Constructor
 	public GtfsTransfer() {}
@@ -61,23 +77,25 @@ public class GtfsTransfer {
 							transferTypeCode));
 		}
 	}
+	public void setTransferType(String transferTypeCode) {
+		setTransferType(Integer.valueOf(transferTypeCode));
+	}
 	public void setMinTransferTime(Integer minTransferTime) {
 		this.minTransferTime = minTransferTime;
 	}
+	public void setMinTransferTime(String minTransferTime) {
+		this.minTransferTime = Integer.valueOf(minTransferTime);
+	}
 	
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[4];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "from_stop_id": valueOrder[0] = counter; break;
-				case "to_stop_id": valueOrder[1] = counter; break;
-				case "transfer_type": valueOrder[2] = counter; break;
-				case "min_transfer_time": valueOrder[3] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;
+	@Override
+	public String toString() {
+		return "GtfsTransfer [fromStopId=" + fromStopId + ", toStopId=" + toStopId + ", transferType=" + transferType
+				+ ", minTransferTime=" + minTransferTime + "]";
+	}
+
+	@Override
+	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+		Class<GtfsTransfer> classObject = GtfsTransfer.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
 }

@@ -151,19 +151,19 @@ public class GtfsReader {
 		gtfsStops = readToMemory(reader, new GtfsStop());
 	}
 	public void readStopTimesToMemory() throws IOException, CsvValidationException {
-//		logger.info("Read stop_times.txt to memory");
-//		CSVReader reader = createReader(gtfsDirectory.resolve("stop_times.txt"));
-//		gtfsStopTimes = readToMemory(reader, new GtfsStopTime());
+		logger.info("Read stop_times.txt to memory");
+		CSVReader reader = createReader(gtfsDirectory.resolve("stop_times.txt"));
+		gtfsStopTimes = readToMemory(reader, new GtfsStopTime());
 	}
 	public void readTransfersToMemory() throws IOException, CsvValidationException {
-//		logger.info("Read transfers.txt to memory");
-//		CSVReader reader = createReader(gtfsDirectory.resolve("transfers.txt"));
-//		gtfsTransfers = readToMemory(reader, new GtfsTransfer());
+		logger.info("Read transfers.txt to memory");
+		CSVReader reader = createReader(gtfsDirectory.resolve("transfers.txt"));
+		gtfsTransfers = readToMemory(reader, new GtfsTransfer());
 	}
 	public void readTripsToMemory() throws IOException, CsvValidationException {
-//		logger.info("Read trips.txt to memory");
-//		CSVReader reader = createReader(gtfsDirectory.resolve("trips.txt"));
-//		gtfsTrips = readToMemory(reader, new GtfsTrip());
+		logger.info("Read trips.txt to memory");
+		CSVReader reader = createReader(gtfsDirectory.resolve("trips.txt"));
+		gtfsTrips = readToMemory(reader, new GtfsTrip());
 	}
 	
 	// Read to sqlite

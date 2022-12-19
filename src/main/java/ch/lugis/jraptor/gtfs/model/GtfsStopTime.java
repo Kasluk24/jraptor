@@ -1,16 +1,37 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public class GtfsStopTime {
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.lugis.jraptor.utils.GtfsImport;
+
+public class GtfsStopTime implements GtfsTableData{
 	// Fields
 	private String tripId;
-	private GtfsTime arrivalTime = new GtfsTime();
-	private GtfsTime departureTime = new GtfsTime();
+	private GtfsTime arrivalTime;
+	private GtfsTime departureTime;
 	private String stopId;
 	private String stopSequence;
 	private String stopHeadsign;
 	private GtfsPickupDropOffType pickupType;
 	private GtfsPickupDropOffType dropOffType;
 	private Double shapeDistTraveled;
+	public static final Map<String, String> mapSetters = createSettersMap();
+	
+	private static Map<String, String> createSettersMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("trip_id", "setTripId");
+		tempFields.put("arrival_time", "setArrivalTime");
+		tempFields.put("departure_time", "setDepartureTime");
+		tempFields.put("stop_id", "setStopId");
+		tempFields.put("stop_sequence", "setStopSequence");
+		tempFields.put("stop_headsign", "setStopHeadsign");
+		tempFields.put("pickup_type", "setPickupType");
+		tempFields.put("drop_off_type", "setDropOffType");
+		tempFields.put("shape_dist_traveled", "setShapeDistTraveled");
+		return tempFields;
+	}
 	
 	// Constructor
 	public GtfsStopTime() {}
@@ -39,7 +60,7 @@ public class GtfsStopTime {
 		this.stopSequence = stopSequence;
 		this.stopHeadsign = stopHeadsign;
 		setPickupType(Integer.valueOf(pickupType));
-		setDropoffType(Integer.valueOf(dropoffType));
+		setDropOffType(Integer.valueOf(dropoffType));
 		this.shapeDistTraveled = Double.valueOf(shapeDistTraveled);
 	}
 	
@@ -122,41 +143,43 @@ public class GtfsStopTime {
 							pickupTypeCode));
 		}
 	}
-	public void setDropoffType(GtfsPickupDropOffType dropoffType) {
-		this.dropOffType = dropoffType;
+	public void setPickupType(String pickupTypeCode) {
+		setPickupType(Integer.valueOf(pickupTypeCode));
 	}
-	public void setDropoffType(int dropoffTypeCode) {
-		if (GtfsPickupDropOffType.getTypeByCode(dropoffTypeCode) != null) {
-			this.dropOffType = GtfsPickupDropOffType.getTypeByCode(dropoffTypeCode);
+	public void setDropOffType(GtfsPickupDropOffType dropOffType) {
+		this.dropOffType = dropOffType;
+	}
+	public void setDropOffType(int dropOffTypeCode) {
+		if (GtfsPickupDropOffType.getTypeByCode(dropOffTypeCode) != null) {
+			this.dropOffType = GtfsPickupDropOffType.getTypeByCode(dropOffTypeCode);
 		} else {
 			throw new IllegalArgumentException(
 					String.format(
-							"The value %s is not a valid GTFS pickup type", 
-							dropoffTypeCode));
+							"The value %s is not a valid GTFS drop off type", 
+							dropOffTypeCode));
 		}
+	}
+	public void setDropOffType(String dropOffTypeCode) {
+		setDropOffType(Integer.valueOf(dropOffTypeCode));
 	}
 	public void setShapeDistTraveled(Double shapeDistTraveled) {
 		this.shapeDistTraveled = shapeDistTraveled;
-	};
-	
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[9];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "trip_id": valueOrder[0] = counter; break;
-				case "arrival_time": valueOrder[1] = counter; break;
-				case "departure_time": valueOrder[2] = counter; break;
-				case "stop_id": valueOrder[3] = counter; break;
-				case "stop_sequence": valueOrder[4] = counter; break;
-				case "stop_headsign": valueOrder[5] = counter; break;
-				case "pickup_type": valueOrder[6] = counter; break;
-				case "drop_off_type": valueOrder[7] = counter; break;
-				case "shape_dist_traveled": valueOrder[8] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;
 	}
+	public void setShapeDistTraveled(String shapeDistTraveled) {
+		this.shapeDistTraveled = Double.valueOf(shapeDistTraveled);
+	}
+	
+	@Override
+	public String toString() {
+		return "GtfsStopTime [tripId=" + tripId + ", arrivalTime=" + arrivalTime + ", departureTime=" + departureTime
+				+ ", stopId=" + stopId + ", stopSequence=" + stopSequence + ", stopHeadsign=" + stopHeadsign
+				+ ", pickupType=" + pickupType + ", dropOffType=" + dropOffType + ", shapeDistTraveled="
+				+ shapeDistTraveled + "]";
+	}
+
+	@Override
+	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+		Class<GtfsStopTime> classObject = GtfsStopTime.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+	}	
 }
