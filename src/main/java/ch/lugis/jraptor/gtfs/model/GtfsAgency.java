@@ -1,7 +1,6 @@
 package ch.lugis.jraptor.gtfs.model;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,18 +16,8 @@ public class GtfsAgency implements GtfsTableData {
 	private String agencyPhone;
 	private String agencyEmail;
 	public static final Map<String, String> mapSetters = createSettersMap();
-	
-	private static Map<String, String> createSettersMap() {
-		Map<String, String> tempFields = new HashMap<>();
-		tempFields.put("agency_id", "setAgencyId");
-		tempFields.put("agency_name", "setAgencyName");
-		tempFields.put("agency_url", "setAgencyUrl");
-		tempFields.put("agency_timezone", "setAgencyTimezone");
-		tempFields.put("agency_lang", "setAgencyLang");
-		tempFields.put("agency_phone", "setAgencyPhone");
-		tempFields.put("agency_email", "setAgencyEmail");
-		return tempFields;
-	}
+	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
+	public static final String sqlTableName = "agency";
 		
 	// Constructor
 	public GtfsAgency() {};
@@ -102,4 +91,28 @@ public class GtfsAgency implements GtfsTableData {
 		Class<GtfsAgency> classObject = GtfsAgency.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	
+	
+	// Private methods
+	private static Map<String, String> createSettersMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("agency_id", "setAgencyId");
+		tempFields.put("agency_name", "setAgencyName");
+		tempFields.put("agency_url", "setAgencyUrl");
+		tempFields.put("agency_timezone", "setAgencyTimezone");
+		tempFields.put("agency_lang", "setAgencyLang");
+		tempFields.put("agency_phone", "setAgencyPhone");
+		tempFields.put("agency_email", "setAgencyEmail");
+		return tempFields;
+	}
+	private static Map<String, String> createSqlTypeMap() {
+		Map<String, String> tempTypes = new HashMap<>();
+		tempTypes.put("agency_id", "TEXT");
+		tempTypes.put("agency_name", "TEXT");
+		tempTypes.put("agency_url", "TEXT");
+		tempTypes.put("agency_timezone", "TEXT");
+		tempTypes.put("agency_lang", "TEXT");
+		tempTypes.put("agency_phone", "TEXT");
+		tempTypes.put("agency_email", "TEXT");
+		return tempTypes;
+	}
 }

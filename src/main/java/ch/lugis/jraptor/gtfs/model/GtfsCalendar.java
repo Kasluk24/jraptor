@@ -1,7 +1,6 @@
 package ch.lugis.jraptor.gtfs.model;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,21 +19,8 @@ public class GtfsCalendar implements GtfsTableData {
 	private GtfsDate startDate;
 	private GtfsDate endDate;
 	public static final Map<String, String> mapSetters = createSetterMap();
-	
-	private static Map<String, String> createSetterMap() {
-		Map<String, String> tempFields = new HashMap<>();
-		tempFields.put("service_id", "setServiceId");
-		tempFields.put("monday", "setMonday");
-		tempFields.put("tuesday", "setTuesday");
-		tempFields.put("wednesday", "setWednesday");
-		tempFields.put("thursday", "setThursday");
-		tempFields.put("friday", "setFriday");
-		tempFields.put("saturday", "setSaturday");
-		tempFields.put("sunday", "setSunday");
-		tempFields.put("start_date", "setStartDate");
-		tempFields.put("end_date", "setEndDate");
-		return tempFields;
-	}	
+	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
+	public static final String sqlTableName = "calendar";
 	
 	// Constructor
 	public GtfsCalendar() {}
@@ -247,4 +233,32 @@ public class GtfsCalendar implements GtfsTableData {
 			return true;
 		}
 	}
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("service_id", "setServiceId");
+		tempFields.put("monday", "setMonday");
+		tempFields.put("tuesday", "setTuesday");
+		tempFields.put("wednesday", "setWednesday");
+		tempFields.put("thursday", "setThursday");
+		tempFields.put("friday", "setFriday");
+		tempFields.put("saturday", "setSaturday");
+		tempFields.put("sunday", "setSunday");
+		tempFields.put("start_date", "setStartDate");
+		tempFields.put("end_date", "setEndDate");
+		return tempFields;
+	}	
+	private static Map<String, String> createSqlTypeMap() {
+		Map<String, String> tempTypes = new HashMap<>();
+		tempTypes.put("service_id", "TEXT");
+		tempTypes.put("monday", "INT");
+		tempTypes.put("tuesday", "INT");
+		tempTypes.put("wednesday", "INT");
+		tempTypes.put("thursday", "INT");
+		tempTypes.put("friday", "INT");
+		tempTypes.put("saturday", "INT");
+		tempTypes.put("sunday", "INT");
+		tempTypes.put("start_date", "TEXT");
+		tempTypes.put("end_date", "TEXT");
+		return tempTypes;
+	}	
 }

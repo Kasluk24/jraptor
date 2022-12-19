@@ -5,15 +5,6 @@ import java.time.LocalTime;
 
 import com.opencsv.exceptions.CsvValidationException;
 
-import ch.lugis.jraptor.gtfs.model.GtfsAgency;
-import ch.lugis.jraptor.gtfs.model.GtfsCalendar;
-import ch.lugis.jraptor.gtfs.model.GtfsCalendarDate;
-import ch.lugis.jraptor.gtfs.model.GtfsRoute;
-import ch.lugis.jraptor.gtfs.model.GtfsStop;
-import ch.lugis.jraptor.gtfs.model.GtfsStopTime;
-import ch.lugis.jraptor.gtfs.model.GtfsTransfer;
-import ch.lugis.jraptor.gtfs.model.GtfsTrip;
-
 public class Starter {
 
 	public static void main(String[] args) {
@@ -21,19 +12,19 @@ public class Starter {
 		GtfsReader reader = new GtfsReader("data/gtfs_fp2022_2022-08-17_04-15");
 		System.out.println(LocalTime.now());
 		
-		try {
-			reader.readAgenciesToMemory();
-			reader.readCalendarsToMemory();
-			reader.readCalendarDatesToMemory();
-			reader.readRoutesToMemory();
-			reader.readStopsToMemory();
-			reader.readStopTimesToMemory();
-			reader.readTransfersToMemory();
-			reader.readTripsToMemory();
-		} catch (CsvValidationException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			reader.readAgenciesToMemory();
+//			reader.readCalendarsToMemory();
+//			reader.readCalendarDatesToMemory();
+//			reader.readRoutesToMemory();
+//			reader.readStopsToMemory();
+//			reader.readStopTimesToMemory();
+//			reader.readTransfersToMemory();
+//			reader.readTripsToMemory();
+//		} catch (CsvValidationException | IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 //		for (GtfsAgency agency : reader.getGtfsAgencies()) {
 //			System.out.println(agency.toString());
 //		}
@@ -58,6 +49,16 @@ public class Starter {
 //		for (GtfsTrip trip : reader.getGtfsTrips()) {
 //			System.out.println(trip.toString());
 //		}
+		
+		
+		try {
+			reader.readAllToSqlite();
+		} catch (CsvValidationException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		System.out.println(LocalTime.now());
 	}
 }

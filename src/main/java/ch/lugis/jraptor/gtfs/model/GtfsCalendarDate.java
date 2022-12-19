@@ -1,7 +1,6 @@
 package ch.lugis.jraptor.gtfs.model;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
