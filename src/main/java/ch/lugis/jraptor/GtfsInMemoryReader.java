@@ -72,7 +72,7 @@ public class GtfsInMemoryReader extends GtfsReader {
 	// Read to memory
 	public void readAgenciesToMemory() throws IOException, CsvValidationException {
 		logger.info("Read agency.txt to memory");
-		CSVReader reader = createReader(gtfsDirectory.resolve("calendar.txt"));
+		CSVReader reader = createReader(gtfsDirectory.resolve("agency.txt"));
 		gtfsAgencies = readToMemory(reader, new GtfsAgency());
 		reader.close();
 	}
@@ -146,7 +146,7 @@ public class GtfsInMemoryReader extends GtfsReader {
 				dataset.add(gtfsObjectInstance);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException | SecurityException | NoSuchMethodException e) {
 				// Internal error
-				logger.severe(String.format("Fatal error in {} class", gtfsClass.getName()));
+				logger.severe(String.format("Fatal error in %s class", gtfsClass.getName()));
 				e.printStackTrace();
 			}
 		}

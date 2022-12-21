@@ -55,7 +55,7 @@ public class SqliteHandler {
 		try {
 			this.connection = DriverManager.getConnection("jdbc:sqlite:" + pathToDatabase.toString());
 		} catch (SQLException e) {
-			logger.severe(String.format("Connection to SQLITE database \"{}\" failed", getAbsolutePath()));
+			logger.severe(String.format("Connection to SQLITE database \"%s\" failed", getAbsolutePath()));
 			e.printStackTrace();
 		}
 	}
@@ -64,11 +64,20 @@ public class SqliteHandler {
 		execute(sqlStatement);
 		return result;
 	}
+	public ResultSet executeSql(String sqlStatement) {
+		result = null;
+		try {
+			PreparedStatement statement = connection.prepareStatement(sqlStatement);
+			execute(statement);
+			
+		} catch (SQLException e) {
+			logger.warning("Could not create SQL statement");
+			e.printStackTrace();
+		}
+		return result;
+	}
 	public ResultSet executeSql(String sqlStatement, String... values) {
 		result = null;
-		if (connection == null) {
-			connectToDatabase();
-		}		
 		try {
 			PreparedStatement statement = connection.prepareStatement(sqlStatement);
 			
@@ -82,7 +91,6 @@ public class SqliteHandler {
 			logger.warning("Could not create SQL statement");
 			e.printStackTrace();
 		}
-		
 		return result;
 	}
 	public void closeResultSet() {
@@ -103,7 +111,7 @@ public class SqliteHandler {
 	// Private methods
 	private void execute(PreparedStatement sqlStatement) {
 		try {
-			result = sqlStatement.executeQuery();
+			result = (sqlStatement.execute()) ? sqlStatement.getResultSet() : null;
 		} catch (SQLException e) {
 			logger.warning("Could not execute SQL statement");
 			logger.warning(e.getMessage());

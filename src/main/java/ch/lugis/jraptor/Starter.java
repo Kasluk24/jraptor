@@ -11,7 +11,7 @@ public class Starter {
 
 	public static void main(String[] args) {
 		// Test GtfsReader
-		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
+		GtfsSqliteReader reader = new GtfsSqliteReader("data/gtfs_fp2022_2022-08-17_04-15", "data/GTFS.sqlite");
 		System.out.println(LocalTime.now());
 		
 //		try {
@@ -53,7 +53,8 @@ public class Starter {
 //		}
 				
 		try {
-			reader.readAllToMemory();
+			reader.readAgenciesToSqlite();
+			reader.readCalendarsToSqlite();
 		} catch (CsvValidationException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

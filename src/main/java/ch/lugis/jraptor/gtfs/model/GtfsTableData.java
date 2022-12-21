@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface GtfsTableData {
 	public static final Map<String, String> mapSetters = createSetterMap();
-	public static final Map<String, String> mapSqlTypes = createSqlTypeMap();
+	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = null;
 	
 	private static Map<String, String> createSetterMap() {
@@ -16,6 +16,8 @@ public interface GtfsTableData {
 	}
 	
 	Method[] getOrderedMethodArray(String[] gtfsHeader);
-	
-	
+	Map<String, String> getAllAsMap();
+	Map<String, String> getMapSetters();
+	Map<String, String> getMapSqliteTypes();
+	String getSqlTableName();
 }

@@ -55,6 +55,15 @@ public class GtfsAgency implements GtfsTableData {
 	public String getAgencyEmail() {
 		return agencyEmail;
 	}
+	public Map<String, String> getMapSetters() {
+		return mapSetters;
+	}
+	public Map<String, String> getMapSqliteTypes() {
+		return mapSqliteTypes;
+	}
+	public String getSqlTableName() {
+		return sqlTableName;
+	}
 	
 	// Setters
 	public void setAgencyId(String agencyId) {
@@ -92,6 +101,19 @@ public class GtfsAgency implements GtfsTableData {
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	
 	
+	@Override
+	public Map<String, String> getAllAsMap() {
+		Map<String, String> tempValues = new HashMap<>();
+		tempValues.put("agency_id", getAgencyId());
+		tempValues.put("agency_name", getAgencyName());
+		tempValues.put("agency_url", getAgencyUrl());
+		tempValues.put("agency_timezone", getAgencyTimezone());
+		tempValues.put("agency_lang", getAgencyLang());
+		tempValues.put("agency_phone", getAgencyPhone());
+		tempValues.put("agency_email", getAgencyEmail());
+		return tempValues;
+	}
+	
 	// Private methods
 	private static Map<String, String> createSettersMap() {
 		Map<String, String> tempFields = new HashMap<>();
@@ -106,7 +128,7 @@ public class GtfsAgency implements GtfsTableData {
 	}
 	private static Map<String, String> createSqlTypeMap() {
 		Map<String, String> tempTypes = new HashMap<>();
-		tempTypes.put("agency_id", "TEXT");
+		tempTypes.put("agency_id", "TEXT PRIMARY KEY");
 		tempTypes.put("agency_name", "TEXT");
 		tempTypes.put("agency_url", "TEXT");
 		tempTypes.put("agency_timezone", "TEXT");
