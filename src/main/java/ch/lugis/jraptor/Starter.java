@@ -3,8 +3,6 @@ package ch.lugis.jraptor;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.opencsv.exceptions.CsvValidationException;
 
