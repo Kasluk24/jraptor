@@ -54,10 +54,7 @@ public class Starter {
 //		}
 				
 		try {
-			reader.readAgenciesToSqlite();
-			reader.readCalendarsToSqlite();
-			reader.readCalendarDatesToSqlite();
-			reader.readRoutesToSqlite();
+			reader.readAllToSqlite();
 		} catch (CsvValidationException | IOException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

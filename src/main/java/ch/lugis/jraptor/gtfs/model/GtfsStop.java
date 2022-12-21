@@ -17,21 +17,10 @@ public class GtfsStop implements GtfsTableData {
 	private GtfsLocationType locationType;
 	private String parentStation;
 	private String stopTimezone;
-	public static Map<String, String> mapSetters = createSetterMap();
-	
-	private static Map<String, String> createSetterMap() {
-		Map<String, String> tempFields = new HashMap<>();
-		tempFields.put("stop_id", "setStopId");
-		tempFields.put("stop_code", "setStopCode");
-		tempFields.put("stop_name", "setStopName");
-		tempFields.put("stop_desc", "setStopDesc");
-		tempFields.put("stop_lat", "setStopLat");
-		tempFields.put("stop_lon", "setStopLon");
-		tempFields.put("location_type", "setLocationType");
-		tempFields.put("parent_station", "setParentStation");
-		tempFields.put("stop_timezone", "setStopTimezone");
-		return tempFields;
-	}
+	public static final Map<String, String> mapSetters = createSetterMap();
+	public static final Map<String, String> mapGetters = createGetterMap();
+	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
+	public static final String sqlTableName = "stops";
 	
 	// Constructor
 	public GtfsStop() {};
@@ -78,8 +67,14 @@ public class GtfsStop implements GtfsTableData {
 	public Double getStopLat() {
 		return stopLat;
 	}
+	public String getStopLatAsString() {
+		return String.valueOf(stopLat);
+	}
 	public Double getStopLon() {
 		return stopLon;
+	}
+	public String getStopLonAsString() {
+		return String.valueOf(stopLon);
 	}
 	public GtfsLocationType getLocationType() {
 		return locationType;
@@ -87,11 +82,26 @@ public class GtfsStop implements GtfsTableData {
 	public int getLocationTypeCode() {
 		return locationType.getCode();
 	}
+	public String getLocationTypeCodeAsString() {
+		return String.valueOf(locationType.getCode());
+	}
 	public String getParentStation() {
 		return parentStation;
 	}
 	public String getStopTimezone() {
 		return stopTimezone;
+	}
+	public Map<String, String> getMapSetters() {
+		return mapSetters;
+	}
+	public Map<String, String> getMapGetters() {
+		return mapGetters;
+	}
+	public Map<String, String> getMapSqliteTypes() {
+		return mapSqliteTypes;
+	}
+	public String getSqlTableName() {
+		return sqlTableName;
 	}
 	
 	// Setters
@@ -152,10 +162,55 @@ public class GtfsStop implements GtfsTableData {
 				+ stopDesc + ", stopLat=" + stopLat + ", stopLon=" + stopLon + ", locationType=" + locationType
 				+ ", parentStation=" + parentStation + ", stopTimezone=" + stopTimezone + "]";
 	}
-
 	@Override
 	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsStop> classObject = GtfsStop.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+	}
+	@Override
+	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
+		Class<GtfsStop> classObject = GtfsStop.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
+	}
+	
+	// Private static methods
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("stop_id", "setStopId");
+		tempFields.put("stop_code", "setStopCode");
+		tempFields.put("stop_name", "setStopName");
+		tempFields.put("stop_desc", "setStopDesc");
+		tempFields.put("stop_lat", "setStopLat");
+		tempFields.put("stop_lon", "setStopLon");
+		tempFields.put("location_type", "setLocationType");
+		tempFields.put("parent_station", "setParentStation");
+		tempFields.put("stop_timezone", "setStopTimezone");
+		return tempFields;
+	}
+	private static Map<String, String> createGetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("stop_id", "getStopId");
+		tempFields.put("stop_code", "getStopCode");
+		tempFields.put("stop_name", "getStopName");
+		tempFields.put("stop_desc", "getStopDesc");
+		tempFields.put("stop_lat", "getStopLatAsString");
+		tempFields.put("stop_lon", "getStopLonAsString");
+		tempFields.put("location_type", "getLocationTypeCodeAsString");
+		tempFields.put("parent_station", "getParentStation");
+		tempFields.put("stop_timezone", "getStopTimezone");
+		return tempFields;
+	}
+	private static Map<String, String> createSqlTypeMap() {
+		Map<String, String> tempTypes = new HashMap<>();
+		tempTypes.put("stop_id", "TEXT PRIMARY KEY");
+		tempTypes.put("stop_code", "TEXT");
+		tempTypes.put("stop_name", "TEXT");
+		tempTypes.put("stop_desc", "TEXT");
+		tempTypes.put("stop_lat", "REAL");
+		tempTypes.put("stop_lon", "REAL");
+		tempTypes.put("location_type", "INT");
+		tempTypes.put("parent_station", "TEXT");
+		tempTypes.put("stop_timezone", "TEXT");
+		return tempTypes;
 	}
 }

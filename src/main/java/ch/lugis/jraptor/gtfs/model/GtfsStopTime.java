@@ -17,21 +17,10 @@ public class GtfsStopTime implements GtfsTableData{
 	private GtfsPickupDropOffType pickupType;
 	private GtfsPickupDropOffType dropOffType;
 	private Double shapeDistTraveled;
-	public static final Map<String, String> mapSetters = createSettersMap();
-	
-	private static Map<String, String> createSettersMap() {
-		Map<String, String> tempFields = new HashMap<>();
-		tempFields.put("trip_id", "setTripId");
-		tempFields.put("arrival_time", "setArrivalTime");
-		tempFields.put("departure_time", "setDepartureTime");
-		tempFields.put("stop_id", "setStopId");
-		tempFields.put("stop_sequence", "setStopSequence");
-		tempFields.put("stop_headsign", "setStopHeadsign");
-		tempFields.put("pickup_type", "setPickupType");
-		tempFields.put("drop_off_type", "setDropOffType");
-		tempFields.put("shape_dist_traveled", "setShapeDistTraveled");
-		return tempFields;
-	}
+	public static final Map<String, String> mapSetters = createSetterMap();
+	public static final Map<String, String> mapGetters = createGetterMap();
+	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
+	public static final String sqlTableName = "stop_times";
 	
 	// Constructor
 	public GtfsStopTime() {}
@@ -95,14 +84,35 @@ public class GtfsStopTime implements GtfsTableData{
 	public int getPickupTypeCode() {
 		return pickupType.getCode();
 	}
-	public GtfsPickupDropOffType getDropoffType() {
+	public String getPickupTypeCodeAsString() {
+		return String.valueOf(pickupType.getCode());
+	}
+	public GtfsPickupDropOffType getDropOffType() {
 		return dropOffType;
 	}
-	public int getDropoffTypeCode() {
+	public int getDropOffTypeCode() {
 		return dropOffType.getCode();
+	}
+	public String getDropOffTypeCodeAsString() {
+		return String.valueOf(dropOffType.getCode());
 	}
 	public Double getShapeDistTraveled() {
 		return shapeDistTraveled;
+	}
+	public String getShapeDistTraveledAsString() {
+		return String.valueOf(shapeDistTraveled);
+	}
+	public Map<String, String> getMapSetters() {
+		return mapSetters;
+	}
+	public Map<String, String> getMapGetters() {
+		return mapGetters;
+	}
+	public Map<String, String> getMapSqliteTypes() {
+		return mapSqliteTypes;
+	}
+	public String getSqlTableName() {
+		return sqlTableName;
 	}
 	
 	// Setters
@@ -181,5 +191,51 @@ public class GtfsStopTime implements GtfsTableData{
 	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsStopTime> classObject = GtfsStopTime.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+	}
+	@Override
+	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
+		Class<GtfsStopTime> classObject = GtfsStopTime.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
 	}	
+	
+	// Private static methods
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("trip_id", "setTripId");
+		tempFields.put("arrival_time", "setArrivalTime");
+		tempFields.put("departure_time", "setDepartureTime");
+		tempFields.put("stop_id", "setStopId");
+		tempFields.put("stop_sequence", "setStopSequence");
+		tempFields.put("stop_headsign", "setStopHeadsign");
+		tempFields.put("pickup_type", "setPickupType");
+		tempFields.put("drop_off_type", "setDropOffType");
+		tempFields.put("shape_dist_traveled", "setShapeDistTraveled");
+		return tempFields;
+	}
+	private static Map<String, String> createGetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("trip_id", "getTripId");
+		tempFields.put("arrival_time", "getArrivalTimeAsString");
+		tempFields.put("departure_time", "getDepartureTimeAsString");
+		tempFields.put("stop_id", "getStopId");
+		tempFields.put("stop_sequence", "getStopSequence");
+		tempFields.put("stop_headsign", "getStopHeadsign");
+		tempFields.put("pickup_type", "getPickupTypeCodeAsString");
+		tempFields.put("drop_off_type", "getDropOffTypeCodeAsString");
+		tempFields.put("shape_dist_traveled", "getShapeDistTraveledAsString");
+		return tempFields;
+	}
+	private static Map<String, String> createSqlTypeMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("trip_id", "TEXT");
+		tempFields.put("arrival_time", "TEXT");
+		tempFields.put("departure_time", "TEXT");
+		tempFields.put("stop_id", "TEXT");
+		tempFields.put("stop_sequence", "TEXT");
+		tempFields.put("stop_headsign", "TEXT");
+		tempFields.put("pickup_type", "INT");
+		tempFields.put("drop_off_type", "INT");
+		tempFields.put("shape_dist_traveled", "REAL");
+		return tempFields;
+	}
 }

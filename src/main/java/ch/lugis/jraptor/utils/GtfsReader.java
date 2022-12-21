@@ -3,7 +3,6 @@ package ch.lugis.jraptor.utils;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
@@ -13,8 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.opencsv.CSVReader;
-
-import ch.lugis.jraptor.gtfs.model.GtfsTableData;
 
 public class GtfsReader {
 	// Fields
@@ -49,11 +46,5 @@ public class GtfsReader {
 	    	      .collect(Collectors.toSet());
 		
 		return gtfsFiles;
-	}
-	protected <T extends GtfsTableData> Method[] getSetters(T gtfsObject, String[] headers) {
-		return gtfsObject.getOrderedSetterArray(headers);
-	}
-	protected <T extends GtfsTableData> Method[] getGetters(T gtfsObject, String[] headers) {
-		return gtfsObject.getOrderedGetterArray(headers);
 	}
 }
