@@ -2,6 +2,8 @@ package ch.lugis.jraptor;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.opencsv.exceptions.CsvValidationException;
 
@@ -9,7 +11,7 @@ public class Starter {
 
 	public static void main(String[] args) {
 		// Test GtfsReader
-		GtfsReader reader = new GtfsReader("data/gtfs_fp2022_2022-08-17_04-15");
+		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
 		System.out.println(LocalTime.now());
 		
 //		try {
@@ -49,10 +51,9 @@ public class Starter {
 //		for (GtfsTrip trip : reader.getGtfsTrips()) {
 //			System.out.println(trip.toString());
 //		}
-		
-		
+				
 		try {
-			reader.readAllToSqlite();
+			reader.readAllToMemory();
 		} catch (CsvValidationException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

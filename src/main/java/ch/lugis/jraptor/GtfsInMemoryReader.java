@@ -1,21 +1,10 @@
 package ch.lugis.jraptor;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -30,13 +19,10 @@ import ch.lugis.jraptor.gtfs.model.GtfsStopTime;
 import ch.lugis.jraptor.gtfs.model.GtfsTableData;
 import ch.lugis.jraptor.gtfs.model.GtfsTransfer;
 import ch.lugis.jraptor.gtfs.model.GtfsTrip;
-import ch.lugis.jraptor.utils.SqliteHandler;
+import ch.lugis.jraptor.utils.GtfsReader;
 
-public class GtfsReader {
+public class GtfsInMemoryReader extends GtfsReader {
 	// Fields
-	private final Path gtfsDirectory;
-	private SqliteHandler sqliteHandler;
-	private Logger logger;
 	private Set<GtfsAgency> gtfsAgencies;
 	private Set<GtfsCalendar> gtfsCalendars;
 	private Set<GtfsCalendarDate> gtfsCalendarDates;
@@ -47,17 +33,8 @@ public class GtfsReader {
 	private Set<GtfsTransfer> gtfsTransfers;
 	private Set<GtfsTrip> gtfsTrips;
 	
-	// Constructor
-	public GtfsReader(String gtfsDirectory) {
-		Path workingDirectory = Paths.get(".");
-		if (gtfsDirectory == null) {
-			this.gtfsDirectory = workingDirectory;
-		} else {
-			this.gtfsDirectory = workingDirectory.relativize(Paths.get(gtfsDirectory));
-		}
-		
-		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-		logger.setLevel(Level.ALL);		
+	public GtfsInMemoryReader(String gtfsDirectory) {
+		super(gtfsDirectory);
 	}
 	
 	// Public read methods
@@ -91,37 +68,7 @@ public class GtfsReader {
 			readTripsToMemory();
 	    }
 	}
-	public void readAllToSqlite() throws IOException, CsvValidationException {
-		Set<String> gtfsFiles = getGtfsFiles();
-	    if (gtfsFiles.contains("agency.txt")) {
-			readAgenciesToSqlite();
-	    }
-	    if (gtfsFiles.contains("calendar.txt")) {
-			readCalendarsToSqlite();
-	    }
-	    if (gtfsFiles.contains("calendar_dates.txt")) {
-			readCalendarDatesToSqlite();
-	    }
-	    if (gtfsFiles.contains("frequencies.txt")) {
-			readFrequenciesToSqlite();
-	    }
-	    if (gtfsFiles.contains("routes.txt")) {
-			readRoutesToSqlite();
-	    }
-	    if (gtfsFiles.contains("stops.txt")) {
-			readStopsToSqlite();
-	    }
-	    if (gtfsFiles.contains("stop_times.txt")) {
-			readStopTimesToSqlite();
-	    }
-	    if (gtfsFiles.contains("transfers.txt")) {
-			readTransfersToSqlite();
-	    }
-	    if (gtfsFiles.contains("trips.txt")) {
-			readTripsToSqlite();
-	    }
-	}
-	
+
 	// Read to memory
 	public void readAgenciesToMemory() throws IOException, CsvValidationException {
 		logger.info("Read agency.txt to memory");
@@ -178,71 +125,7 @@ public class GtfsReader {
 		reader.close();
 	}
 	
-	// Read to sqlite
-	public void readAgenciesToSqlite() throws IOException {
-		logger.info("Read agency.txt to database");
-		CSVReader reader = createReader(gtfsDirectory.resolve("agencytxt"));
-		readToSqlite(reader, new GtfsAgency(), "agency");
-		reader.close();
-	}
-	public void readCalendarsToSqlite() {
-		
-	}
-	public void readCalendarDatesToSqlite() {
-		
-	}
-	public void readFrequenciesToSqlite() {
-		
-	}
-	public void readRoutesToSqlite() {
-		
-	}
-	public void readStopsToSqlite() {
-		
-	}
-	public void readStopTimesToSqlite() {
-
-	}
-	public void readTransfersToSqlite() {
-		
-	}
-	public void readTripsToSqlite() {
-		
-	}
-	
 	// Private methods
-	private CSVReader createReader(Path gtfsFile) throws IOException {
-		FileReader fileReader = new FileReader(gtfsFile.toFile());
-		CSVReader reader = new CSVReader(fileReader);
-		
-		return reader;
-	}
-	private Set<String> getGtfsFiles() {
-		File gtfsFolder = gtfsDirectory.toFile();
-	    Set<String> gtfsFiles = Stream.of(gtfsFolder.listFiles())
-	    	      .filter(file -> !file.isDirectory())
-	    	      .map(File::getName)
-	    	      .collect(Collectors.toSet());
-		
-		return gtfsFiles;
-	}
-	
-	private void createSqliteHandler(String pathToDatabase) {
-		if (pathToDatabase == null || pathToDatabase.isBlank()) {
-			pathToDatabase = "GTFS_Data.sqlite";
-		}
-		sqliteHandler = new SqliteHandler(pathToDatabase);
-	}
-	
-	private <T extends GtfsTableData> void createSqliteTable(String[] header, T gtfsObject) {
-		sqliteHandler.executeSql("DROP TABLE IF EXISTS ?", T.sqlTableName);
-		// Create table
-	}
-	
-	private <T extends GtfsTableData> Method[] getSetters(T gtfsObject, String[] headers) {
-		return gtfsObject.getOrderedMethodArray(headers);
-	}
-
 	private <T extends GtfsTableData> Set<T> readToMemory(CSVReader reader, T gtfsObject) throws CsvValidationException, IOException {
 		Set<T> dataset = new HashSet<>();
 		String[] lineValues = reader.readNext(); // Reads the header
@@ -268,11 +151,7 @@ public class GtfsReader {
 			}
 		}
 		return dataset;
-	}
-	
-	private <T extends GtfsTableData> void readToSqlite(CSVReader reader, T gtfsObject, String tableName) {
-		
-	}
+	}	
 	
 	// Getters
 	public Set<GtfsAgency> getGtfsAgencies() {
@@ -302,4 +181,5 @@ public class GtfsReader {
 	public Set<GtfsTrip> getGtfsTrips() {
 		return gtfsTrips;
 	}
+
 }
