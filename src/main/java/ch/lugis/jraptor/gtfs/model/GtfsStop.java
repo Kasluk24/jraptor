@@ -154,7 +154,7 @@ public class GtfsStop implements GtfsTableData {
 	}
 
 	@Override
-	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsStop> classObject = GtfsStop.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}

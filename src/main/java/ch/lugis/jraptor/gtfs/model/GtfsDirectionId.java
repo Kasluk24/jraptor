@@ -16,7 +16,9 @@ public enum GtfsDirectionId {
 	
 	public static GtfsDirectionId getIdByCode(int code) {
 		for (GtfsDirectionId id : GtfsDirectionId.values()) {
-			return id;
+			if (id.getCode() == code) {
+				return id;
+			}
 		}
 		return null;
 	}

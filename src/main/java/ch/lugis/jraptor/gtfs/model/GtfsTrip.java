@@ -134,7 +134,7 @@ public class GtfsTrip implements GtfsTableData  {
 	}
 
 	@Override
-	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsTrip> classObject = GtfsTrip.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	

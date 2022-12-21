@@ -1,6 +1,7 @@
 package ch.lugis.jraptor;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +56,9 @@ public class Starter {
 		try {
 			reader.readAgenciesToSqlite();
 			reader.readCalendarsToSqlite();
-		} catch (CsvValidationException | IOException e) {
+			reader.readCalendarDatesToSqlite();
+			reader.readRoutesToSqlite();
+		} catch (CsvValidationException | IOException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -16,7 +16,9 @@ public enum GtfsFrequenciesExactTimesType {
 	
 	public static GtfsFrequenciesExactTimesType getTypeByCode(int code) {
 		for (GtfsFrequenciesExactTimesType type : GtfsFrequenciesExactTimesType.values()) {
-			return type;
+			if (type.getCode() == code) {
+				return type;
+			}
 		}
 		return null;
 	}

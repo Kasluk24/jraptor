@@ -16,6 +16,7 @@ public class GtfsAgency implements GtfsTableData {
 	private String agencyPhone;
 	private String agencyEmail;
 	public static final Map<String, String> mapSetters = createSettersMap();
+	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "agency";
 		
@@ -58,6 +59,9 @@ public class GtfsAgency implements GtfsTableData {
 	public Map<String, String> getMapSetters() {
 		return mapSetters;
 	}
+	public Map<String, String> getMapGetters() {
+		return mapGetters;
+	}
 	public Map<String, String> getMapSqliteTypes() {
 		return mapSqliteTypes;
 	}
@@ -94,24 +98,15 @@ public class GtfsAgency implements GtfsTableData {
 				+ ", agencyTimezone=" + agencyTimezone + ", agencyLang=" + agencyLang + ", agencyPhone=" + agencyPhone
 				+ ", agencyEmail=" + agencyEmail + "]";
 	}
-	
 	@Override
-	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsAgency> classObject = GtfsAgency.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
-	}	
-	
+	}
 	@Override
-	public Map<String, String> getAllAsMap() {
-		Map<String, String> tempValues = new HashMap<>();
-		tempValues.put("agency_id", getAgencyId());
-		tempValues.put("agency_name", getAgencyName());
-		tempValues.put("agency_url", getAgencyUrl());
-		tempValues.put("agency_timezone", getAgencyTimezone());
-		tempValues.put("agency_lang", getAgencyLang());
-		tempValues.put("agency_phone", getAgencyPhone());
-		tempValues.put("agency_email", getAgencyEmail());
-		return tempValues;
+	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
+		Class<GtfsAgency> classObject = GtfsAgency.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
 	}
 	
 	// Private methods
@@ -124,6 +119,17 @@ public class GtfsAgency implements GtfsTableData {
 		tempFields.put("agency_lang", "setAgencyLang");
 		tempFields.put("agency_phone", "setAgencyPhone");
 		tempFields.put("agency_email", "setAgencyEmail");
+		return tempFields;
+	}
+	private static Map<String, String> createGetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("agency_id", "getAgencyId");
+		tempFields.put("agency_name", "getAgencyName");
+		tempFields.put("agency_url", "getAgencyUrl");
+		tempFields.put("agency_timezone", "getAgencyTimezone");
+		tempFields.put("agency_lang", "getAgencyLang");
+		tempFields.put("agency_phone", "getAgencyPhone");
+		tempFields.put("agency_email", "getAgencyEmail");
 		return tempFields;
 	}
 	private static Map<String, String> createSqlTypeMap() {

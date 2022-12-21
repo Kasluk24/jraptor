@@ -20,7 +20,9 @@ public enum GtfsTransferType {
 	
 	public static GtfsTransferType getTypeByCode(int code) {
 		for (GtfsTransferType type : GtfsTransferType.values()) {
-			return type;
+			if (type.getCode() == code) {
+				return type;
+			}
 		}
 		return null;
 	}

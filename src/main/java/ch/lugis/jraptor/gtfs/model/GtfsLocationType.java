@@ -19,7 +19,9 @@ public enum GtfsLocationType {
 	
 	public static GtfsLocationType getTypeByCode(int code) {
 		for (GtfsLocationType type : GtfsLocationType.values()) {
-			return type;
+			if (type.getCode() == code) {
+				return type;
+			}
 		}
 		return null;
 	}

@@ -19,6 +19,7 @@ public class GtfsCalendar implements GtfsTableData {
 	private GtfsDate startDate;
 	private GtfsDate endDate;
 	public static final Map<String, String> mapSetters = createSetterMap();
+	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "calendar";
 	
@@ -76,11 +77,17 @@ public class GtfsCalendar implements GtfsTableData {
 	public int getMondayAsInt() {
 		return monday  ? 1 : 0;
 	}
+	public String getMondayAsString() {
+		return monday  ? "1" : "0";
+	}
 	public Boolean getTuesday() {
 		return tuesday;
 	}
 	public int getTuesdayAsInt() {
 		return tuesday  ? 1 : 0;
+	}
+	public String getTuesdayAsString() {
+		return tuesday  ? "1" : "0";
 	}
 	public Boolean getWednesday() {
 		return wednesday;
@@ -88,11 +95,17 @@ public class GtfsCalendar implements GtfsTableData {
 	public int getWednesdayAsInt() {
 		return wednesday  ? 1 : 0;
 	}
+	public String getWednesdayAsString() {
+		return wednesday  ? "1" : "0";
+	}
 	public Boolean getThursday() {
 		return thursday;
 	}
 	public int getThursdayAsInt() {
 		return thursday  ? 1 : 0;
+	}
+	public String getThursdayAsString() {
+		return thursday  ? "1" : "0";
 	}
 	public Boolean getFriday() {
 		return friday;
@@ -100,17 +113,26 @@ public class GtfsCalendar implements GtfsTableData {
 	public int getFridayAsInt() {
 		return friday  ? 1 : 0;
 	}
+	public String getFridayAsString() {
+		return friday  ? "1" : "0";
+	}
 	public Boolean getSaturday() {
 		return saturday;
 	}
 	public int getSaturdayAsInt() {
 		return saturday  ? 1 : 0;
 	}
+	public String getSaturdayAsString() {
+		return saturday  ? "1" : "0";
+	}
 	public Boolean getSunday() {
 		return sunday;
 	}
 	public int getSundayAsInt() {
 		return sunday  ? 1 : 0;
+	}
+	public String getSundayAsString() {
+		return sunday  ? "1" : "0";
 	}
 	public GtfsDate getStartDate() {
 		return startDate;
@@ -126,6 +148,9 @@ public class GtfsCalendar implements GtfsTableData {
 	}
 	public Map<String, String> getMapSetters() {
 		return mapSetters;
+	}
+	public Map<String, String> getMapGetters() {
+		return mapGetters;
 	}
 	public Map<String, String> getMapSqliteTypes() {
 		return mapSqliteTypes;
@@ -220,27 +245,15 @@ public class GtfsCalendar implements GtfsTableData {
 				+ wednesday + ", thursday=" + thursday + ", friday=" + friday + ", saturday=" + saturday + ", sunday="
 				+ sunday + ", startDate=" + startDate + ", endDate=" + endDate + "]";
 	}
-
 	@Override
-	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsCalendar> classObject = GtfsCalendar.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
-	
 	@Override
-	public Map<String, String> getAllAsMap() {
-		Map<String, String> tempValues = new HashMap<>();
-		tempValues.put("service_id", getServiceId());
-		tempValues.put("monday", String.valueOf(getMondayAsInt()));
-		tempValues.put("tuesday", String.valueOf(getTuesdayAsInt()));
-		tempValues.put("wednesday", String.valueOf(getWednesdayAsInt()));
-		tempValues.put("thursday", String.valueOf(getThursdayAsInt()));
-		tempValues.put("friday", String.valueOf(getFridayAsInt()));
-		tempValues.put("saturday", String.valueOf(getSaturdayAsInt()));
-		tempValues.put("sunday", String.valueOf(getSundayAsInt()));
-		tempValues.put("start_date", getStartDateAsString());
-		tempValues.put("end_date", getEndDateAsString());
-		return tempValues;
+	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
+		Class<GtfsCalendar> classObject = GtfsCalendar.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
 	}
 	
 	// Private methods
@@ -272,6 +285,20 @@ public class GtfsCalendar implements GtfsTableData {
 		tempFields.put("sunday", "setSunday");
 		tempFields.put("start_date", "setStartDate");
 		tempFields.put("end_date", "setEndDate");
+		return tempFields;
+	}	
+	private static Map<String, String> createGetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("service_id", "getServiceId");
+		tempFields.put("monday", "getMondayAsString");
+		tempFields.put("tuesday", "getTuesdayAsString");
+		tempFields.put("wednesday", "getWednesdayAsString");
+		tempFields.put("thursday", "getThursdayAsString");
+		tempFields.put("friday", "getFridayAsString");
+		tempFields.put("saturday", "getSaturdayAsString");
+		tempFields.put("sunday", "getSundayAsString");
+		tempFields.put("start_date", "getStartDateAsString");
+		tempFields.put("end_date", "getEndDateAsString");
 		return tempFields;
 	}	
 	private static Map<String, String> createSqlTypeMap() {

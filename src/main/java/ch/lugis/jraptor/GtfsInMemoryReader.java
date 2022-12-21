@@ -131,7 +131,7 @@ public class GtfsInMemoryReader extends GtfsReader {
 		String[] lineValues = reader.readNext(); // Reads the header
 		@SuppressWarnings("unchecked")
 		Class<T> gtfsClass = (Class<T>)gtfsObject.getClass();
-		Method[] setterMethods = getSetters(gtfsObject, lineValues);
+		Method[] setterMethods = gtfsObject.getOrderedSetterArray(lineValues);
 		
 		while ((lineValues = reader.readNext()) != null) {
 			try {

@@ -3,14 +3,9 @@ package ch.lugis.jraptor.utils;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,18 +13,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 
-import ch.lugis.jraptor.gtfs.model.GtfsAgency;
-import ch.lugis.jraptor.gtfs.model.GtfsCalendar;
-import ch.lugis.jraptor.gtfs.model.GtfsCalendarDate;
-import ch.lugis.jraptor.gtfs.model.GtfsFrequency;
-import ch.lugis.jraptor.gtfs.model.GtfsRoute;
-import ch.lugis.jraptor.gtfs.model.GtfsStop;
-import ch.lugis.jraptor.gtfs.model.GtfsStopTime;
 import ch.lugis.jraptor.gtfs.model.GtfsTableData;
-import ch.lugis.jraptor.gtfs.model.GtfsTransfer;
-import ch.lugis.jraptor.gtfs.model.GtfsTrip;
 
 public class GtfsReader {
 	// Fields
@@ -65,8 +50,10 @@ public class GtfsReader {
 		
 		return gtfsFiles;
 	}
-	
 	protected <T extends GtfsTableData> Method[] getSetters(T gtfsObject, String[] headers) {
-		return gtfsObject.getOrderedMethodArray(headers);
+		return gtfsObject.getOrderedSetterArray(headers);
+	}
+	protected <T extends GtfsTableData> Method[] getGetters(T gtfsObject, String[] headers) {
+		return gtfsObject.getOrderedGetterArray(headers);
 	}
 }

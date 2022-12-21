@@ -178,7 +178,7 @@ public class GtfsStopTime implements GtfsTableData{
 	}
 
 	@Override
-	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsStopTime> classObject = GtfsStopTime.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	

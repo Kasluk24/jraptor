@@ -18,7 +18,9 @@ public enum GtfsPickupDropOffType {
 	
 	public static GtfsPickupDropOffType getTypeByCode(int code) {
 		for (GtfsPickupDropOffType type : GtfsPickupDropOffType.values()) {
-			return type;
+			if (type.getCode() == code) {
+				return type;
+			}
 		}
 		return null;
 	}

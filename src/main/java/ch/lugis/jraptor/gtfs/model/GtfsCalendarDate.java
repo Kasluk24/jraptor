@@ -11,15 +11,10 @@ public class GtfsCalendarDate implements GtfsTableData {
 	private String serviceId;
 	private GtfsDate date;
 	private GtfsCalendarExceptionType exceptionType;
-	public static Map<String, String> mapSetters = createSetterMap();
-	
-	private static Map<String, String> createSetterMap() {
-		Map<String, String> tempFields = new HashMap<>();
-		tempFields.put("service_id", "setServiceId");
-		tempFields.put("date", "setDate");
-		tempFields.put("exception_type", "setExceptionType");
-		return tempFields;
-	}
+	public static final Map<String, String> mapSetters = createSetterMap();
+	public static final Map<String, String> mapGetters = createGetterMap();
+	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
+	public static final String sqlTableName = "calendar_dates";
 	
 	// Constructor
 	public GtfsCalendarDate() {}
@@ -64,6 +59,21 @@ public class GtfsCalendarDate implements GtfsTableData {
 	public int getExceptionTypeCode() {
 		return exceptionType.getCode();
 	}
+	public String getExceptionTypeCodeAsString() {
+		return String.valueOf(exceptionType.getCode());
+	}
+	public Map<String, String> getMapSetters() {
+		return mapSetters;
+	}
+	public Map<String, String> getMapGetters() {
+		return mapGetters;
+	}
+	public Map<String, String> getMapSqliteTypes() {
+		return mapSqliteTypes;
+	}
+	public String getSqlTableName() {
+		return sqlTableName;
+	}
 	
 	// Setters
 	public void setServiceId(String serviceId) {
@@ -98,8 +108,36 @@ public class GtfsCalendarDate implements GtfsTableData {
 	}
 
 	@Override
-	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsCalendarDate> classObject = GtfsCalendarDate.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+	}
+	@Override
+	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
+		Class<GtfsCalendarDate> classObject = GtfsCalendarDate.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
 	}	
+	
+	// Private static methods
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("service_id", "setServiceId");
+		tempFields.put("date", "setDate");
+		tempFields.put("exception_type", "setExceptionType");
+		return tempFields;
+	}
+	private static Map<String, String> createGetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("service_id", "getServiceId");
+		tempFields.put("date", "getDateAsString");
+		tempFields.put("exception_type", "getExceptionTypeCodeAsString");
+		return tempFields;
+	}
+	private static Map<String, String> createSqlTypeMap() {
+		Map<String, String> tempTypes = new HashMap<>();
+		tempTypes.put("service_id", "TEXT");
+		tempTypes.put("date", "TEXT");
+		tempTypes.put("exception_type", "INT");
+		return tempTypes;
+	}
 }

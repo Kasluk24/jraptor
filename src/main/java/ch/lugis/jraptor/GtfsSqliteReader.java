@@ -3,7 +3,9 @@ package ch.lugis.jraptor;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Set;
 
 import com.opencsv.CSVReader;
@@ -19,6 +21,7 @@ import ch.lugis.jraptor.gtfs.model.GtfsStopTime;
 import ch.lugis.jraptor.gtfs.model.GtfsTableData;
 import ch.lugis.jraptor.gtfs.model.GtfsTransfer;
 import ch.lugis.jraptor.gtfs.model.GtfsTrip;
+import ch.lugis.jraptor.utils.GtfsImport;
 import ch.lugis.jraptor.utils.GtfsReader;
 import ch.lugis.jraptor.utils.SqliteHandler;
 
@@ -35,7 +38,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		createSqliteHandler(pathToDatabase);
 	}
 	
-	public void readAllToSqlite() throws IOException, CsvValidationException {
+	public void readAllToSqlite() throws IOException, CsvValidationException, SQLException {
 		Set<String> gtfsFiles = getGtfsFiles();
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -70,7 +73,7 @@ public class GtfsSqliteReader extends GtfsReader {
 	    }
 	}
 	
-	public void readAgenciesToSqlite() throws IOException, CsvValidationException {
+	public void readAgenciesToSqlite() throws IOException, CsvValidationException, SQLException {
 		logger.info("Read agency.txt to database");
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -79,7 +82,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		readToSqlite(reader, new GtfsAgency());
 		reader.close();
 	}
-	public void readCalendarsToSqlite() throws IOException, CsvValidationException {
+	public void readCalendarsToSqlite() throws IOException, CsvValidationException, SQLException {
 		logger.info("Read calendar.txt to database");
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -88,7 +91,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		readToSqlite(reader, new GtfsCalendar());
 		reader.close();
 	}
-	public void readCalendarDatesToSqlite() throws CsvValidationException, IOException {
+	public void readCalendarDatesToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read calendar_dates.txt to database");
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -97,7 +100,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		readToSqlite(reader, new GtfsCalendarDate());
 		reader.close();
 	}
-	public void readFrequenciesToSqlite() throws CsvValidationException, IOException {
+	public void readFrequenciesToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read frequencies.txt to database");
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -106,7 +109,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		readToSqlite(reader, new GtfsFrequency());
 		reader.close();
 	}
-	public void readRoutesToSqlite() throws CsvValidationException, IOException {
+	public void readRoutesToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read routes.txt to database");
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -115,7 +118,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		readToSqlite(reader, new GtfsRoute());
 		reader.close();
 	}
-	public void readStopsToSqlite() throws CsvValidationException, IOException {
+	public void readStopsToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read stops.txt to database");
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -124,7 +127,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		readToSqlite(reader, new GtfsStop());
 		reader.close();
 	}
-	public void readStopTimesToSqlite() throws CsvValidationException, IOException {
+	public void readStopTimesToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read stop_times.txt to database");
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -133,7 +136,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		readToSqlite(reader, new GtfsStopTime());
 		reader.close();
 	}
-	public void readTransfersToSqlite() throws CsvValidationException, IOException {
+	public void readTransfersToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read transfers.txt to database");
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -142,7 +145,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		readToSqlite(reader, new GtfsTransfer());
 		reader.close();
 	}
-	public void readTripsToSqlite() throws CsvValidationException, IOException {
+	public void readTripsToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read trips.txt to database");
 		if (sqliteHandler.getConnection() == null) {
 			sqliteHandler.connectToDatabase();
@@ -176,41 +179,42 @@ public class GtfsSqliteReader extends GtfsReader {
 		sqliteHandler.executeSql(createTableSql.toString());
 	}
 	
-	private <T extends GtfsTableData> void readToSqlite(CSVReader reader, T gtfsObject) throws CsvValidationException, IOException {
-		String[] header = reader.readNext(); // Reads the header
-		createSqliteTable(header, gtfsObject);
+	private <T extends GtfsTableData> void readToSqlite(CSVReader reader, T gtfsObject) throws CsvValidationException, IOException, SQLException {
+		String[] lineValues = reader.readNext(); // Reads the header
+		createSqliteTable(lineValues, gtfsObject);
 		@SuppressWarnings("unchecked")
 		Class<T> gtfsClass = (Class<T>)gtfsObject.getClass();
-		Method[] setterMethods = getSetters(gtfsObject, header);
+		Method[] setterMethods = gtfsObject.getOrderedSetterArray(lineValues);
+		Method[] getterMethods = gtfsObject.getOrderedGetterArray(lineValues);
 		
-		String[] lineValues;
-		while ((lineValues = reader.readNext()) != null) {
-			try {
+		String insertSql = "INSERT INTO " + 
+				gtfsObject.getSqlTableName() + 
+				" VALUES (" + 
+				GtfsImport.createSeparatedString(lineValues.length, ", ", "?") +
+				");";
+		Connection connection = sqliteHandler.getConnection();
+		connection.setAutoCommit(false);
+		PreparedStatement insertStatement = connection.prepareStatement(insertSql);
+		
+		try {
+			while ((lineValues = reader.readNext()) != null) {
 				T gtfsObjectInstance = gtfsClass.getConstructor().newInstance();
 				int i = 0;
 				for (String value : lineValues) {
 					if (setterMethods[i] != null) {
 							setterMethods[i].invoke(gtfsObjectInstance, value);
+							insertStatement.setString(i + 1, (String)getterMethods[i].invoke(gtfsObjectInstance));	
 					}
 					i++;
 				}
-				
-				Map<String, String> dataValues = gtfsObjectInstance.getAllAsMap();
-				StringBuilder insertSql = new StringBuilder();
-				insertSql.append(String.format("INSERT INTO %s VALUES (\"", gtfsObjectInstance.getSqlTableName()));
-				for (String column : header) {
-					insertSql.append(dataValues.get(column));
-					insertSql.append("\", \"");
-				}
-				insertSql.replace(insertSql.length() - 3, insertSql.length(), ");");
-				sqliteHandler.executeSql(insertSql.toString());
-				
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException | SecurityException | NoSuchMethodException e) {
-				// Internal error
-				logger.severe(String.format("Fatal error in %s class", gtfsClass.getName()));
-				e.printStackTrace();
+				sqliteHandler.executeSql(insertStatement);	
 			}
+		} catch (IllegalArgumentException | SecurityException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			// Internal error
+			logger.severe(String.format("Fatal error in %s class", gtfsClass.getName()));
+			e.printStackTrace();
+		} finally {
+			connection.commit();
 		}
 	}
-
 }

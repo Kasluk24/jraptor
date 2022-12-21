@@ -28,8 +28,14 @@ public class GtfsImport {
 			}
 			i++;
 		}
-		return methods;
-		
-		
+		return methods;		
+	}
+	
+	public static String createSeparatedString(int count, String separator, String character) {
+		StringBuilder builder = new StringBuilder();
+		for (int i=0; i<count; i++) {
+			builder.append(character + separator);
+		}
+		return builder.substring(0, builder.length() - separator.length()).toString();
 	}
 }

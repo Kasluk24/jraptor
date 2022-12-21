@@ -17,20 +17,10 @@ public class GtfsRoute implements GtfsTableData {
 	private String routeUrl;
 	private String routeColor;
 	private String routeTextColor;
-	public static Map<String, String> mapSetters = createSetterMap();
-	
-	private static Map<String, String> createSetterMap() {
-		Map<String, String> tempFields = new HashMap<>();
-		tempFields.put("route_id", "setRouteId");
-		tempFields.put("agency_id", "setAgencyId");
-		tempFields.put("route_short_name", "setRouteShortName");
-		tempFields.put("route_long_name", "setRouteLongName");
-		tempFields.put("route_type", "setRouteType");
-		tempFields.put("route_url", "setRouteUrl");
-		tempFields.put("route_color", "setRouteColor");
-		tempFields.put("route_text_color", "setRouteTextColor");
-		return tempFields;
-	}
+	public static final Map<String, String> mapSetters = createSetterMap();
+	public static final Map<String, String> mapGetters = createGetterMap();
+	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
+	public static final String sqlTableName = "routes";
 	
 	// Constructor
 	public GtfsRoute() {};
@@ -80,6 +70,9 @@ public class GtfsRoute implements GtfsTableData {
 	public Integer getRouteType() {
 		return routeType;
 	}
+	public String getRouteTypeAsString() {
+		return String.valueOf(routeType);
+	}
 	public String getRouteUrl() {
 		return routeUrl;
 	}
@@ -88,6 +81,18 @@ public class GtfsRoute implements GtfsTableData {
 	}
 	public String getRouteTextColor() {
 		return routeTextColor;
+	}
+	public Map<String, String> getMapSetters() {
+		return mapSetters;
+	}
+	public Map<String, String> getMapGetters() {
+		return mapGetters;
+	}
+	public Map<String, String> getMapSqliteTypes() {
+		return mapSqliteTypes;
+	}
+	public String getSqlTableName() {
+		return sqlTableName;
 	}
 	
 	// Setters
@@ -128,10 +133,52 @@ public class GtfsRoute implements GtfsTableData {
 				+ ", routeLongName=" + routeLongName + ", routeDesc=" + routeDesc + ", routeType=" + routeType
 				+ ", routeUrl=" + routeUrl + ", routeColor=" + routeColor + ", routeTextColor=" + routeTextColor + "]";
 	}
-
 	@Override
-	public Method[] getOrderedMethodArray(String[] gtfsHeader) {
+	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsRoute> classObject = GtfsRoute.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+	}	
+	@Override
+	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
+		Class<GtfsRoute> classObject = GtfsRoute.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
+	}	
+	
+	// Private static methods
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("route_id", "setRouteId");
+		tempFields.put("agency_id", "setAgencyId");
+		tempFields.put("route_short_name", "setRouteShortName");
+		tempFields.put("route_long_name", "setRouteLongName");
+		tempFields.put("route_type", "setRouteType");
+		tempFields.put("route_url", "setRouteUrl");
+		tempFields.put("route_color", "setRouteColor");
+		tempFields.put("route_text_color", "setRouteTextColor");
+		return tempFields;
+	}
+	private static Map<String, String> createGetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("route_id", "getRouteId");
+		tempFields.put("agency_id", "getAgencyId");
+		tempFields.put("route_short_name", "getRouteShortName");
+		tempFields.put("route_long_name", "getRouteLongName");
+		tempFields.put("route_type", "getRouteTypeAsString");
+		tempFields.put("route_url", "getRouteUrl");
+		tempFields.put("route_color", "getRouteColor");
+		tempFields.put("route_text_color", "getRouteTextColor");
+		return tempFields;
+	}
+	private static Map<String, String> createSqlTypeMap() {
+		Map<String, String> tempTypes = new HashMap<>();
+		tempTypes.put("route_id", "TEXT PRIMARY KEY");
+		tempTypes.put("agency_id", "TEXT");
+		tempTypes.put("route_short_name", "TEXT");
+		tempTypes.put("route_long_name", "TEXT");
+		tempTypes.put("route_type", "INT");
+		tempTypes.put("route_url", "TEXT");
+		tempTypes.put("route_color", "TEXT");
+		tempTypes.put("route_text_color", "TEXT");
+		return tempTypes;
 	}
 }
