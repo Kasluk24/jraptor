@@ -16,7 +16,9 @@ public enum GtfsCalendarExceptionType {
 	
 	public static GtfsCalendarExceptionType getTypeByCode(int code) {
 		for (GtfsCalendarExceptionType type : GtfsCalendarExceptionType.values()) {
-			return type;
+			if (type.getCode() == code) {
+				return type;
+			}
 		}
 		return null;
 	}

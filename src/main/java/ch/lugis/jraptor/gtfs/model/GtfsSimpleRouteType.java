@@ -24,7 +24,9 @@ public enum GtfsSimpleRouteType {
 	
 	public static GtfsSimpleRouteType getTypeByCode(int code) {
 		for (GtfsSimpleRouteType type : GtfsSimpleRouteType.values()) {
-			return type;
+			if (type.getCode() == code) {
+				return type;
+			}
 		}
 		return null;
 	}

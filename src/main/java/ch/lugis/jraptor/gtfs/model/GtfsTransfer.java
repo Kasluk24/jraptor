@@ -1,11 +1,21 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public class GtfsTransfer {
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.lugis.jraptor.utils.GtfsImport;
+
+public class GtfsTransfer implements GtfsTableData {
 	// Fields
 	private String fromStopId;
 	private String toStopId;
 	private GtfsTransferType transferType;
 	private Integer minTransferTime;
+	public static final Map<String, String> mapSetters = createSetterMap();
+	public static final Map<String, String> mapGetters = createGetterMap();
+	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
+	public static final String sqlTableName = "transfers";
 	
 	// Constructor
 	public GtfsTransfer() {}
@@ -37,8 +47,26 @@ public class GtfsTransfer {
 	public int getTransferTypeCode() {
 		return transferType.getCode();
 	}
+	public String getTransferTypeCodeAsString() {
+		return String.valueOf(transferType.getCode());
+	}
 	public Integer getMinTransferTime() {
 		return minTransferTime;
+	}
+	public String getMinTransferTimeAsString() {
+		return String.valueOf(minTransferTime);
+	}
+	public Map<String, String> getMapSetters() {
+		return mapSetters;
+	}
+	public Map<String, String> getMapGetters() {
+		return mapGetters;
+	}
+	public Map<String, String> getMapSqliteTypes() {
+		return mapSqliteTypes;
+	}
+	public String getSqlTableName() {
+		return sqlTableName;
 	}
 	
 	// Setters
@@ -61,23 +89,55 @@ public class GtfsTransfer {
 							transferTypeCode));
 		}
 	}
+	public void setTransferType(String transferTypeCode) {
+		setTransferType(Integer.valueOf(transferTypeCode));
+	}
 	public void setMinTransferTime(Integer minTransferTime) {
 		this.minTransferTime = minTransferTime;
 	}
+	public void setMinTransferTime(String minTransferTime) {
+		this.minTransferTime = Integer.valueOf(minTransferTime);
+	}
 	
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[4];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "from_stop_id": valueOrder[0] = counter; break;
-				case "to_stop_id": valueOrder[1] = counter; break;
-				case "transfer_type": valueOrder[2] = counter; break;
-				case "min_transfer_time": valueOrder[3] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;
+	@Override
+	public String toString() {
+		return "GtfsTransfer [fromStopId=" + fromStopId + ", toStopId=" + toStopId + ", transferType=" + transferType
+				+ ", minTransferTime=" + minTransferTime + "]";
+	}
+	@Override
+	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
+		Class<GtfsTransfer> classObject = GtfsTransfer.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+	}
+	@Override
+	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
+		Class<GtfsTransfer> classObject = GtfsTransfer.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
+	}
+	
+	// Private static methods
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("from_stop_id", "setFromStopId");
+		tempFields.put("to_stop_id", "setToStopId");
+		tempFields.put("transfer_type", "setTransferType");
+		tempFields.put("min_transfer_time", "setMinTransferTime");
+		return tempFields;
+	}
+	private static Map<String, String> createGetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("from_stop_id", "getFromStopId");
+		tempFields.put("to_stop_id", "getToStopId");
+		tempFields.put("transfer_type", "getTransferTypeCodeAsString");
+		tempFields.put("min_transfer_time", "getMinTransferTimeAsString");
+		return tempFields;
+	}
+	private static Map<String, String> createSqlTypeMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("from_stop_id", "TEXT");
+		tempFields.put("to_stop_id", "TEXT");
+		tempFields.put("transfer_type", "INT");
+		tempFields.put("min_transfer_time", "INT");
+		return tempFields;
 	}
 }

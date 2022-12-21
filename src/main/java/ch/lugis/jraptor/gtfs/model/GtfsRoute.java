@@ -1,6 +1,12 @@
 package ch.lugis.jraptor.gtfs.model;
 
-public class GtfsRoute {
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.lugis.jraptor.utils.GtfsImport;
+
+public class GtfsRoute implements GtfsTableData {
 	// Fields
 	private String routeId;
 	private String agencyId;
@@ -11,13 +17,16 @@ public class GtfsRoute {
 	private String routeUrl;
 	private String routeColor;
 	private String routeTextColor;
-	private Integer routeSortOrder;
+	public static final Map<String, String> mapSetters = createSetterMap();
+	public static final Map<String, String> mapGetters = createGetterMap();
+	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
+	public static final String sqlTableName = "routes";
 	
 	// Constructor
 	public GtfsRoute() {};
 	
 	public GtfsRoute(String routeId, String agencyId, String routeShortName, String routeLongName, String routeDesc,
-			Integer routeType, String routeUrl, String routeColor, String routeTextColor, Integer routeSortOrder) {
+			Integer routeType, String routeUrl, String routeColor, String routeTextColor) {
 		this.routeId = routeId;
 		this.agencyId = agencyId;
 		this.routeShortName = routeShortName;
@@ -27,21 +36,19 @@ public class GtfsRoute {
 		this.routeUrl = routeUrl;
 		this.routeColor = routeColor;
 		this.routeTextColor = routeTextColor;
-		this.routeSortOrder = routeSortOrder;
 	}
 	// Only Strings
 	public GtfsRoute(String routeId, String agencyId, String routeShortName, String routeLongName, String routeDesc,
-			Integer routeType, String routeUrl, String routeColor, String routeTextColor, String routeSortOrder) {
+			String routeType, String routeUrl, String routeColor, String routeTextColor) {
 		this.routeId = routeId;
 		this.agencyId = agencyId;
 		this.routeShortName = routeShortName;
 		this.routeLongName = routeLongName;
 		this.routeDesc = routeDesc;
-		this.routeType = routeType;
+		this.routeType = Integer.valueOf(routeType);
 		this.routeUrl = routeUrl;
 		this.routeColor = routeColor;
 		this.routeTextColor = routeTextColor;
-		this.routeSortOrder = Integer.valueOf(routeSortOrder);
 	}
 	
 	// Getters
@@ -63,6 +70,9 @@ public class GtfsRoute {
 	public Integer getRouteType() {
 		return routeType;
 	}
+	public String getRouteTypeAsString() {
+		return String.valueOf(routeType);
+	}
 	public String getRouteUrl() {
 		return routeUrl;
 	}
@@ -72,8 +82,17 @@ public class GtfsRoute {
 	public String getRouteTextColor() {
 		return routeTextColor;
 	}
-	public Integer getRouteSortOrder() {
-		return routeSortOrder;
+	public Map<String, String> getMapSetters() {
+		return mapSetters;
+	}
+	public Map<String, String> getMapGetters() {
+		return mapGetters;
+	}
+	public Map<String, String> getMapSqliteTypes() {
+		return mapSqliteTypes;
+	}
+	public String getSqlTableName() {
+		return sqlTableName;
 	}
 	
 	// Setters
@@ -95,6 +114,9 @@ public class GtfsRoute {
 	public void setRouteType(Integer routeType) {
 		this.routeType = routeType;
 	}
+	public void setRouteType(String routeType) {
+		this.routeType = Integer.valueOf(routeType);
+	}
 	public void setRouteUrl(String routeUrl) {
 		this.routeUrl = routeUrl;
 	}
@@ -104,29 +126,59 @@ public class GtfsRoute {
 	public void setRouteTextColor(String routeTextColor) {
 		this.routeTextColor = routeTextColor;
 	}
-	public void setRouteSortOrder(Integer routeSortOrder) {
-		this.routeSortOrder = routeSortOrder;
-	}
 	
-	// Public static methods
-	public static int[] mapFields(String[] headerValues) {
-		int[] valueOrder = new int[10];
-		int counter = 0;
-		for (String column : headerValues) {
-			switch (column) {
-				case "route_id": valueOrder[0] = counter; break;
-				case "agency_id": valueOrder[1] = counter; break;
-				case "route_short_name": valueOrder[2] = counter; break;
-				case "route_long_name": valueOrder[3] = counter; break;
-				case "route_desc": valueOrder[4] = counter; break;
-				case "route_type": valueOrder[5] = counter; break;
-				case "route_url": valueOrder[6] = counter; break;
-				case "route_color": valueOrder[7] = counter; break;
-				case "route_text_color": valueOrder[8] = counter; break;
-				case "route_sort_order": valueOrder[9] = counter; break;
-			}
-			counter++;
-		}
-		return valueOrder;	
+	@Override
+	public String toString() {
+		return "GtfsRoute [routeId=" + routeId + ", agencyId=" + agencyId + ", routeShortName=" + routeShortName
+				+ ", routeLongName=" + routeLongName + ", routeDesc=" + routeDesc + ", routeType=" + routeType
+				+ ", routeUrl=" + routeUrl + ", routeColor=" + routeColor + ", routeTextColor=" + routeTextColor + "]";
+	}
+	@Override
+	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
+		Class<GtfsRoute> classObject = GtfsRoute.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+	}	
+	@Override
+	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
+		Class<GtfsRoute> classObject = GtfsRoute.class;
+		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
+	}	
+	
+	// Private static methods
+	private static Map<String, String> createSetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("route_id", "setRouteId");
+		tempFields.put("agency_id", "setAgencyId");
+		tempFields.put("route_short_name", "setRouteShortName");
+		tempFields.put("route_long_name", "setRouteLongName");
+		tempFields.put("route_type", "setRouteType");
+		tempFields.put("route_url", "setRouteUrl");
+		tempFields.put("route_color", "setRouteColor");
+		tempFields.put("route_text_color", "setRouteTextColor");
+		return tempFields;
+	}
+	private static Map<String, String> createGetterMap() {
+		Map<String, String> tempFields = new HashMap<>();
+		tempFields.put("route_id", "getRouteId");
+		tempFields.put("agency_id", "getAgencyId");
+		tempFields.put("route_short_name", "getRouteShortName");
+		tempFields.put("route_long_name", "getRouteLongName");
+		tempFields.put("route_type", "getRouteTypeAsString");
+		tempFields.put("route_url", "getRouteUrl");
+		tempFields.put("route_color", "getRouteColor");
+		tempFields.put("route_text_color", "getRouteTextColor");
+		return tempFields;
+	}
+	private static Map<String, String> createSqlTypeMap() {
+		Map<String, String> tempTypes = new HashMap<>();
+		tempTypes.put("route_id", "TEXT PRIMARY KEY");
+		tempTypes.put("agency_id", "TEXT");
+		tempTypes.put("route_short_name", "TEXT");
+		tempTypes.put("route_long_name", "TEXT");
+		tempTypes.put("route_type", "INT");
+		tempTypes.put("route_url", "TEXT");
+		tempTypes.put("route_color", "TEXT");
+		tempTypes.put("route_text_color", "TEXT");
+		return tempTypes;
 	}
 }
