@@ -1,63 +1,67 @@
 package ch.lugis.jraptor;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Set;
 
 import com.opencsv.exceptions.CsvValidationException;
 
+import ch.lugis.jraptor.gtfs.model.GtfsStop;
+import ch.lugis.jraptor.gtfs.model.GtfsStopTime;
+import ch.lugis.jraptor.gtfs.model.GtfsTrip;
+import ch.lugis.jraptor.provider.GtfsRouteRaptorProvider;
+
 public class Starter {
 
-	public static void main(String[] args) {
-		// Test GtfsReader
-		GtfsSqliteReader reader = new GtfsSqliteReader("data/gtfs_fp2022_2022-08-17_04-15", "data/GTFS.sqlite");
+	public static void main(String[] args) throws CsvValidationException, IOException {
 		System.out.println(LocalTime.now());
 		
-//		try {
-//			reader.readAgenciesToMemory();
-//			reader.readCalendarsToMemory();
-//			reader.readCalendarDatesToMemory();
-//			reader.readRoutesToMemory();
-//			reader.readStopsToMemory();
-//			reader.readStopTimesToMemory();
-//			reader.readTransfersToMemory();
-//			reader.readTripsToMemory();
-//		} catch (CsvValidationException | IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		for (GtfsAgency agency : reader.getGtfsAgencies()) {
-//			System.out.println(agency.toString());
-//		}
-//		for (GtfsCalendar calendar : reader.getGtfsCalendars()) {
-//			System.out.println(calendar.toString());
-//		}
-//		for (GtfsCalendarDate calendarDate : reader.getGtfsCalendarDates()) {
-//			System.out.println(calendarDate.toString());
-//		}
-//		for (GtfsRoute route : reader.getGtfsRoutes()) {
-//			System.out.println(route.toString());
-//		}
-//		for (GtfsStop stop : reader.getGtfsStops()) {
-//			System.out.println(stop.toString());
-//		}
-//		for (GtfsStopTime stopTime : reader.getGtfsStopTimes()) {
-//			System.out.println(stopTime.toString());
-//		}
-//		for (GtfsTransfer transfer : reader.getGtfsTransfers()) {
-//			System.out.println(transfer.toString());
-//		}
-//		for (GtfsTrip trip : reader.getGtfsTrips()) {
-//			System.out.println(trip.toString());
-//		}
-				
-		try {
-			reader.readAllToSqlite();
-		} catch (CsvValidationException | IOException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// Code
+		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
+		reader.readStopTimesToMemory();
+		reader.readTripsToMemory();
+		reader.readStopsToMemory();
+		Set<GtfsStopTime> stopTimes = reader.getGtfsStopTimes();
+		Set<GtfsTrip> trips = reader.getGtfsTrips();
+		Set<GtfsStop> stops = reader.getGtfsStops();
 		
+		GtfsStop stopA = stops.stream()
+				.filter(s -> s.getStopId().equals("8500023:0:1"))
+				.findFirst()
+				.get();
+		GtfsStop stopB = stops.stream()
+				.filter(s -> s.getStopId().equals("8502001:0:2"))
+				.findFirst()
+				.get();
+		GtfsTrip trip = trips.stream()
+				.filter(t -> t.getTripId().equals("2.TA.91-BT-Y-j22-1.2.H"))
+				.findFirst()
+				.get();
+		
+		System.out.println(stopA);
+		System.out.println(stopB);
+		System.out.println(trip);
+		
+		GtfsRouteRaptorProvider provider = new GtfsRouteRaptorProvider(trips, stops, stopTimes);
+		
+		System.out.println(LocalTime.now() + " 1.1");
+		boolean isABeforeB = provider.isStopBefore(trip, stopA, stopB);
+		System.out.println(LocalTime.now() + " 1.2");
+		
+		System.out.println(isABeforeB);
+		
+		System.out.println(LocalTime.now() + " 2.1");
+		int stopIndexA = provider.getRouteStopIndex(trip, stopA);
+		int stopIndexB = provider.getRouteStopIndex(trip, stopB);
+		System.out.println(LocalTime.now() + " 2.2");
+		
+		System.out.println(stopIndexA + " -- " + stopIndexB);
+		
+		System.out.println(LocalTime.now() + " 3.1");
+		List<GtfsStop> stopsFromTrip = provider.getRoutePath(trip);
+		System.out.println(LocalTime.now() + " 3.2");
+		System.out.println(stopsFromTrip);
 		
 		System.out.println(LocalTime.now());
 	}

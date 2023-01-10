@@ -12,7 +12,7 @@ public class GtfsStopTime implements GtfsTableData{
 	private GtfsTime arrivalTime;
 	private GtfsTime departureTime;
 	private String stopId;
-	private String stopSequence;
+	private Integer stopSequence;
 	private String stopHeadsign;
 	private GtfsPickupDropOffType pickupType;
 	private GtfsPickupDropOffType dropOffType;
@@ -25,7 +25,7 @@ public class GtfsStopTime implements GtfsTableData{
 	// Constructor
 	public GtfsStopTime() {}
 
-	public GtfsStopTime(String tripId, GtfsTime arrivalTime, GtfsTime departureTime, String stopId, String stopSequence,
+	public GtfsStopTime(String tripId, GtfsTime arrivalTime, GtfsTime departureTime, String stopId, Integer stopSequence,
 			String stopHeadsign, GtfsPickupDropOffType pickupType, GtfsPickupDropOffType dropoffType,
 			Double shapeDistTraveled) {
 		this.tripId = tripId;
@@ -46,7 +46,7 @@ public class GtfsStopTime implements GtfsTableData{
 		setArrivalTime(arrivalTime);
 		setDepartureTime(departureTime);
 		this.stopId = stopId;
-		this.stopSequence = stopSequence;
+		this.stopSequence = Integer.valueOf(stopSequence);
 		this.stopHeadsign = stopHeadsign;
 		setPickupType(Integer.valueOf(pickupType));
 		setDropOffType(Integer.valueOf(dropoffType));
@@ -72,8 +72,11 @@ public class GtfsStopTime implements GtfsTableData{
 	public String getStopId() {
 		return stopId;
 	}
-	public String getStopSequence() {
+	public Integer getStopSequence() {
 		return stopSequence;
+	}
+	public String getStopSequenceAsString() {
+		return String.valueOf(stopSequence);
 	}
 	public String getStopHeadsign() {
 		return stopHeadsign;
@@ -134,8 +137,11 @@ public class GtfsStopTime implements GtfsTableData{
 	public void setStopId(String stopId) {
 		this.stopId = stopId;
 	}
-	public void setStopSequence(String stopSequence) {
+	public void setStopSequence(Integer stopSequence) {
 		this.stopSequence = stopSequence;
+	}
+	public void setStopSequence(String stopSequence) {
+		this.stopSequence = Integer.valueOf(stopSequence);
 	}
 	public void setStopHeadsign(String stopHeadsign) {
 		this.stopHeadsign = stopHeadsign;
@@ -231,7 +237,7 @@ public class GtfsStopTime implements GtfsTableData{
 		tempFields.put("arrival_time", "TEXT");
 		tempFields.put("departure_time", "TEXT");
 		tempFields.put("stop_id", "TEXT");
-		tempFields.put("stop_sequence", "TEXT");
+		tempFields.put("stop_sequence", "INT");
 		tempFields.put("stop_headsign", "TEXT");
 		tempFields.put("pickup_type", "INT");
 		tempFields.put("drop_off_type", "INT");
