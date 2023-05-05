@@ -1,10 +1,10 @@
-package ch.lugis.jraptor.gtfs.model;
+package ch.weinetz.jraptor.gtfs.model;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.lugis.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImport;
 
 public class GtfsStop implements GtfsTableData {
 	// Fields
@@ -172,6 +172,16 @@ public class GtfsStop implements GtfsTableData {
 		Class<GtfsStop> classObject = GtfsStop.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
 	}
+	@Override
+	public boolean equals(Object object) {
+		if (!object.getClass().equals(GtfsStop.class)) {
+			return false;
+		} else if (((GtfsStop) object).getStopId().equals(this.stopId)) {
+			return true;
+		} else {
+			return false;
+		}
+	}	
 	
 	// Private static methods
 	private static Map<String, String> createSetterMap() {

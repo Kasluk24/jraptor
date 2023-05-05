@@ -1,10 +1,10 @@
-package ch.lugis.jraptor.gtfs.model;
+package ch.weinetz.jraptor.gtfs.model;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.lugis.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImport;
 
 public class GtfsAgency implements GtfsTableData {
 	// Fields
@@ -107,6 +107,16 @@ public class GtfsAgency implements GtfsTableData {
 	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
 		Class<GtfsAgency> classObject = GtfsAgency.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
+	}
+	@Override
+	public boolean equals(Object object) {
+		if (!object.getClass().equals(GtfsAgency.class)) {
+			return false;
+		} else if (((GtfsAgency) object).getAgencyId().equals(this.agencyId)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	// Private methods

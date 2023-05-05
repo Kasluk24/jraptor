@@ -1,10 +1,10 @@
-package ch.lugis.jraptor.gtfs.model;
+package ch.weinetz.jraptor.gtfs.model;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.lugis.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImport;
 
 public class GtfsTrip implements GtfsTableData  {
 	// Fields
@@ -146,7 +146,17 @@ public class GtfsTrip implements GtfsTableData  {
 	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
 		Class<GtfsTrip> classObject = GtfsTrip.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
-	}	
+	}
+	@Override
+	public boolean equals(Object object) {
+		if (!object.getClass().equals(GtfsTrip.class)) {
+			return false;
+		} else if (((GtfsTrip) object).getTripId().equals(this.tripId)) {
+			return true;
+		} else {
+			return false;
+		}
+	}		
 	
 	// Private static methods
 	private static Map<String, String> createSetterMap() {
