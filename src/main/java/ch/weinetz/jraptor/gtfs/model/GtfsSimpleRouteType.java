@@ -1,4 +1,4 @@
-package ch.lugis.jraptor.gtfs.model;
+package ch.weinetz.jraptor.gtfs.model;
 
 public enum GtfsSimpleRouteType {
 	TRAM_STREETCAR_LIGHTRAIL(0),

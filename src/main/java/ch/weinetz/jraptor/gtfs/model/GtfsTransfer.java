@@ -1,10 +1,10 @@
-package ch.lugis.jraptor.gtfs.model;
+package ch.weinetz.jraptor.gtfs.model;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.lugis.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImport;
 
 public class GtfsTransfer implements GtfsTableData {
 	// Fields

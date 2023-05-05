@@ -1,4 +1,4 @@
-package ch.lugis.jraptor;
+package ch.weinetz.jraptor;
 
 import java.io.IOException;
 import java.time.LocalTime;
@@ -7,10 +7,10 @@ import java.util.Set;
 
 import com.opencsv.exceptions.CsvValidationException;
 
-import ch.lugis.jraptor.gtfs.model.GtfsStop;
-import ch.lugis.jraptor.gtfs.model.GtfsStopTime;
-import ch.lugis.jraptor.gtfs.model.GtfsTrip;
-import ch.lugis.jraptor.provider.GtfsRouteRaptorProvider;
+import ch.weinetz.jraptor.gtfs.model.GtfsStop;
+import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
+import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
+import ch.weinetz.jraptor.provider.GtfsRouteRaptorProvider;
 
 public class Starter {
 

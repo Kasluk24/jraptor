@@ -1,4 +1,4 @@
-package ch.lugis.jraptor.utils;
+package ch.weinetz.jraptor.utils;
 
 import java.io.File;
 import java.nio.file.Path;

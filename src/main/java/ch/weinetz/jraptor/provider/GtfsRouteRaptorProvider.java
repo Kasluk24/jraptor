@@ -1,4 +1,4 @@
-package ch.lugis.jraptor.provider;
+package ch.weinetz.jraptor.provider;
 
 import java.util.List;
 import java.util.Set;
@@ -7,10 +7,10 @@ import java.util.stream.Stream;
 
 import com.raoulvdberge.raptor.provider.RouteDetailsProvider;
 
-import ch.lugis.jraptor.gtfs.model.GtfsRoute;
-import ch.lugis.jraptor.gtfs.model.GtfsStop;
-import ch.lugis.jraptor.gtfs.model.GtfsStopTime;
-import ch.lugis.jraptor.gtfs.model.GtfsTrip;
+import ch.weinetz.jraptor.gtfs.model.GtfsRoute;
+import ch.weinetz.jraptor.gtfs.model.GtfsStop;
+import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
+import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
 
 public class GtfsRouteRaptorProvider implements RouteDetailsProvider<GtfsTrip, GtfsStop> {
 	private Set<GtfsTrip> trips;

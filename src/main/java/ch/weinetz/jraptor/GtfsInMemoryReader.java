@@ -1,4 +1,4 @@
-package ch.lugis.jraptor;
+package ch.weinetz.jraptor;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -9,17 +9,17 @@ import java.util.Set;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
-import ch.lugis.jraptor.gtfs.model.GtfsAgency;
-import ch.lugis.jraptor.gtfs.model.GtfsCalendar;
-import ch.lugis.jraptor.gtfs.model.GtfsCalendarDate;
-import ch.lugis.jraptor.gtfs.model.GtfsFrequency;
-import ch.lugis.jraptor.gtfs.model.GtfsRoute;
-import ch.lugis.jraptor.gtfs.model.GtfsStop;
-import ch.lugis.jraptor.gtfs.model.GtfsStopTime;
-import ch.lugis.jraptor.gtfs.model.GtfsTableData;
-import ch.lugis.jraptor.gtfs.model.GtfsTransfer;
-import ch.lugis.jraptor.gtfs.model.GtfsTrip;
-import ch.lugis.jraptor.utils.GtfsReader;
+import ch.weinetz.jraptor.gtfs.model.GtfsAgency;
+import ch.weinetz.jraptor.gtfs.model.GtfsCalendar;
+import ch.weinetz.jraptor.gtfs.model.GtfsCalendarDate;
+import ch.weinetz.jraptor.gtfs.model.GtfsFrequency;
+import ch.weinetz.jraptor.gtfs.model.GtfsRoute;
+import ch.weinetz.jraptor.gtfs.model.GtfsStop;
+import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
+import ch.weinetz.jraptor.gtfs.model.GtfsTableData;
+import ch.weinetz.jraptor.gtfs.model.GtfsTransfer;
+import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
+import ch.weinetz.jraptor.utils.GtfsReader;
 
 public class GtfsInMemoryReader extends GtfsReader {
 	// Fields

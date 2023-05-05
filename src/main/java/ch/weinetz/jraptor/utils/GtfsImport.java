@@ -1,4 +1,4 @@
-package ch.lugis.jraptor.utils;
+package ch.weinetz.jraptor.utils;
 
 import java.lang.reflect.Method;
 import java.util.Map;

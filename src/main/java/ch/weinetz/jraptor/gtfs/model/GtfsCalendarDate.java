@@ -1,10 +1,10 @@
-package ch.lugis.jraptor.gtfs.model;
+package ch.weinetz.jraptor.gtfs.model;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.lugis.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImport;
 
 public class GtfsCalendarDate implements GtfsTableData {
 	// Fields
@@ -116,7 +116,7 @@ public class GtfsCalendarDate implements GtfsTableData {
 	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
 		Class<GtfsCalendarDate> classObject = GtfsCalendarDate.class;
 		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
-	}	
+	}
 	
 	// Private static methods
 	private static Map<String, String> createSetterMap() {
