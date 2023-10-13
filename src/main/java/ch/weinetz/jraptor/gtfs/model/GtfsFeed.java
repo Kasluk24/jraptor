@@ -64,13 +64,56 @@ public class GtfsFeed {
 		return Collections.unmodifiableSet(this.gtfsTrips);
 	}
 	
-	// Get objects as set by ids
+	// Get objects as set by attributes
+	// Agency
 	public Set<GtfsAgency> getAgenciesByIds(Set<String> agencyIds) {
 		return this.gtfsAgencies.stream()
-				.filter(o -> agencyIds.contains(o.getAgencyId()))
+				.filter(a -> agencyIds.contains(a.getAgencyId()))
 				.collect(Collectors.toSet());
 	}
-	// TODO: Add other getters by attributes
+	// Calendar
+	// CalendarDate
+	// Frequency
+	// Route
+	public Set<GtfsRoute> getRoutesByIds(Set<String> routeIds) {
+		return this.gtfsRoutes.stream()
+				.filter(r -> routeIds.contains(r.getRouteId()))
+				.collect(Collectors.toSet());
+	}
+	// Stop
+	public Set<GtfsStop> getStopsByIds(Set<String> stopIds) {
+		return this.gtfsStops.stream()
+				.filter(s -> stopIds.contains(s.getStopId()))
+				.collect(Collectors.toSet());
+	}
+	// StopTime
+	public Set<GtfsStopTime> getStopTimesByTripIds(Set<String> tripIds) {
+			return this.gtfsStopTimes.stream()
+					.filter(s -> tripIds.contains(s.getTripId()))
+					.collect(Collectors.toSet());
+	}
+	public Set<GtfsStopTime> getStopTimesByStopIds(Set<String> stopIds) {
+		return this.gtfsStopTimes.stream()
+				.filter(s -> stopIds.contains(s.getStopId()))
+				.collect(Collectors.toSet());
+	}
+	// Transfer
+	public Set<GtfsTransfer> getTransfersByFromStopIds(Set<String> fromStopIds) {
+		return this.gtfsTransfers.stream()
+				.filter(t -> fromStopIds.contains(t.getFromStopId()))
+				.collect(Collectors.toSet());
+	}
+	public Set<GtfsTransfer> getTransfersByToStopIds(Set<String> toStopIds) {
+		return this.gtfsTransfers.stream()
+				.filter(t -> toStopIds.contains(t.getToStopId()))
+				.collect(Collectors.toSet());
+	}	
+	// Trip
+	public Set<GtfsTrip> getTripsByIds(Set<String> tripIds) {
+		return this.gtfsTrips.stream()
+				.filter(t -> tripIds.contains(t.getTripId()))
+				.collect(Collectors.toSet());
+	}
 	
 	// Add Gtfs objects
 	public void addGtfsAgency(GtfsAgency gtfsAgency) {
