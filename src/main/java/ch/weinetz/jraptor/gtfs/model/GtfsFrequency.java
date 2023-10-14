@@ -17,6 +17,7 @@ public class GtfsFrequency implements GtfsTableData {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "frequencies";
+	public static final String gtfsFileName = "frequencies.txt";
 	
 	// Constructor
 	public GtfsFrequency() {}
@@ -81,6 +82,9 @@ public class GtfsFrequency implements GtfsTableData {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 
 	// Setters

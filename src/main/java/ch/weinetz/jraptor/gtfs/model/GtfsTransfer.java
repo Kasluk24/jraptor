@@ -16,6 +16,7 @@ public class GtfsTransfer implements GtfsTableData {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "transfers";
+	public static final String gtfsFileName = "transfers.txt";
 	
 	// Constructor
 	public GtfsTransfer() {}
@@ -67,6 +68,9 @@ public class GtfsTransfer implements GtfsTableData {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 	
 	// Setters

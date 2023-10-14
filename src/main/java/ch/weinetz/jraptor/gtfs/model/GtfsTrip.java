@@ -20,6 +20,7 @@ public class GtfsTrip implements GtfsTableData  {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "trips";
+	public static final String gtfsFileName = "trips.txt";
 	
 	// Constructor
 	public GtfsTrip() {};
@@ -90,6 +91,9 @@ public class GtfsTrip implements GtfsTableData  {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 	
 	// Setters

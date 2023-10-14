@@ -19,6 +19,7 @@ public class GtfsAgency implements GtfsTableData {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "agency";
+	public static final String gtfsFileName = "agency.txt";
 		
 	// Constructor
 	public GtfsAgency() {};
@@ -67,6 +68,9 @@ public class GtfsAgency implements GtfsTableData {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 	
 	// Setters

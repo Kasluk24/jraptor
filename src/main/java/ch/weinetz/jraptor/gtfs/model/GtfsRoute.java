@@ -21,6 +21,7 @@ public class GtfsRoute implements GtfsTableData {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "routes";
+	public static final String gtfsFileName = "routes.txt";
 	
 	// Constructor
 	public GtfsRoute() {};
@@ -93,6 +94,9 @@ public class GtfsRoute implements GtfsTableData {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 	
 	// Setters

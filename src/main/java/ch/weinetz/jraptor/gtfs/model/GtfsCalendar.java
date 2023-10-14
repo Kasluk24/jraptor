@@ -22,6 +22,7 @@ public class GtfsCalendar implements GtfsTableData {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "calendar";
+	public static final String gtfsFileName = "calendar.txt";
 	
 	// Constructor
 	public GtfsCalendar() {}
@@ -157,6 +158,9 @@ public class GtfsCalendar implements GtfsTableData {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 	
 	// Setters

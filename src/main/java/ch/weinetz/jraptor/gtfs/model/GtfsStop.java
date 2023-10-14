@@ -21,6 +21,7 @@ public class GtfsStop implements GtfsTableData {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "stops";
+	public static final String gtfsFileName = "stops.txt";
 	
 	// Constructor
 	public GtfsStop() {};
@@ -102,6 +103,9 @@ public class GtfsStop implements GtfsTableData {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 	
 	// Setters
