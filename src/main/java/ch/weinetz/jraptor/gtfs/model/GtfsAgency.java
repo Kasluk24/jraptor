@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsAgency implements GtfsObject {
+public class GtfsAgency implements GtfsTableData {
 	// Fields
 	private String agencyId;
 	private String agencyName;
@@ -19,6 +19,7 @@ public class GtfsAgency implements GtfsObject {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "agency";
+	public static final String gtfsFileName = "agency.txt";
 		
 	// Constructor
 	public GtfsAgency() {};
@@ -67,6 +68,9 @@ public class GtfsAgency implements GtfsObject {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 	
 	// Setters

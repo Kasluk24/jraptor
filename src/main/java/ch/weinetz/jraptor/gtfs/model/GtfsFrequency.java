@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsFrequency implements GtfsObject {
+public class GtfsFrequency implements GtfsTableData {
 	// Fields
 	private String tripId;
 	private GtfsTime startTime;
@@ -17,6 +17,7 @@ public class GtfsFrequency implements GtfsObject {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "frequencies";
+	public static final String gtfsFileName = "frequencies.txt";
 	
 	// Constructor
 	public GtfsFrequency() {}
@@ -81,6 +82,9 @@ public class GtfsFrequency implements GtfsObject {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 
 	// Setters

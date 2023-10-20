@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsCalendarDate implements GtfsObject {
+public class GtfsCalendarDate implements GtfsTableData {
 	// Fields
 	private String serviceId;
 	private GtfsDate date;
@@ -15,6 +15,7 @@ public class GtfsCalendarDate implements GtfsObject {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "calendar_dates";
+	public static final String gtfsFileName = "calendar_dates.txt";
 	
 	// Constructor
 	public GtfsCalendarDate() {}
@@ -73,6 +74,9 @@ public class GtfsCalendarDate implements GtfsObject {
 	}
 	public String getSqlTableName() {
 		return sqlTableName;
+	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
 	}
 	
 	// Setters

@@ -1,17 +1,10 @@
 package ch.weinetz.jraptor.gtfs.model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GtfsFeed {
-	// Fields
 	private Set<GtfsAgency> gtfsAgencies;
 	private Set<GtfsCalendar> gtfsCalendars;
 	private Set<GtfsCalendarDate> gtfsCalendarDates;
