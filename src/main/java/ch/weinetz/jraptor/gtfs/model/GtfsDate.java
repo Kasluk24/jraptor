@@ -1,8 +1,6 @@
 package ch.weinetz.jraptor.gtfs.model;
 
-
 public class GtfsDate {
-	
 	// Fields
 	private Integer year;
 	private Integer month;

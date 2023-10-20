@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsTransfer implements GtfsTableData {
+public class GtfsTransfer implements GtfsObject {
 	// Fields
 	private String fromStopId;
 	private String toStopId;

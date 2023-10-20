@@ -18,7 +18,7 @@ import ch.weinetz.jraptor.gtfs.model.GtfsFrequency;
 import ch.weinetz.jraptor.gtfs.model.GtfsRoute;
 import ch.weinetz.jraptor.gtfs.model.GtfsStop;
 import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
-import ch.weinetz.jraptor.gtfs.model.GtfsTableData;
+import ch.weinetz.jraptor.gtfs.model.GtfsObject;
 import ch.weinetz.jraptor.gtfs.model.GtfsTransfer;
 import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
 import ch.weinetz.jraptor.utils.GtfsImport;
@@ -163,7 +163,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		sqliteHandler = new SqliteHandler(pathToDatabase);
 	}
 	
-	private <T extends GtfsTableData> void createSqliteTable(String[] header, T gtfsObject) {
+	private <T extends GtfsObject> void createSqliteTable(String[] header, T gtfsObject) {
 		sqliteHandler.executeSql(String.format("DROP TABLE IF EXISTS %s;", gtfsObject.getSqlTableName()));
 		
 		StringBuilder createTableSql = new StringBuilder();
@@ -179,7 +179,7 @@ public class GtfsSqliteReader extends GtfsReader {
 		sqliteHandler.executeSql(createTableSql.toString());
 	}
 	
-	private <T extends GtfsTableData> void readToSqlite(CSVReader reader, T gtfsObject) throws CsvValidationException, IOException, SQLException {
+	private <T extends GtfsObject> void readToSqlite(CSVReader reader, T gtfsObject) throws CsvValidationException, IOException, SQLException {
 		String[] lineValues = reader.readNext(); // Reads the header
 		createSqliteTable(lineValues, gtfsObject);
 		@SuppressWarnings("unchecked")

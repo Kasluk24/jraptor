@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsCalendarDate implements GtfsTableData {
+public class GtfsCalendarDate implements GtfsObject {
 	// Fields
 	private String serviceId;
 	private GtfsDate date;

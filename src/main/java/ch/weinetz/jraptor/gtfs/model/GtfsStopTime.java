@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsStopTime implements GtfsTableData{
+public class GtfsStopTime implements GtfsObject {
 	// Fields
 	private String tripId;
 	private GtfsTime arrivalTime;

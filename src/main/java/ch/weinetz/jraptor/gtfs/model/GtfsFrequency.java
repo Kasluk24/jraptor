@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsFrequency implements GtfsTableData {
+public class GtfsFrequency implements GtfsObject {
 	// Fields
 	private String tripId;
 	private GtfsTime startTime;

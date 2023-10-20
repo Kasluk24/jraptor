@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsAgency implements GtfsTableData {
+public class GtfsAgency implements GtfsObject {
 	// Fields
 	private String agencyId;
 	private String agencyName;

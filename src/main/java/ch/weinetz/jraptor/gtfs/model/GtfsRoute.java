@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsRoute implements GtfsTableData {
+public class GtfsRoute implements GtfsObject {
 	// Fields
 	private String routeId;
 	private String agencyId;

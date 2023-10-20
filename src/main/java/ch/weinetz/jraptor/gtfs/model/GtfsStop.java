@@ -6,7 +6,7 @@ import java.util.Map;
 
 import ch.weinetz.jraptor.utils.GtfsImport;
 
-public class GtfsStop implements GtfsTableData {
+public class GtfsStop implements GtfsObject {
 	// Fields
 	private String stopId;
 	private String stopCode;
