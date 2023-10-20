@@ -1,6 +1,7 @@
 package ch.weinetz.jraptor.gtfs.model;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,22 +17,32 @@ public class GtfsFeed {
 	private Set<GtfsTrip> gtfsTrips;
 	
 	// Default constructor
-	public GtfsFeed() {}
+	public GtfsFeed() {
+		gtfsAgencies = new HashSet<>();
+		gtfsCalendars = new HashSet<>();
+		gtfsCalendarDates = new HashSet<>();
+		gtfsFrequencies = new HashSet<>();
+		gtfsRoutes = new HashSet<>();
+		gtfsStops = new HashSet<>();
+		gtfsStopTimes = new HashSet<>();
+		gtfsTransfers = new HashSet<>();
+		gtfsTrips = new HashSet<>();
+	}
 
 	// Constructor set all fields
 	public GtfsFeed(Set<GtfsAgency> gtfsAgencies, Set<GtfsCalendar> gtfsCalendars,
 			Set<GtfsCalendarDate> gtfsCalendarDates, Set<GtfsFrequency> gtfsFrequencies, Set<GtfsRoute> gtfsRoutes,
 			Set<GtfsStop> gtfsStops, Set<GtfsStopTime> gtfsStopTimes, Set<GtfsTransfer> gtfsTransfers,
 			Set<GtfsTrip> gtfsTrips) {
-		this.gtfsAgencies = gtfsAgencies;
-		this.gtfsCalendars = gtfsCalendars;
-		this.gtfsCalendarDates = gtfsCalendarDates;
-		this.gtfsFrequencies = gtfsFrequencies;
-		this.gtfsRoutes = gtfsRoutes;
-		this.gtfsStops = gtfsStops;
-		this.gtfsStopTimes = gtfsStopTimes;
-		this.gtfsTransfers = gtfsTransfers;
-		this.gtfsTrips = gtfsTrips;
+		this.gtfsAgencies = gtfsAgencies != null ? gtfsAgencies : new HashSet<>();
+		this.gtfsCalendars = gtfsCalendars != null ? gtfsCalendars : new HashSet<>();
+		this.gtfsCalendarDates = gtfsCalendarDates != null ? gtfsCalendarDates : new HashSet<>();
+		this.gtfsFrequencies = gtfsFrequencies != null ? gtfsFrequencies : new HashSet<>();
+		this.gtfsRoutes = gtfsRoutes != null ? gtfsRoutes : new HashSet<>();
+		this.gtfsStops = gtfsStops != null ? gtfsStops : new HashSet<>();
+		this.gtfsStopTimes = gtfsStopTimes != null ? gtfsStopTimes : new HashSet<>();
+		this.gtfsTransfers = gtfsTransfers != null ? gtfsTransfers : new HashSet<>();
+		this.gtfsTrips = gtfsTrips != null ? gtfsTrips : new HashSet<>();
 	}
 	
 	
@@ -142,6 +153,20 @@ public class GtfsFeed {
 	}
 	public void addGtfsTrip(GtfsTrip gtfsTrip) {
 		this.gtfsTrips.add(gtfsTrip);
+	}
+	
+	@Override
+	public String toString() {
+		return "GtfsFeed with:\n"
+				+ gtfsAgencies.size() + " Agencies\n"
+				+ gtfsCalendars.size() + " Calendars\n"
+				+ gtfsCalendarDates.size() + " CalendarDates\n"
+				+ gtfsFrequencies.size() + " Frequencies\n"
+				+ gtfsRoutes.size() + " Routes\n"
+				+ gtfsStops.size() + " Stops\n"
+				+ gtfsStopTimes.size() + " StopTimes\n"
+				+ gtfsTransfers.size() + " Transfers\n"
+				+ gtfsTrips.size() + " Trips";
 	}
 	
 }

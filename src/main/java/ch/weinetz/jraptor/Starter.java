@@ -1,28 +1,10 @@
 package ch.weinetz.jraptor;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.opencsv.exceptions.CsvValidationException;
 
-import ch.weinetz.jraptor.gtfs.model.GtfsCalendar;
 import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
-import ch.weinetz.jraptor.gtfs.model.GtfsRoute;
-import ch.weinetz.jraptor.gtfs.model.GtfsStop;
-import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
-import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
-import ch.weinetz.jraptor.provider.GtfsRouteRaptorProvider;
-import ch.weinetz.jraptor.provider.RaptorRouteStopIndexBuilder;
-import ch.weinetz.jraptor.utils.GtfsComparsion;
 
 public class Starter {
 
@@ -32,7 +14,7 @@ public class Starter {
 		// Code
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
 		GtfsFeed feed = reader.readGtfsFeed();
-				
+		System.out.println(feed);
 		
 		/*
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
