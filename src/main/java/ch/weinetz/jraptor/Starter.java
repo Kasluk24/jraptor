@@ -1,6 +1,9 @@
 package ch.weinetz.jraptor;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +15,7 @@ import java.util.stream.Stream;
 import com.opencsv.exceptions.CsvValidationException;
 
 import ch.weinetz.jraptor.gtfs.model.GtfsCalendar;
+import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 import ch.weinetz.jraptor.gtfs.model.GtfsRoute;
 import ch.weinetz.jraptor.gtfs.model.GtfsStop;
 import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
@@ -22,10 +26,15 @@ import ch.weinetz.jraptor.utils.GtfsComparsion;
 
 public class Starter {
 
-	public static void main(String[] args) throws CsvValidationException, IOException {
+	public static void main(String[] args) throws CsvValidationException, IOException, ClassNotFoundException {
 		System.out.println(LocalTime.now());
 		
 		// Code
+		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
+		GtfsFeed feed = reader.readGtfsFeed();
+				
+		
+		/*
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
 		reader.readStopTimesToMemory();
 		reader.readTripsToMemory();
@@ -77,5 +86,6 @@ public class Starter {
 		
 		
 		System.out.println(LocalTime.now());
+		*/
 	}
 }

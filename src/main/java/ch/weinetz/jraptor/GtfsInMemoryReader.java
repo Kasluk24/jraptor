@@ -12,6 +12,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import ch.weinetz.jraptor.gtfs.model.GtfsAgency;
 import ch.weinetz.jraptor.gtfs.model.GtfsCalendar;
 import ch.weinetz.jraptor.gtfs.model.GtfsCalendarDate;
+import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 import ch.weinetz.jraptor.gtfs.model.GtfsFrequency;
 import ch.weinetz.jraptor.gtfs.model.GtfsRoute;
 import ch.weinetz.jraptor.gtfs.model.GtfsStop;
@@ -123,6 +124,16 @@ public class GtfsInMemoryReader extends GtfsReader {
 		CSVReader reader = createReader(gtfsDirectory.resolve("trips.txt"));
 		gtfsTrips = readToMemory(reader, new GtfsTrip());
 		reader.close();
+	}
+	
+	public GtfsFeed readGtfsFeed() throws CsvValidationException, IOException {
+		readAllToMemory();
+		return getGtfsFeed();
+	}
+
+	public GtfsFeed getGtfsFeed() {
+		return new GtfsFeed(gtfsAgencies, gtfsCalendars, gtfsCalendarDates, gtfsFrequencies, gtfsRoutes,
+			gtfsStops, gtfsStopTimes, gtfsTransfers, gtfsTrips);
 	}
 	
 	// Private methods
