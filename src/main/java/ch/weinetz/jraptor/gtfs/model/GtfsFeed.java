@@ -6,43 +6,33 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GtfsFeed {
-	private Set<GtfsAgency> gtfsAgencies;
-	private Set<GtfsCalendar> gtfsCalendars;
-	private Set<GtfsCalendarDate> gtfsCalendarDates;
-	private Set<GtfsFrequency> gtfsFrequencies;
-	private Set<GtfsRoute> gtfsRoutes;
-	private Set<GtfsStop> gtfsStops;
-	private Set<GtfsStopTime> gtfsStopTimes;
-	private Set<GtfsTransfer> gtfsTransfers;
-	private Set<GtfsTrip> gtfsTrips;
+	private Set<GtfsAgency> gtfsAgencies = new HashSet<>();
+	private Set<GtfsCalendar> gtfsCalendars = new HashSet<>();
+	private Set<GtfsCalendarDate> gtfsCalendarDates = new HashSet<>();
+	private Set<GtfsFrequency> gtfsFrequencies = new HashSet<>();
+	private Set<GtfsRoute> gtfsRoutes = new HashSet<>();
+	private Set<GtfsStop> gtfsStops = new HashSet<>();
+	private Set<GtfsStopTime> gtfsStopTimes = new HashSet<>();
+	private Set<GtfsTransfer> gtfsTransfers = new HashSet<>();
+	private Set<GtfsTrip> gtfsTrips = new HashSet<>();
 	
 	// Default constructor
-	public GtfsFeed() {
-		gtfsAgencies = new HashSet<>();
-		gtfsCalendars = new HashSet<>();
-		gtfsCalendarDates = new HashSet<>();
-		gtfsFrequencies = new HashSet<>();
-		gtfsRoutes = new HashSet<>();
-		gtfsStops = new HashSet<>();
-		gtfsStopTimes = new HashSet<>();
-		gtfsTransfers = new HashSet<>();
-		gtfsTrips = new HashSet<>();
-	}
+	public GtfsFeed() {}
 
 	// Constructor set all fields
 	public GtfsFeed(Set<GtfsAgency> gtfsAgencies, Set<GtfsCalendar> gtfsCalendars,
 			Set<GtfsCalendarDate> gtfsCalendarDates, Set<GtfsFrequency> gtfsFrequencies, Set<GtfsRoute> gtfsRoutes,
 			Set<GtfsStop> gtfsStops, Set<GtfsStopTime> gtfsStopTimes, Set<GtfsTransfer> gtfsTransfers,
 			Set<GtfsTrip> gtfsTrips) {
-		this.gtfsAgencies = gtfsAgencies != null ? gtfsAgencies : new HashSet<>();
-		this.gtfsCalendars = gtfsCalendars != null ? gtfsCalendars : new HashSet<>();
-		this.gtfsCalendarDates = gtfsCalendarDates != null ? gtfsCalendarDates : new HashSet<>();
-		this.gtfsFrequencies = gtfsFrequencies != null ? gtfsFrequencies : new HashSet<>();
-		this.gtfsRoutes = gtfsRoutes != null ? gtfsRoutes : new HashSet<>();
-		this.gtfsStops = gtfsStops != null ? gtfsStops : new HashSet<>();
-		this.gtfsStopTimes = gtfsStopTimes != null ? gtfsStopTimes : new HashSet<>();
-		this.gtfsTransfers = gtfsTransfers != null ? gtfsTransfers : new HashSet<>();
-		this.gtfsTrips = gtfsTrips != null ? gtfsTrips : new HashSet<>();
+		if (gtfsAgencies != null) this.gtfsAgencies = gtfsAgencies;
+		if (gtfsCalendars != null) this.gtfsCalendars = gtfsCalendars;
+		if (gtfsCalendarDates != null) this.gtfsCalendarDates = gtfsCalendarDates;
+		if (gtfsFrequencies != null) this.gtfsFrequencies = gtfsFrequencies;
+		if (gtfsRoutes != null) this.gtfsRoutes = gtfsRoutes;
+		if (gtfsStops != null) this.gtfsStops = gtfsStops;
+		if (gtfsStopTimes != null) this.gtfsStopTimes = gtfsStopTimes;
+		if (gtfsTransfers != null) this.gtfsTransfers = gtfsTransfers;
+		if (gtfsTrips != null) this.gtfsTrips = gtfsTrips;
 	}
 	
 	
