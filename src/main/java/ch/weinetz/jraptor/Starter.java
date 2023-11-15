@@ -9,12 +9,34 @@ import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 public class Starter {
 
 	public static void main(String[] args) throws CsvValidationException, IOException, ClassNotFoundException {
-		System.out.println(LocalTime.now());
 		
 		// Code
+		
+		System.out.println(LocalTime.now());
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
-		GtfsFeed feed = reader.readGtfsFeed();
-		System.out.println(feed);
+		GtfsFeed feed1 = reader.readGtfsFeed();
+		System.out.println(LocalTime.now());
+		System.out.println(feed1.toString());
+
+
+		System.out.println(LocalTime.now());
+		GtfsFeedReader feedReader = new GtfsFeedReader("data/gtfs_fp2022_2022-08-17_04-15");
+		GtfsFeed feed2 = feedReader.readFeed();
+		System.out.println(LocalTime.now());
+		System.out.println(feed2.toString());
+		
+
+		try {
+			System.out.println(LocalTime.now());
+			GtfsFeedReader feedReader2 = new GtfsFeedReader("data/gtfs_fp2022_2022-08-17_04-15");
+			GtfsFeed feed3 = feedReader2.readFeedParallel();
+			System.out.println(LocalTime.now());
+			System.out.println(feed3.toString());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		
 		/*
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");

@@ -22,6 +22,13 @@ import ch.weinetz.jraptor.gtfs.model.GtfsTransfer;
 import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
 import ch.weinetz.jraptor.utils.GtfsReader;
 
+
+/**
+ * Old class for reading GTFS data from disk
+ *
+ * @deprecated use {@link #GtfsFeedReader} instead.  
+ */
+@Deprecated
 public class GtfsInMemoryReader extends GtfsReader {
 	// Fields
 	private Set<GtfsAgency> gtfsAgencies;

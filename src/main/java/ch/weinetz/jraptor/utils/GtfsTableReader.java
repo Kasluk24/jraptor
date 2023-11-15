@@ -12,24 +12,39 @@ import com.opencsv.exceptions.CsvValidationException;
 import ch.weinetz.jraptor.gtfs.model.GtfsTableData;
 
 public class GtfsTableReader <T extends GtfsTableData> extends GtfsReader implements Runnable  {
-	private Set<T> gtfsTable;
+	private Set<T> gtfsTable = new HashSet<>();
 	private Class<T> gtfsClass;
 	
+	// Constructor
 	public GtfsTableReader(String gtfsDirectory, Class<T> gtfsClass) {
 		super(gtfsDirectory);
 		this.gtfsClass = gtfsClass;
-		this.gtfsTable = new HashSet<>();
 	}
 
 	@Override
 	public void run() {
+		startReader();
+	}
+	
+	// Getter
+	public Set<T> getGtfsTable() {
+		if (gtfsTable.size() == 0) {
+			startReader();
+		}
+		return gtfsTable;
+	}	
+
+	// Private methods
+	private void startReader() {
 		try {
 			T gtfsObject = gtfsClass.getConstructor().newInstance();
 			String gtfsFileName = gtfsObject.getGtfsFileName();
 			logger.info("Read " + gtfsFileName + " to memory");
-			CSVReader reader = createReader(gtfsDirectory.resolve(gtfsFileName));
-			readToMemory(reader, gtfsObject);
-			reader.close();
+			if (getGtfsFiles().contains(gtfsFileName)) {
+				CSVReader reader = createReader(gtfsDirectory.resolve(gtfsFileName));
+				readToMemory(reader, gtfsObject);
+				reader.close();
+			}
 			
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
@@ -44,16 +59,8 @@ public class GtfsTableReader <T extends GtfsTableData> extends GtfsReader implem
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
-	// Getter
-	public Set<T> getGtfsTable() {
-		return gtfsTable;
-	}
-	
-
-	// Private methods
 	private void readToMemory(CSVReader reader, T gtfsObject) throws CsvValidationException, IOException {
 		String[] lineValues = reader.readNext(); // Reads the header
 		Method[] setterMethods = gtfsObject.getOrderedSetterArray(lineValues);

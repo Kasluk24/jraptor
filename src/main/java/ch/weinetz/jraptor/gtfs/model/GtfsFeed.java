@@ -145,6 +145,35 @@ public class GtfsFeed {
 		this.gtfsTrips.add(gtfsTrip);
 	}
 	
+	// Set Gtfs Tables	
+	public void setGtfsAgencies(Set<GtfsAgency> gtfsAgencies) {
+		this.gtfsAgencies = gtfsAgencies;
+	}
+	public void setGtfsCalendars(Set<GtfsCalendar> gtfsCalendars) {
+		this.gtfsCalendars = gtfsCalendars;
+	}
+	public void setGtfsCalendarDates(Set<GtfsCalendarDate> gtfsCalendarDates) {
+		this.gtfsCalendarDates = gtfsCalendarDates;
+	}
+	public void setGtfsFrequencies(Set<GtfsFrequency> gtfsFrequencies) {
+		this.gtfsFrequencies = gtfsFrequencies;
+	}
+	public void setGtfsRoutes(Set<GtfsRoute> gtfsRoutes) {
+		this.gtfsRoutes = gtfsRoutes;
+	}
+	public void setGtfsStops(Set<GtfsStop> gtfsStops) {
+		this.gtfsStops = gtfsStops;
+	}
+	public void setGtfsStopTimes(Set<GtfsStopTime> gtfsStopTimes) {
+		this.gtfsStopTimes = gtfsStopTimes;
+	}
+	public void setGtfsTransfers(Set<GtfsTransfer> gtfsTransfers) {
+		this.gtfsTransfers = gtfsTransfers;
+	}
+	public void setGtfsTrips(Set<GtfsTrip> gtfsTrips) {
+		this.gtfsTrips = gtfsTrips;
+	}
+
 	@Override
 	public String toString() {
 		return "GtfsFeed with:\n"
@@ -159,4 +188,20 @@ public class GtfsFeed {
 				+ gtfsTrips.size() + " Trips";
 	}
 	
+	public boolean isEmpty() {
+		if ((gtfsAgencies.size() +
+				gtfsCalendars.size() +
+				gtfsCalendarDates.size() +
+				gtfsFrequencies.size() +
+				gtfsRoutes.size() +
+				gtfsStops.size() +
+				gtfsStopTimes.size() + 
+				gtfsTransfers.size() + 
+				gtfsTrips.size()
+		) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
