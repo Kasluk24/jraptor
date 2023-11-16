@@ -1,8 +1,12 @@
 package ch.weinetz.jraptor;
 
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import ch.weinetz.jraptor.gtfs.model.*;
 import ch.weinetz.jraptor.utils.GtfsTableReader;
@@ -37,19 +41,21 @@ public class GtfsFeedReader  {
 	public GtfsFeed readFeedParallel() throws InterruptedException {
 		GtfsFeed gtfsFeed = new GtfsFeed();
 		
-		List<GtfsTableReader> readers = new LinkedList<>();
-		readers.add(new GtfsTableReader<>(gtfsFeedDirectory, GtfsAgency.class));
-		readers.add(new GtfsTableReader<>(gtfsFeedDirectory, GtfsCalendar.class));
-		readers.add(new GtfsTableReader<>(gtfsFeedDirectory, GtfsCalendarDate.class));
-		readers.add(new GtfsTableReader<>(gtfsFeedDirectory, GtfsFrequency.class));
-		readers.add(new GtfsTableReader<>(gtfsFeedDirectory, GtfsRoute.class));
-		readers.add(new GtfsTableReader<>(gtfsFeedDirectory, GtfsStop.class));
-		readers.add(new GtfsTableReader<>(gtfsFeedDirectory, GtfsStopTime.class));
-		readers.add(new GtfsTableReader<>(gtfsFeedDirectory, GtfsTransfer.class));
-		readers.add(new GtfsTableReader<>(gtfsFeedDirectory, GtfsTrip.class));
+		
+		@SuppressWarnings("rawtypes") GtfsTableReader[] readers = {
+			new GtfsTableReader<>(gtfsFeedDirectory, GtfsAgency.class),
+			new GtfsTableReader<>(gtfsFeedDirectory, GtfsCalendar.class),
+			new GtfsTableReader<>(gtfsFeedDirectory, GtfsCalendarDate.class),
+			new GtfsTableReader<>(gtfsFeedDirectory, GtfsFrequency.class),
+			new GtfsTableReader<>(gtfsFeedDirectory, GtfsRoute.class),
+			new GtfsTableReader<>(gtfsFeedDirectory, GtfsStop.class),
+			new GtfsTableReader<>(gtfsFeedDirectory, GtfsStopTime.class),
+			new GtfsTableReader<>(gtfsFeedDirectory, GtfsTransfer.class),
+			new GtfsTableReader<>(gtfsFeedDirectory, GtfsTrip.class)
+		};
 		
 		List<Thread> threads = new LinkedList<>();
-		for (GtfsTableReader reader : readers) {
+		for (@SuppressWarnings("rawtypes") GtfsTableReader reader : readers) {
 			threads.add(new Thread(reader));
 		}
 		
@@ -61,16 +67,11 @@ public class GtfsFeedReader  {
 			thread.join();
 		}
 		
-		gtfsFeed.setGtfsAgencies(readers.get(0).getGtfsTable());
-		gtfsFeed.setGtfsCalendars(readers.get(1).getGtfsTable());
-		gtfsFeed.setGtfsCalendarDates(readers.get(2).getGtfsTable());
-		gtfsFeed.setGtfsFrequencies(readers.get(3).getGtfsTable());
-		gtfsFeed.setGtfsRoutes(readers.get(4).getGtfsTable());
-		gtfsFeed.setGtfsStops(readers.get(5).getGtfsTable());
-		gtfsFeed.setGtfsStopTimes(readers.get(6).getGtfsTable());
-		gtfsFeed.setGtfsTransfers(readers.get(7).getGtfsTable());
-		gtfsFeed.setGtfsTrips(readers.get(8).getGtfsTable());
-				
+		for (@SuppressWarnings({ "rawtypes"})GtfsTableReader reader : readers) {
+			
+			gtfsFeed.setGtfsData(reader.getGtfsTable());
+		}
+		
 		return gtfsFeed;
 	}
 			

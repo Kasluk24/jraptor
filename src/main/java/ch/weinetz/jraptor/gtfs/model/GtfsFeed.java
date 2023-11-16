@@ -173,6 +173,42 @@ public class GtfsFeed {
 	public void setGtfsTrips(Set<GtfsTrip> gtfsTrips) {
 		this.gtfsTrips = gtfsTrips;
 	}
+	
+	// Set automatic by class type
+	@SuppressWarnings("unchecked")
+	public <T extends GtfsTableData> void setGtfsData(Set<T> table) {
+		if (table != null && !table.isEmpty()) {
+			GtfsTableData element = table.stream().findAny().get();
+			
+			if (element instanceof GtfsAgency) {
+				this.gtfsAgencies = (Set<GtfsAgency>) table;
+			}
+			if (element instanceof GtfsCalendar) {
+				this.gtfsCalendars = (Set<GtfsCalendar>) table;
+			}
+			if (element instanceof GtfsCalendarDate) {
+				this.gtfsCalendarDates = (Set<GtfsCalendarDate>) table;
+			}
+			if (element instanceof GtfsFrequency) {
+				this.gtfsFrequencies = (Set<GtfsFrequency>) table;
+			}
+			if (element instanceof GtfsRoute) {
+				this.gtfsRoutes = (Set<GtfsRoute>) table;
+			}
+			if (element instanceof GtfsStop) {
+				this.gtfsStops = (Set<GtfsStop>) table;
+			}
+			if (element instanceof GtfsStopTime) {
+				this.gtfsStopTimes = (Set<GtfsStopTime>) table;
+			}
+			if (element instanceof GtfsTransfer) {
+				this.gtfsTransfers = (Set<GtfsTransfer>) table;
+			}
+			if (element instanceof GtfsTrip) {
+				this.gtfsTrips = (Set<GtfsTrip>) table;
+			}			
+		}
+	}
 
 	@Override
 	public String toString() {
