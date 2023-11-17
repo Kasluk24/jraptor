@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.weinetz.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImportUtils;
 
 public class GtfsFrequency implements GtfsTableData {
 	// Fields
@@ -134,12 +134,12 @@ public class GtfsFrequency implements GtfsTableData {
 	@Override
 	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsFrequency> classObject = GtfsFrequency.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
 	@Override
 	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
 		Class<GtfsFrequency> classObject = GtfsFrequency.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapSetters, gtfsHeader);
 	}
 	
 	// Private static methods

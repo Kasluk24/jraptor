@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.weinetz.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImportUtils;
 
 public class GtfsCalendar implements GtfsTableData {
 	// Fields
@@ -252,12 +252,12 @@ public class GtfsCalendar implements GtfsTableData {
 	@Override
 	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsCalendar> classObject = GtfsCalendar.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
 	@Override
 	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
 		Class<GtfsCalendar> classObject = GtfsCalendar.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
 	}
 	@Override
 	public boolean equals(Object object) {

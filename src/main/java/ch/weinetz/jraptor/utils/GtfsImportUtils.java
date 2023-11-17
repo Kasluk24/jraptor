@@ -3,7 +3,7 @@ package ch.weinetz.jraptor.utils;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class GtfsImport {
+public class GtfsImportUtils {
 	
 	// Creates an array of methods in the same order as a given array with headers
 	// The map methodHeaderMapping 

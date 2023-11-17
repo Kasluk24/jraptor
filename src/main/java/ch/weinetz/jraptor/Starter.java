@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import com.opencsv.exceptions.CsvValidationException;
 
 import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
+import ch.weinetz.jraptor.utils.GtfsFileToSqliteConverter;
 
 public class Starter {
 
@@ -42,7 +43,7 @@ public class Starter {
 		*/
 		
 		System.out.println(LocalTime.now());
-		GtfsSqliteReader reader = new GtfsSqliteReader("data/gtfs_fp2022_2022-08-17_04-15");
+		GtfsFileToSqliteConverter reader = new GtfsFileToSqliteConverter("data/gtfs_fp2023_2023-10-11_04-15");
 		try {
 			reader.readAllToSqlite();
 		} catch (CsvValidationException e) {

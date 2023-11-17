@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.weinetz.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImportUtils;
 
 public class GtfsStopTime implements GtfsTableData{
 	// Fields
@@ -200,12 +200,12 @@ public class GtfsStopTime implements GtfsTableData{
 	@Override
 	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsStopTime> classObject = GtfsStopTime.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
 	@Override
 	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
 		Class<GtfsStopTime> classObject = GtfsStopTime.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
 	}	
 	
 	// Private static methods
