@@ -179,7 +179,7 @@ public class GtfsFeed {
 	public <T extends GtfsTableData> void setGtfsData(Set<T> table) {
 		if (table != null && !table.isEmpty()) {
 			GtfsTableData element = table.stream().findAny().get();
-			
+						
 			if (element instanceof GtfsAgency) {
 				this.gtfsAgencies = (Set<GtfsAgency>) table;
 			}

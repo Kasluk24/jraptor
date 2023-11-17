@@ -1,6 +1,7 @@
 package ch.weinetz.jraptor;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import com.opencsv.exceptions.CsvValidationException;
 
@@ -27,6 +28,7 @@ public class Starter {
 		System.out.println(feed2.toString());
 		*/
 
+		/*
 		try {
 			System.out.println(LocalTime.now());
 			GtfsFeedReader feedReader2 = new GtfsFeedReader("data/gtfs_fp2022_2022-08-17_04-15");
@@ -37,7 +39,25 @@ public class Starter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		*/
+		
+		System.out.println(LocalTime.now());
+		GtfsSqliteReader reader = new GtfsSqliteReader("data/gtfs_fp2022_2022-08-17_04-15");
+		try {
+			reader.readAllToSqlite();
+		} catch (CsvValidationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println(LocalTime.now());
+		
 		
 		/*
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");

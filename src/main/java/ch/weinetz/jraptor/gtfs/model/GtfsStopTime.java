@@ -228,7 +228,7 @@ public class GtfsStopTime implements GtfsTableData{
 		tempFields.put("arrival_time", "getArrivalTimeAsString");
 		tempFields.put("departure_time", "getDepartureTimeAsString");
 		tempFields.put("stop_id", "getStopId");
-		tempFields.put("stop_sequence", "getStopSequence");
+		tempFields.put("stop_sequence", "getStopSequenceAsString");
 		tempFields.put("stop_headsign", "getStopHeadsign");
 		tempFields.put("pickup_type", "getPickupTypeCodeAsString");
 		tempFields.put("drop_off_type", "getDropOffTypeCodeAsString");

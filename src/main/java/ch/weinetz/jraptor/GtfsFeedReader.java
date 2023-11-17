@@ -1,14 +1,19 @@
 package ch.weinetz.jraptor;
 
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import ch.weinetz.jraptor.gtfs.model.*;
+import ch.weinetz.jraptor.gtfs.model.GtfsAgency;
+import ch.weinetz.jraptor.gtfs.model.GtfsCalendar;
+import ch.weinetz.jraptor.gtfs.model.GtfsCalendarDate;
+import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
+import ch.weinetz.jraptor.gtfs.model.GtfsFrequency;
+import ch.weinetz.jraptor.gtfs.model.GtfsRoute;
+import ch.weinetz.jraptor.gtfs.model.GtfsStop;
+import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
+import ch.weinetz.jraptor.gtfs.model.GtfsTransfer;
+import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
 import ch.weinetz.jraptor.utils.GtfsTableReader;
 
 public class GtfsFeedReader  {
