@@ -3,22 +3,29 @@ package ch.weinetz.jraptor.utils;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
 import ch.weinetz.jraptor.gtfs.model.GtfsTableData;
 
-public class GtfsTableFileReader <T extends GtfsTableData> extends GtfsFileReader implements Runnable  {
+public class GtfsTableFileReader <T extends GtfsTableData> implements Runnable  {
 	private Set<T> gtfsTable = new HashSet<>();
 	private Class<T> gtfsClass;
+	private final Path gtfsDirectory;
+	private Logger logger;
 	
 	// Constructor
 	public GtfsTableFileReader(String gtfsDirectory, Class<T> gtfsClass) {
-		super(gtfsDirectory);
+		this.gtfsDirectory = GtfsImportUtils.getRelativePath(gtfsDirectory);
 		this.gtfsClass = gtfsClass;
+		
+		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+		logger.setLevel(Level.ALL);
 	}
 
 	@Override
@@ -40,8 +47,8 @@ public class GtfsTableFileReader <T extends GtfsTableData> extends GtfsFileReade
 			T gtfsObject = gtfsClass.getConstructor().newInstance();
 			String gtfsFileName = gtfsObject.getGtfsFileName();
 			logger.info("Read " + gtfsFileName + " to memory");
-			if (getGtfsFiles().contains(gtfsFileName)) {
-				CSVReader reader = createReader(gtfsDirectory.resolve(gtfsFileName));
+			if (GtfsImportUtils.getGtfsFiles(gtfsDirectory).contains(gtfsFileName)) {
+				CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve(gtfsFileName));
 				readToMemory(reader, gtfsObject);
 				reader.close();
 			}
@@ -82,6 +89,5 @@ public class GtfsTableFileReader <T extends GtfsTableData> extends GtfsFileReade
 				e.printStackTrace();
 			}
 		}
-	}	
-
+	}
 }

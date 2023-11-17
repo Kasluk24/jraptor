@@ -1,12 +1,11 @@
 package ch.weinetz.jraptor;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalTime;
 import com.opencsv.exceptions.CsvValidationException;
 
 import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
-import ch.weinetz.jraptor.utils.GtfsFileToSqliteConverter;
+import ch.weinetz.jraptor.utils.GtfsFeedFileReader;
 
 public class Starter {
 
@@ -15,7 +14,7 @@ public class Starter {
 		// Code
 		/*
 		System.out.println(LocalTime.now());
-		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
+		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2023_2023-10-11_04-15");
 		GtfsFeed feed1 = reader.readGtfsFeed();
 		System.out.println(LocalTime.now());
 		System.out.println(feed1.toString());
@@ -23,16 +22,15 @@ public class Starter {
 
 		/*
 		System.out.println(LocalTime.now());
-		GtfsFeedReader feedReader = new GtfsFeedReader("data/gtfs_fp2022_2022-08-17_04-15");
+		GtfsFeedFileReader feedReader = new GtfsFeedFileReader("data/gtfs_fp2023_2023-10-11_04-15");
 		GtfsFeed feed2 = feedReader.readFeed();
 		System.out.println(LocalTime.now());
 		System.out.println(feed2.toString());
 		*/
 
-		/*
 		try {
 			System.out.println(LocalTime.now());
-			GtfsFeedReader feedReader2 = new GtfsFeedReader("data/gtfs_fp2022_2022-08-17_04-15");
+			GtfsFeedFileReader feedReader2 = new GtfsFeedFileReader("data/gtfs_fp2023_2023-10-11_04-15");
 			GtfsFeed feed3 = feedReader2.readFeedParallel();
 			System.out.println(LocalTime.now());
 			System.out.println(feed3.toString());
@@ -40,10 +38,14 @@ public class Starter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
 		
+		/*
 		System.out.println(LocalTime.now());
-		GtfsFileToSqliteConverter reader = new GtfsFileToSqliteConverter("data/gtfs_fp2023_2023-10-11_04-15");
+		GtfsFileToSqliteConverter reader = new GtfsFileToSqliteConverter(
+				"data/gtfs_fp2023_2023-10-11_04-15", 
+				"data/gtfs_fp2023_2023-10-11_04-15.sqlite"
+		);
+		
 		try {
 			reader.readAllToSqlite();
 		} catch (CsvValidationException e) {
@@ -58,7 +60,7 @@ public class Starter {
 		}
 		
 		System.out.println(LocalTime.now());
-		
+		*/
 		
 		/*
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");

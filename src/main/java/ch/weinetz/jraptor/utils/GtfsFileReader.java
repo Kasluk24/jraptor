@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import com.opencsv.CSVReader;
 
+@Deprecated
 public class GtfsFileReader {
 	// Fields
 	protected final Path gtfsDirectory;
