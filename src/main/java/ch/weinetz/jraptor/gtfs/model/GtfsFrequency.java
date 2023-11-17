@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.weinetz.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImportUtils;
 
 public class GtfsFrequency implements GtfsTableData {
 	// Fields
@@ -17,6 +17,7 @@ public class GtfsFrequency implements GtfsTableData {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "frequencies";
+	public static final String gtfsFileName = "frequencies.txt";
 	
 	// Constructor
 	public GtfsFrequency() {}
@@ -82,6 +83,9 @@ public class GtfsFrequency implements GtfsTableData {
 	public String getSqlTableName() {
 		return sqlTableName;
 	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
+	}
 
 	// Setters
 	public void setTripId(String tripId) {
@@ -130,12 +134,12 @@ public class GtfsFrequency implements GtfsTableData {
 	@Override
 	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsFrequency> classObject = GtfsFrequency.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
 	@Override
 	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
 		Class<GtfsFrequency> classObject = GtfsFrequency.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapSetters, gtfsHeader);
 	}
 	
 	// Private static methods

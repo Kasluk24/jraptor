@@ -1,9 +1,19 @@
 package ch.weinetz.jraptor.utils;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class GtfsImport {
+import com.opencsv.CSVReader;
+
+public class GtfsImportUtils {
 	
 	// Creates an array of methods in the same order as a given array with headers
 	// The map methodHeaderMapping 
@@ -38,4 +48,31 @@ public class GtfsImport {
 		}
 		return builder.substring(0, builder.length() - separator.length()).toString();
 	}
+	
+	public static CSVReader createCsvReader(Path gtfsFile) throws IOException {
+		FileReader fileReader = new FileReader(gtfsFile.toFile());
+		CSVReader reader = new CSVReader(fileReader);
+		
+		return reader;
+	}
+	
+	public static Set<String> getGtfsFiles(Path gtfsDirectory) {
+		File gtfsFolder = gtfsDirectory.toFile();
+	    Set<String> gtfsFiles = Stream.of(gtfsFolder.listFiles())
+	    	      .filter(file -> !file.isDirectory())
+	    	      .map(File::getName)
+	    	      .collect(Collectors.toSet());
+		
+		return gtfsFiles;
+	}
+	
+	public static Path getRelativePath(String path) {
+		Path workingDirectory = Paths.get(".");
+		if (path == null) {
+			return workingDirectory;
+		} else {
+			return workingDirectory.relativize(Paths.get(path));
+		}
+	}
+
 }

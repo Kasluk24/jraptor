@@ -1,4 +1,4 @@
-package ch.weinetz.jraptor;
+package ch.weinetz.jraptor.utils;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -12,6 +12,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import ch.weinetz.jraptor.gtfs.model.GtfsAgency;
 import ch.weinetz.jraptor.gtfs.model.GtfsCalendar;
 import ch.weinetz.jraptor.gtfs.model.GtfsCalendarDate;
+import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 import ch.weinetz.jraptor.gtfs.model.GtfsFrequency;
 import ch.weinetz.jraptor.gtfs.model.GtfsRoute;
 import ch.weinetz.jraptor.gtfs.model.GtfsStop;
@@ -19,9 +20,15 @@ import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
 import ch.weinetz.jraptor.gtfs.model.GtfsTableData;
 import ch.weinetz.jraptor.gtfs.model.GtfsTransfer;
 import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
-import ch.weinetz.jraptor.utils.GtfsReader;
 
-public class GtfsInMemoryReader extends GtfsReader {
+
+/**
+ * Old class for reading GTFS data from disk
+ *
+ * @deprecated use {@link #GtfsFeedReader} instead.  
+ */
+@Deprecated
+public class GtfsInMemoryReader extends GtfsFileReader {
 	// Fields
 	private Set<GtfsAgency> gtfsAgencies;
 	private Set<GtfsCalendar> gtfsCalendars;
@@ -123,6 +130,16 @@ public class GtfsInMemoryReader extends GtfsReader {
 		CSVReader reader = createReader(gtfsDirectory.resolve("trips.txt"));
 		gtfsTrips = readToMemory(reader, new GtfsTrip());
 		reader.close();
+	}
+	
+	public GtfsFeed readGtfsFeed() throws CsvValidationException, IOException {
+		readAllToMemory();
+		return getGtfsFeed();
+	}
+
+	public GtfsFeed getGtfsFeed() {
+		return new GtfsFeed(gtfsAgencies, gtfsCalendars, gtfsCalendarDates, gtfsFrequencies, gtfsRoutes,
+			gtfsStops, gtfsStopTimes, gtfsTransfers, gtfsTrips);
 	}
 	
 	// Private methods

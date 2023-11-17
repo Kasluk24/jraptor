@@ -2,67 +2,118 @@ package ch.weinetz.jraptor;
 
 import java.io.IOException;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Set;
-
 import com.opencsv.exceptions.CsvValidationException;
 
-import ch.weinetz.jraptor.gtfs.model.GtfsStop;
-import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
-import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
-import ch.weinetz.jraptor.provider.GtfsRouteRaptorProvider;
+import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
+import ch.weinetz.jraptor.utils.GtfsFeedFileReader;
 
 public class Starter {
 
-	public static void main(String[] args) throws CsvValidationException, IOException {
-		System.out.println(LocalTime.now());
+	public static void main(String[] args) throws CsvValidationException, IOException, ClassNotFoundException {
 		
 		// Code
+		/*
+		System.out.println(LocalTime.now());
+		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2023_2023-10-11_04-15");
+		GtfsFeed feed1 = reader.readGtfsFeed();
+		System.out.println(LocalTime.now());
+		System.out.println(feed1.toString());
+		*/
+
+		/*
+		System.out.println(LocalTime.now());
+		GtfsFeedFileReader feedReader = new GtfsFeedFileReader("data/gtfs_fp2023_2023-10-11_04-15");
+		GtfsFeed feed2 = feedReader.readFeed();
+		System.out.println(LocalTime.now());
+		System.out.println(feed2.toString());
+		*/
+
+		try {
+			System.out.println(LocalTime.now());
+			GtfsFeedFileReader feedReader2 = new GtfsFeedFileReader("data/gtfs_fp2023_2023-10-11_04-15");
+			GtfsFeed feed3 = feedReader2.readFeedParallel();
+			System.out.println(LocalTime.now());
+			System.out.println(feed3.toString());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*
+		System.out.println(LocalTime.now());
+		GtfsFileToSqliteConverter reader = new GtfsFileToSqliteConverter(
+				"data/gtfs_fp2023_2023-10-11_04-15", 
+				"data/gtfs_fp2023_2023-10-11_04-15.sqlite"
+		);
+		
+		try {
+			reader.readAllToSqlite();
+		} catch (CsvValidationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println(LocalTime.now());
+		*/
+		
+		/*
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2022_2022-08-17_04-15");
 		reader.readStopTimesToMemory();
 		reader.readTripsToMemory();
 		reader.readStopsToMemory();
+		reader.readRoutesToMemory();
+		reader.readCalendarsToMemory();
 		Set<GtfsStopTime> stopTimes = reader.getGtfsStopTimes();
 		Set<GtfsTrip> trips = reader.getGtfsTrips();
 		Set<GtfsStop> stops = reader.getGtfsStops();
+		Set<GtfsRoute> routes = reader.getGtfsRoutes();
+		Set<GtfsCalendar> calendars = reader.getGtfsCalendars();
+
+		System.out.println(LocalTime.now());
+
+		// Prepare Sets
+		Set<String> filteredServiceId = calendars.stream()
+				.filter(c -> c.getWednesday())
+				.map(c -> c.getServiceId())
+				.collect(Collectors.toSet());
 		
-		GtfsStop stopA = stops.stream()
-				.filter(s -> s.getStopId().equals("8500023:0:1"))
-				.findFirst()
-				.get();
-		GtfsStop stopB = stops.stream()
-				.filter(s -> s.getStopId().equals("8502001:0:2"))
-				.findFirst()
-				.get();
-		GtfsTrip trip = trips.stream()
-				.filter(t -> t.getTripId().equals("2.TA.91-BT-Y-j22-1.2.H"))
-				.findFirst()
-				.get();
+		Set<GtfsTrip> filteredTrips = trips.stream()
+				.filter(t -> filteredServiceId.contains(t.getServiceId()))
+				.collect(Collectors.toSet());
 		
-		System.out.println(stopA);
-		System.out.println(stopB);
-		System.out.println(trip);
+		Set<String> filteredRouteIds = filteredTrips.stream()
+				.map(t -> t.getRouteId())
+				.distinct()
+				.collect(Collectors.toSet());
 		
-		GtfsRouteRaptorProvider provider = new GtfsRouteRaptorProvider(trips, stops, stopTimes);
+		Set<GtfsRoute> filteredRoutes = routes.stream()
+				.filter(r -> filteredRouteIds.contains(r.getRouteId()))
+				.collect(Collectors.toSet());
 		
-		System.out.println(LocalTime.now() + " 1.1");
-		boolean isABeforeB = provider.isStopBefore(trip, stopA, stopB);
-		System.out.println(LocalTime.now() + " 1.2");
+		Set<String> filteredTripIds = filteredTrips.stream()
+				.map(t -> t.getTripId())
+				.collect(Collectors.toSet());
 		
-		System.out.println(isABeforeB);
+		Set<GtfsStopTime> filteredStopTimes = stopTimes.stream()
+				.filter(s -> filteredTripIds.contains(s.getTripId()))
+				.collect(Collectors.toSet());
 		
-		System.out.println(LocalTime.now() + " 2.1");
-		int stopIndexA = provider.getRouteStopIndex(trip, stopA);
-		int stopIndexB = provider.getRouteStopIndex(trip, stopB);
-		System.out.println(LocalTime.now() + " 2.2");
 		
-		System.out.println(stopIndexA + " -- " + stopIndexB);
+		System.out.println(routes.size());
+		System.out.println(filteredRoutes.size());
+		System.out.println(LocalTime.now());		
+				
+		Map routeStopIndex = RaptorRouteStopIndexBuilder.buildRaptorRouteStopIndex(filteredStopTimes, filteredRoutes, stops, filteredTrips);
+		System.out.println(routeStopIndex);
 		
-		System.out.println(LocalTime.now() + " 3.1");
-		List<GtfsStop> stopsFromTrip = provider.getRoutePath(trip);
-		System.out.println(LocalTime.now() + " 3.2");
-		System.out.println(stopsFromTrip);
 		
 		System.out.println(LocalTime.now());
+		*/
 	}
 }

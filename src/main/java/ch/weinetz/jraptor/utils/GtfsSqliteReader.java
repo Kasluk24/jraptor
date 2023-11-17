@@ -13,13 +13,13 @@ import java.util.stream.Stream;
 
 import com.opencsv.CSVReader;
 
-public class GtfsReader {
+public class GtfsSqliteReader {
 	// Fields
 	protected final Path gtfsDirectory;
 	protected Logger logger;
 	
 	// Constructor
-	public GtfsReader(String gtfsDirectory) {
+	public GtfsSqliteReader(String gtfsDirectory) {
 		Path workingDirectory = Paths.get(".");
 		if (gtfsDirectory == null) {
 			this.gtfsDirectory = workingDirectory;

@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.weinetz.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImportUtils;
 
 public class GtfsStopTime implements GtfsTableData{
 	// Fields
@@ -21,6 +21,7 @@ public class GtfsStopTime implements GtfsTableData{
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "stop_times";
+	public static final String gtfsFileName = "stop_times.txt";
 	
 	// Constructor
 	public GtfsStopTime() {}
@@ -117,6 +118,9 @@ public class GtfsStopTime implements GtfsTableData{
 	public String getSqlTableName() {
 		return sqlTableName;
 	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
+	}
 	
 	// Setters
 	public void setTripId(String tripId) {
@@ -196,12 +200,12 @@ public class GtfsStopTime implements GtfsTableData{
 	@Override
 	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsStopTime> classObject = GtfsStopTime.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}
 	@Override
 	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
 		Class<GtfsStopTime> classObject = GtfsStopTime.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
 	}	
 	
 	// Private static methods
@@ -224,7 +228,7 @@ public class GtfsStopTime implements GtfsTableData{
 		tempFields.put("arrival_time", "getArrivalTimeAsString");
 		tempFields.put("departure_time", "getDepartureTimeAsString");
 		tempFields.put("stop_id", "getStopId");
-		tempFields.put("stop_sequence", "getStopSequence");
+		tempFields.put("stop_sequence", "getStopSequenceAsString");
 		tempFields.put("stop_headsign", "getStopHeadsign");
 		tempFields.put("pickup_type", "getPickupTypeCodeAsString");
 		tempFields.put("drop_off_type", "getDropOffTypeCodeAsString");

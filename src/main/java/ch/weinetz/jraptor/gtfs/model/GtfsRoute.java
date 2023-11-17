@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.weinetz.jraptor.utils.GtfsImport;
+import ch.weinetz.jraptor.utils.GtfsImportUtils;
 
 public class GtfsRoute implements GtfsTableData {
 	// Fields
@@ -21,6 +21,7 @@ public class GtfsRoute implements GtfsTableData {
 	public static final Map<String, String> mapGetters = createGetterMap();
 	public static final Map<String, String> mapSqliteTypes = createSqlTypeMap();
 	public static final String sqlTableName = "routes";
+	public static final String gtfsFileName = "routes.txt";
 	
 	// Constructor
 	public GtfsRoute() {};
@@ -94,6 +95,9 @@ public class GtfsRoute implements GtfsTableData {
 	public String getSqlTableName() {
 		return sqlTableName;
 	}
+	public String getGtfsFileName() {
+		return gtfsFileName;
+	}
 	
 	// Setters
 	public void setRouteId(String routeId) {
@@ -136,12 +140,12 @@ public class GtfsRoute implements GtfsTableData {
 	@Override
 	public Method[] getOrderedSetterArray(String[] gtfsHeader) {
 		Class<GtfsRoute> classObject = GtfsRoute.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapSetters, gtfsHeader, String.class);
 	}	
 	@Override
 	public Method[] getOrderedGetterArray(String[] gtfsHeader) {
 		Class<GtfsRoute> classObject = GtfsRoute.class;
-		return GtfsImport.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
+		return GtfsImportUtils.createOrderedMethodArray(classObject, mapGetters, gtfsHeader);
 	}
 	@Override
 	public boolean equals(Object object) {
