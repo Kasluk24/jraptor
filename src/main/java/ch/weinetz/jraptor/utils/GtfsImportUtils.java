@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -73,6 +74,11 @@ public class GtfsImportUtils {
 		} else {
 			return workingDirectory.relativize(Paths.get(path));
 		}
+	}
+	
+	public static Set<String> getSqlDataTables(Path databasePath) {
+		SqliteHandler sqliteHandler = new SqliteHandler(databasePath);
+		return sqliteHandler.getDataTables();
 	}
 
 }

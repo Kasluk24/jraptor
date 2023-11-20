@@ -6,12 +6,20 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 import ch.weinetz.jraptor.utils.GtfsFeedFileReader;
+import ch.weinetz.jraptor.utils.GtfsFeedSqliteReader;
+import ch.weinetz.jraptor.utils.SqliteHandler;
 
 public class Starter {
 
 	public static void main(String[] args) throws CsvValidationException, IOException, ClassNotFoundException {
 		
 		// Code
+		System.out.println(LocalTime.now());
+		GtfsFeedSqliteReader reader = new GtfsFeedSqliteReader("data/GTFS_Data.sqlite");
+		GtfsFeed feed0 = reader.readFeed();
+		System.out.println(LocalTime.now());
+		System.out.println(feed0);
+		
 		/*
 		System.out.println(LocalTime.now());
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2023_2023-10-11_04-15");
@@ -28,6 +36,7 @@ public class Starter {
 		System.out.println(feed2.toString());
 		*/
 
+		/*
 		try {
 			System.out.println(LocalTime.now());
 			GtfsFeedFileReader feedReader2 = new GtfsFeedFileReader("data/gtfs_fp2023_2023-10-11_04-15");
@@ -38,6 +47,7 @@ public class Starter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		
 		/*
 		System.out.println(LocalTime.now());

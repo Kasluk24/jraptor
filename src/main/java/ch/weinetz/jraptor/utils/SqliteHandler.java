@@ -7,7 +7,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class SqliteHandler {
@@ -23,17 +28,20 @@ public class SqliteHandler {
 		Path databasePath = Paths.get(pathToDatabase).toAbsolutePath();
 		this.pathToDatabase = workingDirectory.relativize(databasePath);
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+		connectToDatabase();
 	}
 	public SqliteHandler(Path pathToDatabase) {
 		Path workingDirectory = Paths.get(".").toAbsolutePath();
 		this.pathToDatabase = workingDirectory.relativize(pathToDatabase);
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+		connectToDatabase();
 	}
 	public SqliteHandler(File databaseFile) {
 		Path workingDirectory = Paths.get(".").toAbsolutePath();
 		Path databasePath = databaseFile.toPath();
 		this.pathToDatabase = workingDirectory.relativize(databasePath);
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+		connectToDatabase();
 	}
 	
 	// Getters
@@ -49,16 +57,18 @@ public class SqliteHandler {
 	public ResultSet getResult() {
 		return result;
 	}
-	
-	// Public methods
-	public void connectToDatabase() {
-		try {
-			this.connection = DriverManager.getConnection("jdbc:sqlite:" + pathToDatabase.toString());
-		} catch (SQLException e) {
-			logger.severe(String.format("Connection to SQLITE database \"%s\" failed", getAbsolutePath()));
-			e.printStackTrace();
+	public Set<String> getDataTables() {
+		return listTables(new String[]{"TABLE"});
+	}
+	public List<String> getColumnNames(String tableName) {
+		if (listTables(null).contains(tableName)) {
+			return listColumns(tableName);
+		} else {
+			throw new RuntimeException(String.format("Table %s does not exist in database %s.", tableName, getRelativePath()));
 		}
 	}
+	
+	// Public methods
 	public ResultSet executeSql(PreparedStatement sqlStatement) {
 		result = null;
 		execute(sqlStatement);
@@ -109,6 +119,14 @@ public class SqliteHandler {
 	}
 	
 	// Private methods
+	private void connectToDatabase() {
+		try {
+			this.connection = DriverManager.getConnection("jdbc:sqlite:" + pathToDatabase.toString());			
+		} catch (SQLException e) {
+			logger.severe(String.format("Connection to SQLITE database \"%s\" failed", getAbsolutePath()));
+			e.printStackTrace();
+		}
+	}
 	private void execute(PreparedStatement sqlStatement) {
 		try {
 			result = (sqlStatement.execute()) ? sqlStatement.getResultSet() : null;
@@ -118,4 +136,34 @@ public class SqliteHandler {
 			e.printStackTrace();
 		}
 	}
+	private Set<String> listTables(String[] tableTypes) {
+		Set<String> tables = new HashSet<>();
+		try {
+			ResultSet dataTables = connection.getMetaData().getTables(null, null, "%", tableTypes);
+			while (dataTables.next()) {
+				tables.add(dataTables.getString("TABLE_NAME"));
+			}
+			dataTables.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tables;
+	}
+	private List<String> listColumns(String table) {
+		List<String> columns = new LinkedList<>();
+		try {
+			ResultSet tableData = executeSql(String.format("SELECT * FROM %s LIMIT 1;", table));
+			ResultSetMetaData metadata = tableData.getMetaData();
+			for (int i = 0; i < metadata.getColumnCount(); i++) {
+				columns.add(metadata.getColumnName(i + 1));
+			}
+						
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return columns;
+	}
+	
 }

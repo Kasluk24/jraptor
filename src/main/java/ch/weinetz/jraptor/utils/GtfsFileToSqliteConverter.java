@@ -30,10 +30,12 @@ public class GtfsFileToSqliteConverter {
 	private final Path gtfsDirectory;
 	private Logger logger;
 	private SqliteHandler sqliteHandler;
+	private boolean closeConnection;
 	
 	public GtfsFileToSqliteConverter(String gtfsDirectory, String pathToDatabase) {
 		this.gtfsDirectory = GtfsImportUtils.getRelativePath(gtfsDirectory);
 		this.sqliteHandler = new SqliteHandler(pathToDatabase);
+		this.closeConnection = true;
 		
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		logger.setLevel(Level.ALL);
@@ -41,10 +43,7 @@ public class GtfsFileToSqliteConverter {
 	
 	public void readAllToSqlite() throws IOException, CsvValidationException, SQLException {
 		Set<String> gtfsFiles = GtfsImportUtils.getGtfsFiles(gtfsDirectory);
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
-		
+		this.closeConnection = false;
 	    if (gtfsFiles.contains("agency.txt")) {
 			readAgenciesToSqlite();
 	    }
@@ -72,88 +71,71 @@ public class GtfsFileToSqliteConverter {
 	    if (gtfsFiles.contains("trips.txt")) {
 			readTripsToSqlite();
 	    }
+	    sqliteHandler.closeConnection();
 	}
 	
 	public void readAgenciesToSqlite() throws IOException, CsvValidationException, SQLException {
 		logger.info("Read agency.txt to database");
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
 		CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve("agency.txt"));
 		readToSqlite(reader, new GtfsAgency());
 		reader.close();
+		if (closeConnection) sqliteHandler.closeConnection();
 	}
 	public void readCalendarsToSqlite() throws IOException, CsvValidationException, SQLException {
 		logger.info("Read calendar.txt to database");
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
 		CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve("calendar.txt"));
 		readToSqlite(reader, new GtfsCalendar());
 		reader.close();
+		if (closeConnection) sqliteHandler.closeConnection();
 	}
 	public void readCalendarDatesToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read calendar_dates.txt to database");
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
 		CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve("calendar_dates.txt"));
 		readToSqlite(reader, new GtfsCalendarDate());
 		reader.close();
+		if (closeConnection) sqliteHandler.closeConnection();
 	}
 	public void readFrequenciesToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read frequencies.txt to database");
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
 		CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve("frequencies.txt"));
 		readToSqlite(reader, new GtfsFrequency());
 		reader.close();
+		if (closeConnection) sqliteHandler.closeConnection();
 	}
 	public void readRoutesToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read routes.txt to database");
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
 		CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve("routes.txt"));
 		readToSqlite(reader, new GtfsRoute());
 		reader.close();
+		if (closeConnection) sqliteHandler.closeConnection();
 	}
 	public void readStopsToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read stops.txt to database");
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
 		CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve("stops.txt"));
 		readToSqlite(reader, new GtfsStop());
 		reader.close();
+		if (closeConnection) sqliteHandler.closeConnection();
 	}
 	public void readStopTimesToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read stop_times.txt to database");
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
 		CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve("stop_times.txt"));
 		readToSqlite(reader, new GtfsStopTime());
 		reader.close();
+		if (closeConnection) sqliteHandler.closeConnection();
 	}
 	public void readTransfersToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read transfers.txt to database");
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
 		CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve("transfers.txt"));
 		readToSqlite(reader, new GtfsTransfer());
 		reader.close();
+		if (closeConnection) sqliteHandler.closeConnection();
 	}
 	public void readTripsToSqlite() throws CsvValidationException, IOException, SQLException {
 		logger.info("Read trips.txt to database");
-		if (sqliteHandler.getConnection() == null) {
-			sqliteHandler.connectToDatabase();
-		}
 		CSVReader reader = GtfsImportUtils.createCsvReader(gtfsDirectory.resolve("trips.txt"));
 		readToSqlite(reader, new GtfsTrip());
 		reader.close();
+		if (closeConnection) sqliteHandler.closeConnection();
 	}
 	
 	// Private methods
