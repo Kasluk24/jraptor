@@ -65,7 +65,7 @@ public class GtfsFeed {
 		return Collections.unmodifiableSet(this.gtfsTrips);
 	}
 	
-	// Get objects as set by attributes
+	// Get objects as set by attributes (simple)
 	// Agency
 	public Set<GtfsAgency> getAgenciesByIds(Set<String> agencyIds) {
 		return this.gtfsAgencies.stream()
@@ -73,7 +73,22 @@ public class GtfsFeed {
 				.collect(Collectors.toSet());
 	}
 	// Calendar
+	public Set<GtfsCalendar> getCalendarsByEndDates(Set<GtfsDate> endDates) {
+		return this.gtfsCalendars.stream()
+				.filter(c -> endDates.contains(c.getEndDate()))
+				.collect(Collectors.toSet());
+	}
+	public Set<GtfsCalendar> getCalendarsByStartDates(Set<GtfsDate> startDates) {
+		return this.gtfsCalendars.stream()
+				.filter(c -> startDates.contains(c.getStartDate()))
+				.collect(Collectors.toSet());
+	}
 	// CalendarDate
+	public Set<GtfsCalendarDate> getCalendarDatesByDates(Set<GtfsDate> dates) {
+		return this.gtfsCalendarDates.stream()
+				.filter(c -> dates.contains(c.getDate()))
+				.collect(Collectors.toSet());
+	}
 	// Frequency
 	// Route
 	public Set<GtfsRoute> getRoutesByIds(Set<String> routeIds) {
@@ -209,6 +224,41 @@ public class GtfsFeed {
 			}			
 		}
 	}
+	
+	// Simple filter operations
+	// Agency
+	public void filterAgenciesByIds(Set<String> agencyIds) {
+		this.gtfsAgencies = getAgenciesByIds(agencyIds);
+	}
+	// Calendar
+	// CalendarDate
+	// Frequency
+	// Route
+	public void filterRoutesByIds(Set<String> routeIds) {
+		this.gtfsRoutes = getRoutesByIds(routeIds);
+	}
+	// Stop
+	public void filterStopsByIds(Set<String> stopIds) {
+		this.gtfsStops = getStopsByIds(stopIds);
+	}
+	// StopTime
+	public void filterStopTimesByTripIds(Set<String> tripIds) {
+			this.gtfsStopTimes = getStopTimesByTripIds(tripIds);
+	}
+	public void filterStopTimesByStopIds(Set<String> stopIds) {
+		this.gtfsStopTimes = getStopTimesByStopIds(stopIds);
+	}
+	// Transfer
+	public void filterTransfersByFromStopIds(Set<String> fromStopIds) {
+		this.gtfsTransfers = getTransfersByFromStopIds(fromStopIds);
+	}
+	public void filterTransfersByToStopIds(Set<String> toStopIds) {
+		this.gtfsTransfers = getTransfersByToStopIds(toStopIds);
+	}	
+	// Trip
+	public void filterTripsByIds(Set<String> tripIds) {
+		this.gtfsTrips = getTripsByIds(tripIds);
+	}	
 
 	@Override
 	public String toString() {
