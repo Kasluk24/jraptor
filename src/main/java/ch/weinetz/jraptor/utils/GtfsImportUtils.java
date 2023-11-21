@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,8 +18,6 @@ import com.opencsv.CSVReader;
 public class GtfsImportUtils {
 	
 	// Creates an array of methods in the same order as a given array with headers
-	// The map methodHeaderMapping 
-	
 	public static Method[] createOrderedMethodArray(
 			Class<?> classObject, 
 			Map<String, String> methodHeaderMapping, 
@@ -42,6 +41,7 @@ public class GtfsImportUtils {
 		return methods;		
 	}
 	
+	// Creates a string of a specified count of strings separated by a separator
 	public static String createSeparatedString(int count, String separator, String character) {
 		StringBuilder builder = new StringBuilder();
 		for (int i=0; i<count; i++) {
@@ -50,6 +50,7 @@ public class GtfsImportUtils {
 		return builder.substring(0, builder.length() - separator.length()).toString();
 	}
 	
+	// Creates a CSV reader
 	public static CSVReader createCsvReader(Path gtfsFile) throws IOException {
 		FileReader fileReader = new FileReader(gtfsFile.toFile());
 		CSVReader reader = new CSVReader(fileReader);
@@ -57,6 +58,7 @@ public class GtfsImportUtils {
 		return reader;
 	}
 	
+	// Returns a Set with all filenames as string inside a gtfs feed directory
 	public static Set<String> getGtfsFiles(Path gtfsDirectory) {
 		File gtfsFolder = gtfsDirectory.toFile();
 	    Set<String> gtfsFiles = Stream.of(gtfsFolder.listFiles())
@@ -67,6 +69,7 @@ public class GtfsImportUtils {
 		return gtfsFiles;
 	}
 	
+	// Returns the relative path to the working directory
 	public static Path getRelativePath(String path) {
 		Path workingDirectory = Paths.get(".");
 		if (path == null) {
@@ -76,9 +79,20 @@ public class GtfsImportUtils {
 		}
 	}
 	
+	// Returns all data tables from a sqlite database
 	public static Set<String> getSqlDataTables(Path databasePath) {
 		SqliteHandler sqliteHandler = new SqliteHandler(databasePath);
-		return sqliteHandler.getDataTables();
+		Set<String> tables = sqliteHandler.getDataTables();
+		sqliteHandler.closeConnection();
+		return tables;
+	}
+	
+	// Returns the columns from a sql table in same order as stored in the database
+	public static List<String> getSqlTableColumns(Path databasePath, String tableName) {
+		SqliteHandler sqliteHandler = new SqliteHandler(databasePath);
+		List<String> columns = sqliteHandler.getColumnNames(tableName);
+		sqliteHandler.closeConnection();
+		return columns;
 	}
 
 }

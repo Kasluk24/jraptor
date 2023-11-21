@@ -158,12 +158,11 @@ public class SqliteHandler {
 			for (int i = 0; i < metadata.getColumnCount(); i++) {
 				columns.add(metadata.getColumnName(i + 1));
 			}
-						
+			tableData.close();						
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return columns;
 	}
-	
 }
