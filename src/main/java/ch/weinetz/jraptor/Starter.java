@@ -2,8 +2,13 @@ package ch.weinetz.jraptor;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.opencsv.exceptions.CsvValidationException;
 
+import ch.weinetz.jraptor.filter.GtfsTableFilter;
+import ch.weinetz.jraptor.gtfs.model.GtfsDate;
 import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 import ch.weinetz.jraptor.utils.GtfsFeedFileReader;
 import ch.weinetz.jraptor.utils.GtfsFeedSqliteReader;
@@ -11,14 +16,19 @@ import ch.weinetz.jraptor.utils.SqliteHandler;
 
 public class Starter {
 
-	public static void main(String[] args) throws CsvValidationException, IOException, ClassNotFoundException {
+	public static void main(String[] args) throws CsvValidationException, IOException, ClassNotFoundException, InterruptedException {
 		
 		// Code
-		System.out.println(LocalTime.now());
-		GtfsFeedSqliteReader reader = new GtfsFeedSqliteReader("data/GTFS_Data.sqlite");
-		GtfsFeed feed0 = reader.readFeed();
-		System.out.println(LocalTime.now());
+		GtfsFeedFileReader reader = new GtfsFeedFileReader("data/gtfs_fp2022_2022-08-17_04-15");
+		GtfsFeed feed0 = reader.readFeedParallel();
 		System.out.println(feed0);
+		
+		Set<GtfsDate> dates = new HashSet<>();
+		dates.add(new GtfsDate("20221123"));
+		
+		feed0.setGtfsCalendars(GtfsTableFilter.getCalendarsAllAtDates(feed0.getAllGtfsCalendars(), dates));
+		System.out.println(feed0);
+		
 		
 		/*
 		System.out.println(LocalTime.now());
