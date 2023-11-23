@@ -59,6 +59,26 @@ public class GtfsTableFilter {
 	}
 	
 	// CalendarDate
+	public static Set<GtfsCalendarDate> getCalendarDatesAtDates(Set<GtfsCalendarDate> gtfsCalendarDates, Set<GtfsDate> dates) {
+		Set<GtfsCalendarDate> calendarDates = new HashSet<>();
+		dates.forEach(date -> {
+			calendarDates.addAll(gtfsCalendarDates.stream()
+					.filter(c -> c.getDate().equals(date))
+					.collect(Collectors.toSet())
+				);
+		});
+		return calendarDates;		
+	}
+	public static Set<GtfsCalendarDate> getCalendarDatesBetweenDates(Set<GtfsCalendarDate> gtfsCalendarDates, Set<GtfsDate[]> dates) {
+		Set<GtfsCalendarDate> calendarDates = new HashSet<>();
+		dates.forEach(date -> {
+			calendarDates.addAll(gtfsCalendarDates.stream()
+					.filter(c -> c.getDate().after(date[0]) && c.getDate().before(date[1]))
+					.collect(Collectors.toSet())
+				);
+		});
+		return calendarDates;
+	}
 	// Frequency
 	// Route
 	// Stop
