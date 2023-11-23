@@ -109,6 +109,13 @@ public class GtfsDate {
 				convertDatestringToDay(datestring));
 	}
 	
+	public boolean between(GtfsDate startDate, GtfsDate endDate) {
+		return after(startDate) && before(endDate);
+	}
+	public boolean between(String startDatestring, String endDatestring) {
+		return after(startDatestring) && before(endDatestring);
+	}
+	
 	@Override
 	public String toString() {
 		return convertYmdToString(year, month, day);
