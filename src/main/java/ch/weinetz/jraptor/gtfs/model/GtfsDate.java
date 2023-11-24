@@ -1,5 +1,6 @@
 package ch.weinetz.jraptor.gtfs.model;
 
+import java.time.LocalDate;
 
 public class GtfsDate {
 	
@@ -21,6 +22,11 @@ public class GtfsDate {
 		this.month = month;
 		this.day = day;
 	}
+	public GtfsDate(LocalDate localDate) {
+		this.year = localDate.getYear();
+		this.month = localDate.getMonthValue();
+		this.day = localDate.getDayOfMonth();
+	}
 	
 	// Getters
 	public String getDateAsString() {
@@ -34,6 +40,13 @@ public class GtfsDate {
 	}
 	public Integer getDay() {
 		return day;
+	}
+	public LocalDate getAsLocalDate() {
+		return LocalDate.of(this.year, this.month, this.day);
+	}
+	
+	public String getDayOfWeek() {
+		return getAsLocalDate().getDayOfWeek().toString();
 	}
 	
 	// Setters
@@ -168,5 +181,4 @@ public class GtfsDate {
 			}
 		}
 	}
-
 }

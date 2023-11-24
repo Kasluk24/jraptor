@@ -25,11 +25,17 @@ public class Starter {
 		
 		Set<GtfsDate> dates = new HashSet<>();
 		dates.add(new GtfsDate("20221123"));
+		dates.add(new GtfsDate("20221124"));
 		
 		feed0.setGtfsCalendars(GtfsTableFilter.getCalendarsAllAtDates(feed0.getAllGtfsCalendars(), dates));
 		System.out.println(feed0);
 		
-		
+		feed0.setGtfsTrips(GtfsTableFilter.getTripsAtDates(feed0.getAllGtfsTrips(), 
+				feed0.getAllGtfsCalendars(), 
+				feed0.getAllGtfsCalendarDates(), 
+				dates)
+			);		
+		System.out.println(feed0);
 		/*
 		System.out.println(LocalTime.now());
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2023_2023-10-11_04-15");
