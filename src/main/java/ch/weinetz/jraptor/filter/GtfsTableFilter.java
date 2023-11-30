@@ -90,6 +90,19 @@ public class GtfsTableFilter {
 	// Route
 	// Stop
 	// StopTime
+	public static Set<GtfsStopTime> getStopTimesByTrips(Set<GtfsStopTime> gtfsStopTimes,
+			Set<GtfsTrip> gtfsTrips) {
+		
+		Set<String> tripIds = gtfsTrips.stream()
+				.map(t -> t.getTripId())
+				.collect(Collectors.toSet());
+		
+		return gtfsStopTimes.stream()
+				.filter(s -> tripIds.contains(s.getTripId()))
+				.collect(Collectors.toSet());
+		
+		
+	}
 	// Transfer
 	// Trip
 	public static Set<GtfsTrip> getTripsAtDates(Set<GtfsTrip> gtfsTrips, 
