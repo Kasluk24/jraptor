@@ -88,7 +88,31 @@ public class GtfsTableFilter {
 	}
 	// Frequency
 	// Route
+	public static Set<GtfsRoute> getRoutesByTrips(Set<GtfsRoute> gtfsRoutes,
+			Set<GtfsTrip> gtfsTrips) {
+		
+		Set<String> routeIds = gtfsTrips.stream()
+				.map(t -> t.getRouteId())
+				.distinct()
+				.collect(Collectors.toSet());
+		
+		return gtfsRoutes.stream()
+				.filter(r -> routeIds.contains(r.getRouteId()))
+				.collect(Collectors.toSet());
+	}
 	// Stop
+	public static Set<GtfsStop> getStopsByStopTimes(Set<GtfsStop> gtfsStops, 
+			Set<GtfsStopTime> gtfsStopTimes) {
+		
+		Set<String> stopIds = gtfsStopTimes.stream()
+				.map(s -> s.getStopId())
+				.distinct()
+				.collect(Collectors.toSet());
+		
+		return gtfsStops.stream()
+				.filter(s -> stopIds.contains(s.getStopId()))
+				.collect(Collectors.toSet());
+	}
 	// StopTime
 	public static Set<GtfsStopTime> getStopTimesByTrips(Set<GtfsStopTime> gtfsStopTimes,
 			Set<GtfsTrip> gtfsTrips) {
@@ -100,10 +124,19 @@ public class GtfsTableFilter {
 		return gtfsStopTimes.stream()
 				.filter(s -> tripIds.contains(s.getTripId()))
 				.collect(Collectors.toSet());
-		
-		
 	}
 	// Transfer
+	public static Set<GtfsTransfer> getTransfersByStops(Set<GtfsTransfer> gtfsTransfers, 
+			Set<GtfsStop> gtfsStops) {
+		
+		Set<String> stopIds = gtfsStops.stream()
+				.map(s -> s.getStopId())
+				.collect(Collectors.toSet());
+		
+		return gtfsTransfers.stream()
+				.filter(t -> stopIds.contains(t.getFromStopId()) && stopIds.contains(t.getToStopId()))
+				.collect(Collectors.toSet());
+	}
 	// Trip
 	public static Set<GtfsTrip> getTripsAtDates(Set<GtfsTrip> gtfsTrips, 
 			Set<GtfsCalendar> gtfsCalendars, 
@@ -126,5 +159,4 @@ public class GtfsTableFilter {
 				.filter(t -> serviceIds.contains(t.getServiceId()))
 				.collect(Collectors.toSet());
 	}
-	
 }
