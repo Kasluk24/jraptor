@@ -9,6 +9,7 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import ch.weinetz.jraptor.filter.GtfsFeedFilter;
 import ch.weinetz.jraptor.filter.GtfsTableFilter;
+import ch.weinetz.jraptor.gtfs.model.GtfsAgency;
 import ch.weinetz.jraptor.gtfs.model.GtfsDate;
 import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 import ch.weinetz.jraptor.utils.GtfsFeedFileReader;
@@ -22,16 +23,29 @@ public class Starter {
 		// Code
 		GtfsFeedFileReader reader = new GtfsFeedFileReader("data/gtfs_fp2022_2022-08-17_04-15");
 		GtfsFeed feed0 = reader.readFeedParallel();
+		System.out.println(LocalTime.now());
 		System.out.println(feed0);
 		
 		Set<GtfsDate> dates = new HashSet<>();
 		dates.add(new GtfsDate("20221123"));
 		dates.add(new GtfsDate("20221124"));
 		
+		Set<String> agencyIds = new HashSet<>();
+		agencyIds.add("11");
+		Set<GtfsAgency> agencies = feed0.getAgenciesByIds(agencyIds);
+		
 		GtfsFeedFilter feedFilter = new GtfsFeedFilter(feed0);
-		feed0 = feedFilter.filterFeedByDates(dates);
+		
+		System.out.println(LocalTime.now());
+		feedFilter.filterFeedByDates(dates);
+		System.out.println(LocalTime.now());
+		feedFilter.filterFeedByAgencies(agencies);
+		System.out.println(LocalTime.now());
 		
 		System.out.println(feed0);
+		
+		System.out.println(LocalTime.now());
+		
 		/*
 		System.out.println(LocalTime.now());
 		GtfsInMemoryReader reader = new GtfsInMemoryReader("data/gtfs_fp2023_2023-10-11_04-15");
