@@ -137,7 +137,7 @@ public class GtfsTableFilter {
 				.filter(t -> stopIds.contains(t.getFromStopId()) && stopIds.contains(t.getToStopId()))
 				.collect(Collectors.toSet());
 	}
-	// Trip
+	// Trip	
 	public static Set<GtfsTrip> getTripsAtDates(Set<GtfsTrip> gtfsTrips, 
 			Set<GtfsCalendar> gtfsCalendars, 
 			Set<GtfsCalendarDate> gtfsCalendarDates, 

@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.opencsv.exceptions.CsvValidationException;
 
+import ch.weinetz.jraptor.filter.GtfsFeedFilter;
 import ch.weinetz.jraptor.filter.GtfsTableFilter;
 import ch.weinetz.jraptor.gtfs.model.GtfsDate;
 import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
@@ -27,14 +28,9 @@ public class Starter {
 		dates.add(new GtfsDate("20221123"));
 		dates.add(new GtfsDate("20221124"));
 		
-		feed0.setGtfsCalendars(GtfsTableFilter.getCalendarsAllAtDates(feed0.getAllGtfsCalendars(), dates));
-		System.out.println(feed0);
+		GtfsFeedFilter feedFilter = new GtfsFeedFilter(feed0);
+		feed0 = feedFilter.filterFeedByDates(dates);
 		
-		feed0.setGtfsTrips(GtfsTableFilter.getTripsAtDates(feed0.getAllGtfsTrips(), 
-				feed0.getAllGtfsCalendars(), 
-				feed0.getAllGtfsCalendarDates(), 
-				dates)
-			);		
 		System.out.println(feed0);
 		/*
 		System.out.println(LocalTime.now());
