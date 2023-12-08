@@ -12,10 +12,10 @@ import ch.weinetz.jraptor.gtfs.model.GtfsStop;
 import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
 import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
 
-public class GtfsRouteDetailsProvider implements RouteDetailsProvider<GtfsTrip, GtfsStop> {
+public class GtfsRouteRaptorProvider implements RouteDetailsProvider<GtfsTrip, GtfsStop> {
 	private final GtfsFeed feed;
 	
-	public GtfsRouteDetailsProvider(GtfsFeed feed) {
+	public GtfsRouteRaptorProvider(GtfsFeed feed) {
 		this.feed = feed;
 	}
 

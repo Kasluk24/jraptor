@@ -9,10 +9,10 @@ import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 import ch.weinetz.jraptor.gtfs.model.GtfsStop;
 import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
 
-public class GtfsStopDetailsProvider implements StopDetailsProvider<GtfsStop, GtfsTrip> {
+public class GtfsStopRaptorProvider implements StopDetailsProvider<GtfsStop, GtfsTrip> {
 	private final GtfsFeed feed;
 	
-	public GtfsStopDetailsProvider(GtfsFeed feed) {
+	public GtfsStopRaptorProvider(GtfsFeed feed) {
 		this.feed = feed;
 	}
 	
