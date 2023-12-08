@@ -8,13 +8,10 @@ import java.util.Set;
 import com.opencsv.exceptions.CsvValidationException;
 
 import ch.weinetz.jraptor.filter.GtfsFeedFilter;
-import ch.weinetz.jraptor.filter.GtfsTableFilter;
 import ch.weinetz.jraptor.gtfs.model.GtfsAgency;
 import ch.weinetz.jraptor.gtfs.model.GtfsDate;
 import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 import ch.weinetz.jraptor.utils.GtfsFeedFileReader;
-import ch.weinetz.jraptor.utils.GtfsFeedSqliteReader;
-import ch.weinetz.jraptor.utils.SqliteHandler;
 
 public class Starter {
 

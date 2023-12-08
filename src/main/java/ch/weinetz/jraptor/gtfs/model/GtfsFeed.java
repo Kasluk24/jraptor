@@ -113,6 +113,11 @@ public class GtfsFeed {
 				.filter(s -> stopIds.contains(s.getStopId()))
 				.collect(Collectors.toSet());
 	}
+	public Set<GtfsStopTime> getStopTimesByStopId(String stopId) {
+		return this.gtfsStopTimes.stream()
+				.filter(s -> stopId.equals(s.getStopId()))
+				.collect(Collectors.toSet());
+	}
 	// Transfer
 	public Set<GtfsTransfer> getTransfersByFromStopIds(Set<String> fromStopIds) {
 		return this.gtfsTransfers.stream()
