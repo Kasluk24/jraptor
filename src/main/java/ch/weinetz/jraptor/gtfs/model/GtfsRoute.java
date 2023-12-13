@@ -165,6 +165,7 @@ public class GtfsRoute implements GtfsTableData {
 		tempFields.put("agency_id", "setAgencyId");
 		tempFields.put("route_short_name", "setRouteShortName");
 		tempFields.put("route_long_name", "setRouteLongName");
+		tempFields.put("route_desc", "setRouteDesc");
 		tempFields.put("route_type", "setRouteType");
 		tempFields.put("route_url", "setRouteUrl");
 		tempFields.put("route_color", "setRouteColor");
@@ -177,6 +178,7 @@ public class GtfsRoute implements GtfsTableData {
 		tempFields.put("agency_id", "getAgencyId");
 		tempFields.put("route_short_name", "getRouteShortName");
 		tempFields.put("route_long_name", "getRouteLongName");
+		tempFields.put("route_desc", "getRouteDesc");
 		tempFields.put("route_type", "getRouteTypeAsString");
 		tempFields.put("route_url", "getRouteUrl");
 		tempFields.put("route_color", "getRouteColor");
@@ -189,6 +191,7 @@ public class GtfsRoute implements GtfsTableData {
 		tempTypes.put("agency_id", "TEXT");
 		tempTypes.put("route_short_name", "TEXT");
 		tempTypes.put("route_long_name", "TEXT");
+		tempTypes.put("route_desc", "TEXT");
 		tempTypes.put("route_type", "INT");
 		tempTypes.put("route_url", "TEXT");
 		tempTypes.put("route_color", "TEXT");
