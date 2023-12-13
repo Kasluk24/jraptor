@@ -71,7 +71,7 @@ public class GtfsImportUtils {
 	
 	// Returns the relative path to the working directory
 	public static Path getRelativePath(String path) {
-		Path workingDirectory = Paths.get(".");
+		Path workingDirectory = Paths.get(".").toAbsolutePath();
 		if (path == null) {
 			return workingDirectory;
 		} else {
