@@ -72,7 +72,6 @@ public class GtfsFeedFileReader  {
 		}
 		
 		for (@SuppressWarnings({ "rawtypes"})GtfsTableFileReader reader : readers) {
-			
 			gtfsFeed.setGtfsData(reader.getGtfsTable());
 		}
 		

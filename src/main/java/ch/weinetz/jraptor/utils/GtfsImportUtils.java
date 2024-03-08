@@ -69,13 +69,12 @@ public class GtfsImportUtils {
 		return gtfsFiles;
 	}
 	
-	// Returns the relative path to the working directory
-	public static Path getRelativePath(String path) {
-		Path workingDirectory = Paths.get(".").toAbsolutePath();
+	// Returns the absolute path for a given location or the working directory if the parameter path is null
+	public static Path getAbsolutePath(String path) {
 		if (path == null) {
-			return workingDirectory;
+			return Paths.get(".").toAbsolutePath();
 		} else {
-			return workingDirectory.relativize(Paths.get(path));
+			return Paths.get(path).toAbsolutePath();
 		}
 	}
 	

@@ -26,7 +26,7 @@ public class GtfsTableSqliteReader <T extends GtfsTableData> implements Runnable
 	
 	// Constructor
 	public GtfsTableSqliteReader(String gtfsDatabase, Class<T> gtfsClass) {
-		this.gtfsDatabase = GtfsImportUtils.getRelativePath(gtfsDatabase);
+		this.gtfsDatabase = GtfsImportUtils.getAbsolutePath(gtfsDatabase);
 		this.gtfsClass = gtfsClass;
 		this.sqliteHandler = new SqliteHandler(gtfsDatabase);
 		

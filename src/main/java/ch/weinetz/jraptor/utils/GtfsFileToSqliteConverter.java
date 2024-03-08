@@ -33,7 +33,7 @@ public class GtfsFileToSqliteConverter {
 	private boolean closeConnection;
 	
 	public GtfsFileToSqliteConverter(String gtfsDirectory, String pathToDatabase) {
-		this.gtfsDirectory = GtfsImportUtils.getRelativePath(gtfsDirectory);
+		this.gtfsDirectory = GtfsImportUtils.getAbsolutePath(gtfsDirectory);
 		this.sqliteHandler = new SqliteHandler(pathToDatabase);
 		this.closeConnection = true;
 		

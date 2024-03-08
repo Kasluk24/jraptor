@@ -21,7 +21,7 @@ public class GtfsTableFileReader <T extends GtfsTableData> implements Runnable  
 	
 	// Constructor
 	public GtfsTableFileReader(String gtfsDirectory, Class<T> gtfsClass) {
-		this.gtfsDirectory = GtfsImportUtils.getRelativePath(gtfsDirectory);
+		this.gtfsDirectory = GtfsImportUtils.getAbsolutePath(gtfsDirectory);
 		this.gtfsClass = gtfsClass;
 		
 		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
