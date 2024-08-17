@@ -110,7 +110,7 @@ public class GtfsTableFilter {
 		});
 		return calendarDates;
 	}
-	// All calnedar dates by calendars
+	// All calendar dates by calendars
 	public static Set<GtfsCalendarDate> getCalendarDatesByCalendars(Set<GtfsCalendarDate> gtfsCalendarDates,
 			Set<GtfsCalendar> gtfsCalendars) {
 		Set<String> serviceIds = gtfsCalendars.stream()
@@ -173,6 +173,18 @@ public class GtfsTableFilter {
 				.filter(s -> tripIds.contains(s.getTripId()))
 				.collect(Collectors.toSet());
 	}
+	public static Set<GtfsStopTime> getStopTimesByStops(Set<GtfsStopTime> gtfsStopTimes,
+			Set<GtfsStop> gtfsStops) {
+		
+		Set<String> stopIds = gtfsStops.stream()
+				.map(s -> s.getStopId())
+				.collect(Collectors.toSet());
+		
+		return gtfsStopTimes.stream()
+				.filter(st -> stopIds.contains(st.getStopId()))
+				.collect(Collectors.toSet());
+	}
+	
 	// Transfer
 	public static Set<GtfsTransfer> getTransfersByStops(Set<GtfsTransfer> gtfsTransfers, 
 			Set<GtfsStop> gtfsStops) {
