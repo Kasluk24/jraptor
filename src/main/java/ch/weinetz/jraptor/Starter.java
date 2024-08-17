@@ -18,14 +18,14 @@ public class Starter {
 	public static void main(String[] args) throws CsvValidationException, IOException, ClassNotFoundException, InterruptedException {
 		
 		// Code
-		GtfsFeedFileReader reader = new GtfsFeedFileReader("data/gtfs_fp2022_2022-08-17_04-15");
+		GtfsFeedFileReader reader = new GtfsFeedFileReader("data/gtfs_fp2023_2023-10-11_04-15");
 		GtfsFeed feed0 = reader.readFeedParallel();
 		System.out.println(LocalTime.now());
 		System.out.println(feed0);
 		
 		Set<GtfsDate> dates = new HashSet<>();
-		dates.add(new GtfsDate("20221123"));
-		dates.add(new GtfsDate("20221124"));
+		dates.add(new GtfsDate("20231123"));
+		dates.add(new GtfsDate("20231124"));
 		
 		Set<String> agencyIds = new HashSet<>();
 		agencyIds.add("11");
