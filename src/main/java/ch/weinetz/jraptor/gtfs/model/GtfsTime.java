@@ -55,6 +55,22 @@ public class GtfsTime {
 		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
 	}
 	
+	public boolean before(GtfsTime timeB) {
+		return this.time < timeB.getTimeAsSeconds();
+	}
+	
+	public boolean beforeEquals(GtfsTime timeB) {
+		return this.time <= timeB.getTimeAsSeconds();
+	}
+	
+	public boolean after(GtfsTime timeB) {
+		return this.time > timeB.getTimeAsSeconds();
+	}
+	
+	public boolean afterEquals(GtfsTime timeB) {
+		return this.time >= timeB.getTimeAsSeconds();
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
