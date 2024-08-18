@@ -211,26 +211,20 @@ public class GtfsTableFilter {
 				.filter(t -> routeIds.contains(t.getRouteId()))
 				.collect(Collectors.toSet());
 	}
-	public Set<GtfsTrip> getTripsByStops(GtfsStop fromStop, GtfsStop toStop, boolean oneWay) {
-		Set<GtfsTrip> trips = new HashSet<>();
+	public Set<GtfsTrip> getTripsByStops(GtfsStop fromStop, GtfsStop toStop) {
+		Set<GtfsStopTime> fromStopTimes = feed.getStopTimesByStopId(fromStop.getStopId());
+		Set<GtfsStopTime> toStopTimes = feed.getStopTimesByStopId(toStop.getStopId());
 		
-		Set<String> fromStopTripIds = feed.getAllGtfsStopTimes().stream()
-				.filter(st -> st.getStopId().equals(fromStop.getStopId()))
-				.map(st -> st.getTripId())
-				.collect(Collectors.toSet());
-		Set<String> toStopTripIds = feed.getAllGtfsStopTimes().stream()
-				.filter(st -> st.getStopId().equals(toStop.getStopId()))
-				.map(st -> st.getTripId())
-				.collect(Collectors.toSet());
-		
-		if (!oneWay) {
-			trips = feed.getAllGtfsTrips().stream()
-					.filter(t -> fromStopTripIds.contains(t.getTripId()))
-					.filter(t -> toStopTripIds.contains(t.getTripId()))
-					.collect(Collectors.toSet());	
+		Set<String> tripIds = new HashSet<>();
+		for (GtfsStopTime fromStopTime : fromStopTimes) {
+			for (GtfsStopTime toStopTime : toStopTimes) {
+				if (fromStopTime.getTripId().equals(toStopTime.getTripId()) && 
+						fromStopTime.getStopSequence() < toStopTime.getStopSequence()) {
+					tripIds.add(fromStopTime.getTripId());
+				}
+			}
 		}
 		
-		
-		return trips;
+		return feed.getTripsByIds(tripIds);
 	}
 }
