@@ -102,6 +102,12 @@ public class GtfsFeed {
 				.filter(s -> stopIds.contains(s.getStopId()))
 				.collect(Collectors.toSet());
 	}
+	public GtfsStop getStopById(String stopId) {
+		return this.gtfsStops.stream()
+				.filter(s -> s.getStopId().equals(stopId))
+				.findFirst()
+				.get();
+	}
 	// StopTime
 	public Set<GtfsStopTime> getStopTimesByTripIds(Set<String> tripIds) {
 			return this.gtfsStopTimes.stream()
