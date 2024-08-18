@@ -9,31 +9,44 @@ import ch.weinetz.jraptor.gtfs.model.GtfsCalendar;
 import ch.weinetz.jraptor.gtfs.model.GtfsCalendarDate;
 import ch.weinetz.jraptor.gtfs.model.GtfsCalendarExceptionType;
 import ch.weinetz.jraptor.gtfs.model.GtfsDate;
+import ch.weinetz.jraptor.gtfs.model.GtfsFeed;
 import ch.weinetz.jraptor.gtfs.model.GtfsRoute;
 import ch.weinetz.jraptor.gtfs.model.GtfsStop;
 import ch.weinetz.jraptor.gtfs.model.GtfsStopTime;
 import ch.weinetz.jraptor.gtfs.model.GtfsTransfer;
 import ch.weinetz.jraptor.gtfs.model.GtfsTrip;
 
+/**
+ * The table filter allows filtering in specific tables
+ * It will always return single tables and the feed will not be affected
+ * For filtering an entire feed see class @GtfsFeedFilter
+ * @author Lukas Gafner
+ */
 public class GtfsTableFilter {
+	private final GtfsFeed feed;
+	
+	public GtfsTableFilter(GtfsFeed feed) {
+		this.feed = feed;
+	}
+	
 	// Agency
-	public static Set<GtfsAgency> getAgenciesByRoutes(Set<GtfsAgency> gtfsAgencies, Set<GtfsRoute> gtfsRoutes) {
+	public Set<GtfsAgency> getAgenciesByRoutes(Set<GtfsRoute> gtfsRoutes) {
 		Set<String> agencyIds = gtfsRoutes.stream()
 				.map(r -> r.getAgencyId())
 				.distinct()
 				.collect(Collectors.toSet());
 		
-		return gtfsAgencies.stream()
+		return feed.getAllGtfsAgencies().stream()
 				.filter(a -> agencyIds.contains(a.getAgencyId()))
 				.collect(Collectors.toSet());
 		
 	}
 	// Calendar
 	// All calendars that intersect the given dates
-	public static Set<GtfsCalendar> getCalendarsAllAtDates(Set<GtfsCalendar> gtfsCalendars, Set<GtfsDate> dates) {
+	public Set<GtfsCalendar> getCalendarsAllAtDates(Set<GtfsDate> dates) {
 		Set<GtfsCalendar> calendars = new HashSet<>();
 		dates.forEach(date -> {
-			calendars.addAll(gtfsCalendars.stream()
+			calendars.addAll(feed.getAllGtfsCalendars().stream()
 					.filter(c -> date.between(c.getStartDate(), c.getEndDate()))
 					.collect(Collectors.toSet())
 				);
@@ -41,10 +54,10 @@ public class GtfsTableFilter {
 		return calendars;
 	}
 	// All calendars that only include the given dates
-	public static Set<GtfsCalendar> getCalendarsOnlyAtDates(Set<GtfsCalendar> gtfsCalendars, Set<GtfsDate> dates) {
+	public Set<GtfsCalendar> getCalendarsOnlyAtDates(Set<GtfsDate> dates) {
 		Set<GtfsCalendar> calendars = new HashSet<>();
 		dates.forEach(date -> {
-			calendars.addAll(gtfsCalendars.stream()
+			calendars.addAll(feed.getAllGtfsCalendars().stream()
 					.filter(c -> date.equals(c.getStartDate()) && date.equals(c.getEndDate()))
 					.collect(Collectors.toSet())
 				);
@@ -52,10 +65,10 @@ public class GtfsTableFilter {
 		return calendars;
 	}
 	// All calendars that intersect the given period
-	public static Set<GtfsCalendar> getCalendarsAllBetweenDates(Set<GtfsCalendar> gtfsCalendars, Set<GtfsDate[]> dates) {
+	public Set<GtfsCalendar> getCalendarsAllBetweenDates(Set<GtfsDate[]> dates) {
 		Set<GtfsCalendar> calendars = new HashSet<>();
 		dates.forEach(date -> {
-			calendars.addAll(gtfsCalendars.stream()
+			calendars.addAll(feed.getAllGtfsCalendars().stream()
 					.filter(c -> c.getEndDate().after(date[0]) || c.getStartDate().before(date[1]))
 					.collect(Collectors.toSet())
 				);
@@ -63,10 +76,10 @@ public class GtfsTableFilter {
 		return calendars;
 	}
 	// All calendars that only include the given period
-	public static Set<GtfsCalendar> getCalendarsOnlyBetweenDates(Set<GtfsCalendar> gtfsCalendars, Set<GtfsDate[]> dates) {
+	public Set<GtfsCalendar> getCalendarsOnlyBetweenDates(Set<GtfsDate[]> dates) {
 		Set<GtfsCalendar> calendars = new HashSet<>();
 		dates.forEach(date -> {
-			calendars.addAll(gtfsCalendars.stream()
+			calendars.addAll(feed.getAllGtfsCalendars().stream()
 					.filter(c -> c.getStartDate().after(date[0]) || c.getEndDate().before(date[1]))
 					.collect(Collectors.toSet())
 				);
@@ -74,25 +87,23 @@ public class GtfsTableFilter {
 		return calendars;
 	}
 	// All calendars by trips
-	public static Set<GtfsCalendar> getCalendarsByTrips(Set<GtfsCalendar> gtfsCalendars,
-			Set<GtfsTrip> gtfsTrips) {
-		
+	public Set<GtfsCalendar> getCalendarsByTrips(Set<GtfsTrip> gtfsTrips) {
 		Set<String> serviceIds = gtfsTrips.stream()
 				.map(t -> t.getServiceId())
 				.distinct()
 				.collect(Collectors.toSet());
 		
-		return gtfsCalendars.stream()
+		return feed.getAllGtfsCalendars().stream()
 				.filter(c -> serviceIds.contains(c.getServiceId()))
 				.collect(Collectors.toSet());
 	}
 	
 	// CalendarDate
 	// All calendar dates that match the given dates
-	public static Set<GtfsCalendarDate> getCalendarDatesAtDates(Set<GtfsCalendarDate> gtfsCalendarDates, Set<GtfsDate> dates) {
+	public Set<GtfsCalendarDate> getCalendarDatesAtDates(Set<GtfsDate> dates) {
 		Set<GtfsCalendarDate> calendarDates = new HashSet<>();
 		dates.forEach(date -> {
-			calendarDates.addAll(gtfsCalendarDates.stream()
+			calendarDates.addAll(feed.getAllGtfsCalendarDates().stream()
 					.filter(c -> c.getDate().equals(date))
 					.collect(Collectors.toSet())
 				);
@@ -100,10 +111,10 @@ public class GtfsTableFilter {
 		return calendarDates;		
 	}
 	// All calendar dates that intersect the given period
-	public static Set<GtfsCalendarDate> getCalendarDatesBetweenDates(Set<GtfsCalendarDate> gtfsCalendarDates, Set<GtfsDate[]> dates) {
+	public Set<GtfsCalendarDate> getCalendarDatesBetweenDates(Set<GtfsDate[]> dates) {
 		Set<GtfsCalendarDate> calendarDates = new HashSet<>();
 		dates.forEach(date -> {
-			calendarDates.addAll(gtfsCalendarDates.stream()
+			calendarDates.addAll(feed.getAllGtfsCalendarDates().stream()
 					.filter(c -> c.getDate().after(date[0]) && c.getDate().before(date[1]))
 					.collect(Collectors.toSet())
 				);
@@ -111,91 +122,74 @@ public class GtfsTableFilter {
 		return calendarDates;
 	}
 	// All calendar dates by calendars
-	public static Set<GtfsCalendarDate> getCalendarDatesByCalendars(Set<GtfsCalendarDate> gtfsCalendarDates,
-			Set<GtfsCalendar> gtfsCalendars) {
+	public Set<GtfsCalendarDate> getCalendarDatesByCalendars(Set<GtfsCalendar> gtfsCalendars) {
 		Set<String> serviceIds = gtfsCalendars.stream()
 				.map(c -> c.getServiceId())
 				.distinct()
 				.collect(Collectors.toSet());
 		
-		return gtfsCalendarDates.stream()
+		return feed.getAllGtfsCalendarDates().stream()
 				.filter(c -> serviceIds.contains(c.getServiceId()))
 				.collect(Collectors.toSet());
 	}
 	// Frequency
 	// Route
-	public static Set<GtfsRoute> getRoutesByTrips(Set<GtfsRoute> gtfsRoutes,
-			Set<GtfsTrip> gtfsTrips) {
-		
+	public Set<GtfsRoute> getRoutesByTrips(Set<GtfsTrip> gtfsTrips) {
 		Set<String> routeIds = gtfsTrips.stream()
 				.map(t -> t.getRouteId())
 				.distinct()
 				.collect(Collectors.toSet());
 		
-		return gtfsRoutes.stream()
+		return feed.getAllGtfsRoutes().stream()
 				.filter(r -> routeIds.contains(r.getRouteId()))
 				.collect(Collectors.toSet());
 	}
-	public static Set<GtfsRoute> getRoutesByAgencies(Set<GtfsRoute> gtfsRoutes,
-			Set<GtfsAgency> gtfsAgencies) {
-		
+	public Set<GtfsRoute> getRoutesByAgencies(Set<GtfsAgency> gtfsAgencies) {
 		Set<String> agencyIds = gtfsAgencies.stream()
 				.map(a -> a.getAgencyId())
 				.collect(Collectors.toSet());
 		
-		return gtfsRoutes.stream()
+		return feed.getAllGtfsRoutes().stream()
 				.filter(r -> agencyIds.contains(r.getAgencyId()))
 				.collect(Collectors.toSet());
-		
 	}
 	// Stop
-	public static Set<GtfsStop> getStopsByStopTimes(Set<GtfsStop> gtfsStops, 
-			Set<GtfsStopTime> gtfsStopTimes) {
-		
+	public Set<GtfsStop> getStopsByStopTimes(Set<GtfsStopTime> gtfsStopTimes) {
 		Set<String> stopIds = gtfsStopTimes.stream()
 				.map(s -> s.getStopId())
 				.distinct()
 				.collect(Collectors.toSet());
 		
-		return gtfsStops.stream()
+		return feed.getAllGtfsStops().stream()
 				.filter(s -> stopIds.contains(s.getStopId()))
 				.collect(Collectors.toSet());
 	}
 	// StopTime
-	public static Set<GtfsStopTime> getStopTimesByTrips(Set<GtfsStopTime> gtfsStopTimes,
-			Set<GtfsTrip> gtfsTrips) {
-		
+	public Set<GtfsStopTime> getStopTimesByTrips(Set<GtfsTrip> gtfsTrips) {
 		Set<String> tripIds = gtfsTrips.stream()
 				.map(t -> t.getTripId())
 				.collect(Collectors.toSet());
 		
-		return gtfsStopTimes.stream()
+		return feed.getAllGtfsStopTimes().stream()
 				.filter(s -> tripIds.contains(s.getTripId()))
 				.collect(Collectors.toSet());
 	}
-	
 	// Transfer
-	public static Set<GtfsTransfer> getTransfersByStops(Set<GtfsTransfer> gtfsTransfers, 
-			Set<GtfsStop> gtfsStops) {
-		
+	public Set<GtfsTransfer> getTransfersByStops(Set<GtfsStop> gtfsStops) {
 		Set<String> stopIds = gtfsStops.stream()
 				.map(s -> s.getStopId())
 				.collect(Collectors.toSet());
 		
-		return gtfsTransfers.stream()
+		return feed.getAllGtfsTransfers().stream()
 				.filter(t -> stopIds.contains(t.getFromStopId()) && stopIds.contains(t.getToStopId()))
 				.collect(Collectors.toSet());
 	}
 	// Trip	
-	public static Set<GtfsTrip> getTripsAtDates(Set<GtfsTrip> gtfsTrips, 
-			Set<GtfsCalendar> gtfsCalendars, 
-			Set<GtfsCalendarDate> gtfsCalendarDates, 
-			Set<GtfsDate> dates) {
-		
-		Set<String> serviceIds = getCalendarsAllAtDates(gtfsCalendars, dates).stream()
+	public Set<GtfsTrip> getTripsAtDates(Set<GtfsDate> dates) {
+		Set<String> serviceIds = getCalendarsAllAtDates(dates).stream()
 				.map(c -> c.getServiceId())
 				.collect(Collectors.toSet());
-		for (GtfsCalendarDate calendarDate : getCalendarDatesAtDates(gtfsCalendarDates, dates)) {
+		for (GtfsCalendarDate calendarDate : getCalendarDatesAtDates(dates)) {
 			if (calendarDate.getExceptionType().equals(GtfsCalendarExceptionType.REMOVED)) {
 				serviceIds.remove(calendarDate.getServiceId());
 			}
@@ -204,44 +198,36 @@ public class GtfsTableFilter {
 			}
 		}
 
-		return gtfsTrips.stream()
+		return feed.getAllGtfsTrips().stream()
 				.filter(t -> serviceIds.contains(t.getServiceId()))
 				.collect(Collectors.toSet());
 	}
-	public static Set<GtfsTrip> getTripsByRoutes(Set<GtfsTrip> gtfsTrips,
-			Set<GtfsRoute> gtfsRoutes) {
-		
+	public Set<GtfsTrip> getTripsByRoutes(Set<GtfsRoute> gtfsRoutes) {
 		Set<String> routeIds = gtfsRoutes.stream()
 				.map(r -> r.getRouteId())
 				.collect(Collectors.toSet());
 		
-		return gtfsTrips.stream()
+		return feed.getAllGtfsTrips().stream()
 				.filter(t -> routeIds.contains(t.getRouteId()))
 				.collect(Collectors.toSet());
 	}
-	public static Set<GtfsTrip> getTripsByStops(Set<GtfsTrip> gtfsTrips, 
-			Set<GtfsStopTime> gtfsStopTimes, 
-			GtfsStop fromStop, 
-			GtfsStop toStop,
-			boolean oneWay) {
-		
+	public Set<GtfsTrip> getTripsByStops(GtfsStop fromStop, GtfsStop toStop, boolean oneWay) {
 		Set<GtfsTrip> trips = new HashSet<>();
 		
-		Set<String> fromStopTripIds = gtfsStopTimes.stream()
+		Set<String> fromStopTripIds = feed.getAllGtfsStopTimes().stream()
 				.filter(st -> st.getStopId().equals(fromStop.getStopId()))
 				.map(st -> st.getTripId())
 				.collect(Collectors.toSet());
-		Set<String> toStopTripIds = gtfsStopTimes.stream()
+		Set<String> toStopTripIds = feed.getAllGtfsStopTimes().stream()
 				.filter(st -> st.getStopId().equals(toStop.getStopId()))
 				.map(st -> st.getTripId())
 				.collect(Collectors.toSet());
 		
 		if (!oneWay) {
-			trips = gtfsTrips.stream()
+			trips = feed.getAllGtfsTrips().stream()
 					.filter(t -> fromStopTripIds.contains(t.getTripId()))
 					.filter(t -> toStopTripIds.contains(t.getTripId()))
-					.collect(Collectors.toSet());
-					
+					.collect(Collectors.toSet());	
 		}
 		
 		
