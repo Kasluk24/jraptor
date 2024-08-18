@@ -229,41 +229,6 @@ public class GtfsFeed {
 			}			
 		}
 	}
-	
-	// Simple filter operations
-	// Agency
-	public void filterAgenciesByIds(Set<String> agencyIds) {
-		this.gtfsAgencies = getAgenciesByIds(agencyIds);
-	}
-	// Calendar
-	// CalendarDate
-	// Frequency
-	// Route
-	public void filterRoutesByIds(Set<String> routeIds) {
-		this.gtfsRoutes = getRoutesByIds(routeIds);
-	}
-	// Stop
-	public void filterStopsByIds(Set<String> stopIds) {
-		this.gtfsStops = getStopsByIds(stopIds);
-	}
-	// StopTime
-	public void filterStopTimesByTripIds(Set<String> tripIds) {
-			this.gtfsStopTimes = getStopTimesByTripIds(tripIds);
-	}
-	public void filterStopTimesByStopIds(Set<String> stopIds) {
-		this.gtfsStopTimes = getStopTimesByStopIds(stopIds);
-	}
-	// Transfer
-	public void filterTransfersByFromStopIds(Set<String> fromStopIds) {
-		this.gtfsTransfers = getTransfersByFromStopIds(fromStopIds);
-	}
-	public void filterTransfersByToStopIds(Set<String> toStopIds) {
-		this.gtfsTransfers = getTransfersByToStopIds(toStopIds);
-	}	
-	// Trip
-	public void filterTripsByIds(Set<String> tripIds) {
-		this.gtfsTrips = getTripsByIds(tripIds);
-	}	
 
 	@Override
 	public String toString() {
