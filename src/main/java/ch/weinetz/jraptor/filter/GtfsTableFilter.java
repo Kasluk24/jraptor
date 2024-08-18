@@ -173,17 +173,6 @@ public class GtfsTableFilter {
 				.filter(s -> tripIds.contains(s.getTripId()))
 				.collect(Collectors.toSet());
 	}
-	public static Set<GtfsStopTime> getStopTimesByStops(Set<GtfsStopTime> gtfsStopTimes,
-			Set<GtfsStop> gtfsStops) {
-		
-		Set<String> stopIds = gtfsStops.stream()
-				.map(s -> s.getStopId())
-				.collect(Collectors.toSet());
-		
-		return gtfsStopTimes.stream()
-				.filter(st -> stopIds.contains(st.getStopId()))
-				.collect(Collectors.toSet());
-	}
 	
 	// Transfer
 	public static Set<GtfsTransfer> getTransfersByStops(Set<GtfsTransfer> gtfsTransfers, 
@@ -229,6 +218,33 @@ public class GtfsTableFilter {
 		return gtfsTrips.stream()
 				.filter(t -> routeIds.contains(t.getRouteId()))
 				.collect(Collectors.toSet());
+	}
+	public static Set<GtfsTrip> getTripsByStops(Set<GtfsTrip> gtfsTrips, 
+			Set<GtfsStopTime> gtfsStopTimes, 
+			GtfsStop fromStop, 
+			GtfsStop toStop,
+			boolean oneWay) {
 		
+		Set<GtfsTrip> trips = new HashSet<>();
+		
+		Set<String> fromStopTripIds = gtfsStopTimes.stream()
+				.filter(st -> st.getStopId().equals(fromStop.getStopId()))
+				.map(st -> st.getTripId())
+				.collect(Collectors.toSet());
+		Set<String> toStopTripIds = gtfsStopTimes.stream()
+				.filter(st -> st.getStopId().equals(toStop.getStopId()))
+				.map(st -> st.getTripId())
+				.collect(Collectors.toSet());
+		
+		if (!oneWay) {
+			trips = gtfsTrips.stream()
+					.filter(t -> fromStopTripIds.contains(t.getTripId()))
+					.filter(t -> toStopTripIds.contains(t.getTripId()))
+					.collect(Collectors.toSet());
+					
+		}
+		
+		
+		return trips;
 	}
 }
