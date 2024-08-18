@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import ch.weinetz.jraptor.filter.GtfsFeedFilter;
 import ch.weinetz.jraptor.filter.GtfsTableFilter;
@@ -36,12 +37,34 @@ public class Extractor {
 	
 	public void getByStops(GtfsStop stopA, GtfsStop stopB) {
 		// Calculates the cycle between two stops
-		Set<String> stopIds = new HashSet<>();
-		stopIds.add(stopA.getStopId());
-		stopIds.add(stopB.getStopId());
-		Set<GtfsStopTime> stopTimes = feed.getStopTimesByStopIds(stopIds);
+		// Get the stop times at the stop A within the analyse time span
+		Set<GtfsStopTime> fromStopTimes = feed.getStopTimesByStopId(stopA.getStopId());
+		fromStopTimes = fromStopTimes.stream()
+				.filter(st -> st.getDepartureTime().afterEquals(analyseFrom) && 
+						st.getDepartureTime().before(analyseTo))
+				.collect(Collectors.toSet());
 		
+		// Get the stop times at the stop B within the analyse time span
+		Set<GtfsStopTime> toStopTimes = feed.getStopTimesByStopId(stopB.getStopId());
+		toStopTimes = toStopTimes.stream()
+				.filter(st -> st.getDepartureTime().afterEquals(analyseFrom) && 
+						st.getDepartureTime().before(analyseTo))
+				.collect(Collectors.toSet());
 		
+		// Get the trips by the filtered tripIds
+		Set<String> tripIds = new HashSet<>();
+		for (GtfsStopTime fromStopTime : fromStopTimes) {
+			for (GtfsStopTime toStopTime : toStopTimes) {
+				if (fromStopTime.getTripId().equals(toStopTime.getTripId()) && 
+						fromStopTime.getStopSequence() < toStopTime.getStopSequence()) {
+					tripIds.add(fromStopTime.getTripId());
+				}
+			}
+		}
+		
+		Set<GtfsTrip> trips = feed.getTripsByIds(tripIds);
+		
+		trips.forEach(t -> System.out.println(t));
 	}
 	
 	public void setAnalyseTime(GtfsTime fromTime, GtfsTime toTime) {
